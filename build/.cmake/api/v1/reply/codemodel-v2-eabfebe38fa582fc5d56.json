@@ -1,0 +1,87 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"name" : "",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "vsomeip_performance_test",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "test_event_client::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_event_client-3871ec52a9ee2093d722.json",
+					"name" : "test_event_client",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_event_server::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_event_server-d022efc832117d9351ad.json",
+					"name" : "test_event_server",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_method_client::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_method_client-dc22a0ce55a7aa433d15.json",
+					"name" : "test_method_client",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_method_server::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_method_server-7cb28971a690c0aa028c.json",
+					"name" : "test_method_server",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/hikerlee02/workspace/vsomeip-test/vsomeip_performance_test_v2/build",
+		"source" : "/home/hikerlee02/workspace/vsomeip-test/vsomeip_performance_test_v2"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 3
+	}
+}
