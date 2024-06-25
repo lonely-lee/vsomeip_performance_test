@@ -1,5 +1,5 @@
 # vsomeip_performance_test
-## build
+## test_app build
 ```bash
 mkdir build
 cd build

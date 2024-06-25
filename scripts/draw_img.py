@@ -19,6 +19,8 @@ for line in lines[1:]:  # 跳过第一行（标题）
     average_throughputs.append(int(values[2]))  
     average_latency.append(float(values[3]))  
     average_cpu_load.append(float(values[4]))
+
+average_throughputs = [throughput / 1000000 for throughput in average_throughputs]
   
 # 绘制第一幅图：average_vmrss  
 plt.figure(figsize=(10, 6))  # 设置图形大小  
@@ -35,17 +37,17 @@ plt.figure(figsize=(10, 6))  # 设置图形大小
 plt.plot(payload_sizes, average_throughputs, marker='o')  # 绘制点图  
 plt.title('Average Throughput')  # 设置标题  
 plt.xlabel('Payload Size(Bytes)')  # 设置x轴标签  
-plt.ylabel('Throughput(Bytes/s)')  # 设置y轴标签  
+plt.ylabel('Throughput(MBytes/s)')  # 设置y轴标签  
 plt.grid(True)  # 显示网格  
 plt.savefig('throughput.png') 
 plt.show()  # 显示图形
 
 # 绘制第三幅图：average_latency  
 plt.figure(figsize=(10, 6))  # 设置图形大小  
-plt.plot(payload_sizes, average_throughputs, marker='o')  # 绘制点图  
+plt.plot(payload_sizes, average_latency, marker='o')  # 绘制点图  
 plt.title('Average Latency')  # 设置标题  
 plt.xlabel('Payload Size(Byte)')  # 设置x轴标签  
-plt.ylabel('Latency(ms)')  # 设置y轴标签  
+plt.ylabel('Latency(us)')  # 设置y轴标签  
 plt.grid(True)  # 显示网格  
 plt.savefig('Latency.png') 
 plt.show()  # 显示图形

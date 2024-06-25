@@ -92,7 +92,7 @@ bool handleDatas(std::size_t payload_size,const unsigned long average_vmrss,cons
         outfile << "payload_size average_vmrss average_throughput average_latency average_cpu_load" << std::endl;  
     }  
     infile.close();
-    outfile << payload_size << " " << average_vmrss << " " << average_throughput <<" "<< average_latency/1000000 <<"."<<average_latency%1000000<<" "<<average_cpu_load<<std::endl;  
+    outfile << payload_size << " " << average_vmrss << " " << average_throughput <<" "<< average_latency<<" "<<average_cpu_load<<std::endl;  
     outfile.close();
     return true;
 }

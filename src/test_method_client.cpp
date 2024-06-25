@@ -115,7 +115,7 @@ public:
             << average_latency / 1000000
             << "."
             << std::setw(6) << average_latency % 1000000  
-            << "ms], CPU load["
+            << "s], CPU load["
             << std::fixed << std::setprecision(2)
             << average_cpu_load
             << "%], VMRSS["
