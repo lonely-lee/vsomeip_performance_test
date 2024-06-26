@@ -1,5 +1,5 @@
 {
-    "unicast" : "172.18.0.3",
+    "unicast" : "172.18.0.4",
     "netmask" : "255.255.255.0",
     "logging" :
     {
@@ -11,8 +11,8 @@
     "applications" :
     [
         {
-            "name" : "test_method_client",
-            "id" : "0x1343"
+            "name" : "test_method_client1",
+            "id" : "0x1333"
         },
         {
             "name" : "second-client-sample",
@@ -49,7 +49,7 @@
             }
         }
     ],
-    "routing" : "test_method_client",
+    "routing" : "test_method_client1",
     "service-discovery" :
     {
         "enable" : "true",

@@ -1,0 +1,4 @@
+export VSOMEIP_CONFIGURATION=
+export VSOMEIP_APPLICATION_NAME=
+export LD_LIBRARY_PATH=/someip/lib:$LD_LIBRARY_PATH
+./response-sample

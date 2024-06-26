@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt  
   
 # 读取文件并解析数据  
-with open('data.txt', 'r') as file:  
+with open('1vs1_data.txt', 'r') as file:  
     lines = file.readlines()  
   
 # 初始化列表来存储数据  
