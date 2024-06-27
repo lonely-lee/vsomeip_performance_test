@@ -2,7 +2,7 @@
   
 start_size=1000  
 end_size=81000
-step_size=40000
+step_size=10000
   
 for size in $(seq $start_size $step_size $end_size); do  
     echo "1. exec [./test_method_client --size $size --cycle 50]" 

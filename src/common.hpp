@@ -43,9 +43,8 @@ bool get_mem_usage(std::size_t& mem_sizes);
 
 [[nodiscard]] timespec timespec_diff(const timespec &start, const timespec &end);
 
-std::size_t calThroughput(std::size_t payload_size,uint64_t latency_us);
 
 /* Handle Data*/
-bool handleDatas(std::size_t payload_size,const unsigned long average_vmrss,const unsigned long average_throughput,const unsigned long average_latency,const double average_cpu_load);
+bool handleDatas(std::size_t payload_size,const unsigned long average_throughput,const unsigned long average_latency,const double average_cpu_load,const double average_load_no_zero);
 
 #endif // VSOMEIP_PERFORMANCE_TEST_COMMON_HPP

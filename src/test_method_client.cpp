@@ -99,12 +99,11 @@ public:
         app_->release_service(TEST_SERVICE_ID, TEST_INSTANCE_ID);
         app_->stop();
 
-        latencys_.pop_back();
-        cpu_loads_.pop_back();
-        memRss_.pop_back();
-        throughput_.pop_back();
+        if(latencys_.empty()){
+            std::cout <<"This test have no data"<<std::endl;
+            return;
+        }
         const auto average_latency = std::accumulate(latencys_.begin(), latencys_.end(), 0) / static_cast<uint64_t>(latencys_.size());
-        const auto average_vmrss = std::accumulate(memRss_.begin(),memRss_.end(), 0) / static_cast<uint64_t>(memRss_.size());
         const auto average_throughput = payload_size_ * (static_cast<uint64_t>(latencys_.size())) * 1000000 / std::accumulate(latencys_.begin(), latencys_.end(), 0);
         const double average_cpu_load(std::accumulate(cpu_loads_.begin(), cpu_loads_.end(), 0.0) / static_cast<double>(cpu_loads_.size()));
         std::cout << "Sent: " 
@@ -118,13 +117,19 @@ public:
             << "s], CPU load["
             << std::fixed << std::setprecision(2)
             << average_cpu_load
-            << "%], VMRSS["
-            <<average_vmrss
-            <<"KB], throughput["
+            << "%], throughput["
             <<average_throughput<<"(Byte/s)]"
             << std::endl;
 
-        handleDatas(payload_size_,average_vmrss,average_throughput,average_latency,average_cpu_load);
+        std::vector<double> latencys_no_zero;
+        for(const auto &v : latencys_) {
+            if(v > 0.0) {
+                latencys_no_zero.push_back(v);
+            }
+        }
+        const double average_load_no_zero(std::accumulate(latencys_no_zero.begin(), latencys_no_zero.end(), 0.0) / static_cast<double>(latencys_no_zero.size()));
+        
+        handleDatas(payload_size_,average_throughput,average_latency,average_cpu_load,average_load_no_zero);
     }
 
 private:
@@ -203,11 +208,9 @@ private:
 
         auto latency_us = (diff_ts.tv_sec * 1000000) + (diff_ts.tv_nsec / 1000);
         latencys_.push_back(latency_us);
-        auto throughput_by_s = calThroughput(payload_size_,latency_us);
+        auto throughput_by_s = payload_size_*1000000/latency_us;
         throughput_.push_back(throughput_by_s);
-        std::size_t vmrss = 0;
-        get_mem_usage(vmrss);
-        memRss_.push_back(vmrss);
+
         std::cout << "Received a response from Service ["
                 << std::setfill('0') << std::hex
                 << std::setw(4) << response->get_service()
@@ -224,9 +227,7 @@ private:
                 << std::setw(6) << diff_ts.tv_nsec / 1000
                 << "] throughput(Byte/s) ["
                 <<throughput_by_s
-                << "] VmRSS ["
-                <<std::setw(6)<<vmrss
-                <<"] data_sizes ["
+                << "] data_sizes ["
                 <<response->get_payload()->get_length()
                 <<"]"
                 << std::endl;
@@ -249,7 +250,6 @@ private:
     std::uint64_t number_of_sent_messages_;
     std::vector<std::uint64_t> latencys_;
     std::vector<std::size_t> throughput_;
-    std::vector<std::size_t> memRss_;
     std::vector<double> cpu_loads_;
 
     std::thread sender_;
@@ -312,9 +312,14 @@ int main(int argc, char** argv) {
             std::cerr << "无法获取内存使用信息" << std::endl;  
             return false;    
         }
-        std::cout << "someip初始化后，当前进程占用内存大小为：" << mem_size << " KB" << std::endl;
+        std::cout << "someip服务初始化后，当前进程占用内存大小为：" << mem_size << " KB" << std::endl;
 
         client.Start();
+        if(!get_mem_usage(mem_size)){
+            std::cerr << "无法获取内存使用信息" << std::endl;  
+            return false;    
+        }
+        std::cout << "someip服务启动后，当前进程占用内存大小为：" << mem_size << " KB" << std::endl;
         if (stop_thread.joinable()) {
             stop_thread.join();
         }

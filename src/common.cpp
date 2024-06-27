@@ -76,12 +76,8 @@ bool get_mem_usage(std::size_t& mem_sizes) {
     return is_found; 
 }
 
-std::size_t calThroughput(std::size_t payload_size,uint64_t latency_us) {
-    return payload_size*1000000/latency_us;
-}  
-
 /*Data Handle */
-bool handleDatas(std::size_t payload_size,const unsigned long average_vmrss,const unsigned long average_throughput,const unsigned long average_latency,const double average_cpu_load){
+bool handleDatas(std::size_t payload_size,const unsigned long average_throughput,const unsigned long average_latency,const double average_cpu_load,const double average_load_no_zero){
     std::ofstream outfile("data.txt", std::ios::app);
     if (!outfile.is_open()) {  
         return false;  
@@ -89,10 +85,10 @@ bool handleDatas(std::size_t payload_size,const unsigned long average_vmrss,cons
     std::ifstream infile("data.txt");  
     std::string line;  
     if (!std::getline(infile, line)) {
-        outfile << "payload_size average_vmrss average_throughput average_latency average_cpu_load" << std::endl;  
+        outfile << "payload_size average_throughput average_latency average_cpu_load" << std::endl;  
     }  
     infile.close();
-    outfile << payload_size << " " << average_vmrss << " " << average_throughput <<" "<< average_latency<<" "<<average_cpu_load<<std::endl;  
+    outfile << payload_size << " " << average_throughput <<" "<< average_latency<<" "<<average_cpu_load<<" "<<average_load_no_zero<<std::endl;  
     outfile.close();
     return true;
 }

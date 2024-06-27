@@ -1,18 +1,18 @@
 {
-    "unicast" : "172.18.0.4",
+    "unicast" : "172.18.0.3",
     "netmask" : "255.255.255.0",
     "logging" :
     {
         "level" : "debug",
-        "console" : "false",
+        "console" : "true",
         "file" : { "enable" : "true", "path" : "/var/log/vsomeip.log" },
         "dlt" : "true"
     },
     "applications" :
     [
         {
-            "name" : "test_method_client1",
-            "id" : "0x1333"
+            "name" : "test_method_client",
+            "id" : "0x1343"
         },
         {
             "name" : "second-client-sample",
@@ -49,7 +49,7 @@
             }
         }
     ],
-    "routing" : "test_method_client1",
+    "routing" : "test_method_client",
     "service-discovery" :
     {
         "enable" : "true",
