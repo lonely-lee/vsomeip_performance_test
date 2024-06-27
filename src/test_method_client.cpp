@@ -121,13 +121,13 @@ public:
             <<average_throughput<<"(Byte/s)]"
             << std::endl;
 
-        std::vector<double> latencys_no_zero;
-        for(const auto &v : latencys_) {
+        std::vector<double> cpu_load_no_zero;
+        for(const auto &v : cpu_loads_) {
             if(v > 0.0) {
-                latencys_no_zero.push_back(v);
+                cpu_load_no_zero.push_back(v);
             }
         }
-        const double average_load_no_zero(std::accumulate(latencys_no_zero.begin(), latencys_no_zero.end(), 0.0) / static_cast<double>(latencys_no_zero.size()));
+        const double average_load_no_zero(std::accumulate(cpu_load_no_zero.begin(), cpu_load_no_zero.end(), 0.0) / static_cast<double>(cpu_load_no_zero.size()));
         
         handleDatas(payload_size_,average_throughput,average_latency,average_cpu_load,average_load_no_zero);
     }
