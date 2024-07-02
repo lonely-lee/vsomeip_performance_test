@@ -33,7 +33,9 @@ public:
         wait_for_msg_acknowledged_(true),
         is_available_(false),
         number_of_sent_messages_(0),
-        sender_([this]{ run(); }) {
+        sender_([this]{ run(); }),
+        number_of_acknowledged_messages_(0),
+        number_of_calls_(20) {
     }
 
     bool Init() {
@@ -107,7 +109,7 @@ public:
         const auto average_throughput = payload_size_ * (static_cast<uint64_t>(latencys_.size())) * 1000000 / std::accumulate(latencys_.begin(), latencys_.end(), 0);
         const double average_cpu_load(std::accumulate(cpu_loads_.begin(), cpu_loads_.end(), 0.0) / static_cast<double>(cpu_loads_.size()));
         std::cout << "Sent: " 
-            << number_of_sent_messages_
+            << number_of_sent_messages_*number_of_calls_
             << " messages in total (excluding control messages). This caused: "
             << "latency["
             << std::setfill('0') << std::dec
@@ -134,7 +136,7 @@ public:
 
 private:
     void run() {
-        timespec ts;
+        timespec before,after,diff_ts;
         while (running_) {
             {
                 std::unique_lock<std::mutex> u_lock(mutex_);
@@ -143,25 +145,34 @@ private:
                 if (is_available_) {
                     cpu_load_measurer c(static_cast<std::uint32_t>(::getpid()));
 
-                    get_now_time(ts);
-                    timespec_to_bytes(ts, request_->get_payload()->get_data(), request_->get_payload()->get_length());
-                    
+                    get_now_time(before);
                     c.start();
 
-                    app_->send(request_);
-                    
-                    std::unique_lock<std::mutex> u_lock(msg_acknowledged_mutex_);
-                    msg_acknowledged_cv_.wait(u_lock, [this]{ return !wait_for_msg_acknowledged_; });
-                    wait_for_msg_acknowledged_ = true;
+                    for (size_t i = 0; i < number_of_calls_; i++)
+                    {
+                        app_->send(request_);
+                        if(i + 1 == number_of_calls_) {//如果请求发送完毕，则等待响应全部接收完毕
+                            std::unique_lock<std::mutex> u_lock(msg_acknowledged_mutex_);
+                            msg_acknowledged_cv_.wait(u_lock, [this]{ return !wait_for_msg_acknowledged_; });
+                            wait_for_msg_acknowledged_ = true;
+                        }
+                    }
 
                     c.stop();
+                    get_now_time(after);
+                    diff_ts = timespec_diff(before, after);
+                    auto latency_us = ((diff_ts.tv_sec * 1000000) + (diff_ts.tv_nsec / 1000))*0.05;//请求到响应来回除以二
+                    latencys_.push_back(latency_us);
                     cpu_loads_.push_back(std::isfinite(c.get_cpu_load()) ? c.get_cpu_load() : 0.0);
                     
                     number_of_sent_messages_++;
-                    std::cout << "sent " << std::setw(4) << std::setfill('0')
-                            << number_of_sent_messages_ << " messages. CPU load [%]: "
+                    std::cout <<"The No."<<number_of_sent_messages_<<"Test::"<< "sent " << std::setw(4) << std::setfill('0')
+                            << number_of_calls_ << " messages. CPU load [%]: "
                             << std::fixed << std::setprecision(2)
                             << (std::isfinite(c.get_cpu_load()) ? c.get_cpu_load() : 0.0)
+                            <<",latency(us)["
+                            <<latency_us
+                            <<"]"
                             << std::endl;
                 }
 
@@ -192,45 +203,14 @@ private:
     }
 
     void on_message(const std::shared_ptr<vsomeip::message> &response) {
-        timespec response_ts;
-        timespec diff_ts;
-        timespec now_ts;
-
-        if (is_available_) {
+        number_of_acknowledged_messages_++;
+        if (is_available_ && (number_of_acknowledged_messages_==number_of_calls_)) {
+            std::cout<<"Received all messages:"<<number_of_acknowledged_messages_<<std::endl;
             std::lock_guard< std::mutex > u_lock(msg_acknowledged_mutex_);
             wait_for_msg_acknowledged_ = false;
             msg_acknowledged_cv_.notify_one();
+            number_of_acknowledged_messages_=0;
         }
-
-        get_now_time(now_ts);
-        bytes_to_timespec(response->get_payload()->get_data(), response->get_payload()->get_length(), response_ts);
-        diff_ts = timespec_diff(response_ts, now_ts);
-
-        auto latency_us = (diff_ts.tv_sec * 1000000) + (diff_ts.tv_nsec / 1000);
-        latencys_.push_back(latency_us);
-        auto throughput_by_s = payload_size_*1000000/latency_us;
-        throughput_.push_back(throughput_by_s);
-
-        std::cout << "Received a response from Service ["
-                << std::setfill('0') << std::hex
-                << std::setw(4) << response->get_service()
-                << "."
-                << std::setw(4) << response->get_instance()
-                << "] to Client/Session ["
-                << std::setw(4) << response->get_client()
-                << "/"
-                << std::setw(4) << response->get_session()
-                << "] latency ["
-                << std::setfill('0') << std::dec
-                << diff_ts.tv_sec
-                << "."
-                << std::setw(6) << diff_ts.tv_nsec / 1000
-                << "] throughput(Byte/s) ["
-                <<throughput_by_s
-                << "] data_sizes ["
-                <<response->get_payload()->get_length()
-                <<"]"
-                << std::endl;
     }
 
     std::shared_ptr<vsomeip::application> app_;
@@ -248,9 +228,11 @@ private:
     bool wait_for_msg_acknowledged_;
     bool is_available_;
     std::uint64_t number_of_sent_messages_;
+    uint64_t number_of_acknowledged_messages_;
     std::vector<std::uint64_t> latencys_;
     std::vector<std::size_t> throughput_;
     std::vector<double> cpu_loads_;
+    uint32_t number_of_calls_;
 
     std::thread sender_;
 };

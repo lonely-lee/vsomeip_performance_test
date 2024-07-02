@@ -20,6 +20,7 @@ PRIVATE
 
 add_executable(test_method_server 
     src/test_method_server.cpp 
+    src/cpu_load_measurer.cpp
     src/common.cpp
 )
 

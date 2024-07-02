@@ -1,4 +1,5 @@
 #include "common.hpp"
+#include "cpu_load_measurer.hpp"
 
 #include <cstddef>
 #include <cstring>
@@ -8,15 +9,18 @@
 #include <condition_variable>
 #include <thread>
 #include <mutex>
+#include <cmath>
 #include <vsomeip/vsomeip.hpp>
+#include <numeric>
+#include <unistd.h>
 
 class TestMethodServer {
 public:
     TestMethodServer() :
         app_(vsomeip::runtime::get()->create_application()),
         blocked_(false),
-        offer_([this]{ run(); }) {
-    }
+        offer_([this]{ run(); }),
+        cpu_load_measurer_(static_cast<std::uint32_t>(::getpid())) {}
 
     bool Init() {
         if (!app_->init()) {
@@ -36,12 +40,28 @@ public:
         [this](const std::shared_ptr<vsomeip::message> &request){
             on_message(request);
         });
+       app_->register_message_handler(TEST_SERVICE_ID, TEST_INSTANCE_ID, STOP_METHOD_ID, 
+        [this](const std::shared_ptr<vsomeip::message> &request){
+            on_message_stop_measuring(request);
+        });
+       app_->register_message_handler(TEST_SERVICE_ID, TEST_INSTANCE_ID, START_METHOD_ID, 
+        [this](const std::shared_ptr<vsomeip::message> &request){
+            on_message_start_measuring(request);
+        });
 
         return true;
     }
 
     void Start() {
         app_->start();
+    }
+
+    void stop()
+    {
+        std::cout << "Stopping...";
+        app_->stop_offer_service(TEST_SERVICE_ID, TEST_INSTANCE_ID);
+        app_->clear_all_handler();
+        app_->stop();
     }
 
 private:
@@ -56,7 +76,8 @@ private:
         timespec request_ts;
         timespec diff_ts;
         timespec now_ts;
-        get_now_time(now_ts);
+        
+        (now_ts);
         bytes_to_timespec(request->get_payload()->get_data(), request->get_payload()->get_length(), request_ts);
         diff_ts = timespec_diff(request_ts, now_ts);
 
@@ -79,9 +100,52 @@ private:
         ByteVec payload_data(payload_size);
         auto response_payload = vsomeip::runtime::get()->create_payload(payload_data);
         response->set_payload(response_payload);
-
-        timespec_to_bytes(now_ts, response->get_payload()->get_data(), response->get_payload()->get_length());
         app_->send(response);
+    }
+
+
+    void on_message_start_measuring(const std::shared_ptr<vsomeip::message>& _request)
+    {
+        (void)_request;
+        cpu_load_measurer_.start();
+    }
+
+    void on_message_stop_measuring(const std::shared_ptr<vsomeip::message>& _request)
+    {
+        (void)_request;
+        cpu_load_measurer_.stop();
+        std::cout << "Received " << std::setw(4) << std::setfill('0')
+        << number_of_received_messages_ << " messages. CPU load [%]: "
+        << std::fixed << std::setprecision(2)
+        << (std::isfinite(cpu_load_measurer_.get_cpu_load()) ? cpu_load_measurer_.get_cpu_load() : 0.0);
+        cpu_loads_.push_back(std::isfinite(cpu_load_measurer_.get_cpu_load()) ? cpu_load_measurer_.get_cpu_load() : 0.0);
+        number_of_received_messages_ = 0;
+    }
+
+    void on_message_shutdown(const std::shared_ptr<vsomeip::message>& _request){
+        (void)_request;
+        std::cout << "Shutdown method was called, going down now.";
+        const double average_load(std::accumulate(cpu_loads_.begin(), cpu_loads_.end(), 0.0) / static_cast<double>(cpu_loads_.size()));
+        std::cout << "Received: " << number_of_received_messages_total_
+            << " in total (excluding control messages). This caused: "
+            << std::fixed << std::setprecision(2)
+            << average_load << "% load in average (average of "
+            << cpu_loads_.size() << " measurements).";
+
+        std::vector<double> results_no_zero;
+        for(const auto &v : cpu_loads_) {
+            if(v > 0.0) {
+                results_no_zero.push_back(v);
+            }
+        }
+        const double average_load_no_zero(std::accumulate(results_no_zero.begin(), results_no_zero.end(), 0.0) / static_cast<double>(results_no_zero.size()));
+        std::cout << "Sent: " << number_of_received_messages_total_
+            << " messages in total (excluding control messages). This caused: "
+            << std::fixed << std::setprecision(2)
+            << average_load_no_zero << "% load in average, if measured cpu load "
+            << "was greater zero (average of "
+            << results_no_zero.size() << " measurements).";
+        stop();
     }
 
     std::shared_ptr<vsomeip::application> app_;
@@ -91,6 +155,9 @@ private:
     bool blocked_;
 
     std::thread offer_;
+    cpu_load_measurer cpu_load_measurer_;
+    std::vector<double> cpu_loads_;
+    int32_t number_of_received_messages_,number_of_received_messages_total_;
 };
 
 int main(int argc, char** argv) {

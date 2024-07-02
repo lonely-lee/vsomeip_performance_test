@@ -15,6 +15,9 @@
 #define TEST_SERVICE_ID       0x1234
 #define TEST_INSTANCE_ID      0x5678
 #define TEST_METHOD_ID        0x0421
+#define STOP_METHOD_ID        0x0422
+#define START_METHOD_ID       0x0423
+#define SHUTDOWN_METHOD_ID       0x0423
 
 #define TEST_EVENT_ID         0x8778
 

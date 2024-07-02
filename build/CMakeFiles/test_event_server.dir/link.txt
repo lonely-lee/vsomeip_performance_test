@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/test_event_server.dir/src/test_event_server.cpp.o CMakeFiles/test_event_server.dir/src/common.cpp.o -o test_event_server  -Wl,-rpath,/home/hikerlee02/workspace/gitworks/0618src/vsomeip/x86build /home/hikerlee02/workspace/gitworks/0618src/vsomeip/x86build/libvsomeip3.so.3.4.10 

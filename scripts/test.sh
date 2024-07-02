@@ -1,9 +1,10 @@
 #!/bin/bash  
   
-start_size=1000  
-end_size=81000
-step_size=10000
-  
+start_size=16
+end_size=1216
+step_size=300
+
+
 for size in $(seq $start_size $step_size $end_size); do  
     echo "1. exec [./test_method_client --size $size --cycle 50]" 
     ./test_method_client --size $size --cycle 50&  

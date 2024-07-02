@@ -1,5 +1,5 @@
 {
-    "unicast" : "172.18.0.3",
+    "unicast" : "192.254.8.102",
     "netmask" : "255.255.255.0",
     "logging" :
     {
@@ -15,11 +15,11 @@
             "id" : "0x1343"
         },
         {
-            "name" : "second-client-sample",
+            "name" : "test_event_client",
             "id" : "0x1344"
         },
         {
-            "name" : "third-client-sample",
+            "name" : "test_method_client1",
             "id" : "0x1345"
         },
         {
@@ -53,7 +53,7 @@
     "service-discovery" :
     {
         "enable" : "true",
-        "multicast" : "224.244.224.245",
+        "multicast" : "239.0.0.255",
         "port" : "30490",
         "protocol" : "udp",
         "initial_delay_min" : "10",

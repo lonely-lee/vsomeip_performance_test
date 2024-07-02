@@ -1,17 +1,18 @@
 #include "common.hpp"
 #include <cstring>
+#include <thread>
 
-thread_local std::string time_str(50, '\0');
+thread_local char time_char[50];
 
 [[nodiscard]] std::string timespec_to_str(const timespec &ts) {
     tm tm_info;
     localtime_r(&ts.tv_sec, &tm_info);
-
-    strftime(time_str.data(), time_str.size(), "%Y-%m-%d %H:%M:%S", &tm_info);
+    char format[] = "%Y-%m-%d %H:%M:%S";
+    strftime(time_char, sizeof(time_char), format, &tm_info);
     auto msec = ts.tv_nsec / 1000;
-    snprintf(time_str.data() + strlen(time_str.c_str()), time_str.size() - strlen(time_str.c_str()), ".%06ld", msec);
+    snprintf(time_char + strlen(time_char), sizeof(time_char) - strlen(time_char), ".%06ld", msec);
 
-    return time_str;
+    return std::string(time_char);
 }
 
 bool timespec_to_bytes(const timespec &ts, ByteType *bytes, std::size_t size) {
