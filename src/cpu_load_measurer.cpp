@@ -25,8 +25,37 @@ cpu_load_measurer::cpu_load_measurer(std::uint32_t _pid) :
     jiffies_passed_pid_start_(0),
     jiffies_passed_pid_stop_(0),
     cpu_load_pid_(0.0),
-    cpu_load_overall_(0.0),
-    cpu_load_pid_wo_idle_(0.0) {
+    exit_flag_(false) {
+}
+
+void cpu_load_measurer::start_period(uint32_t sampler_period) {
+        if (sampler_period == 0){
+                std::cout<<"invalid: sampler_period is 0, exiting" << std::endl;
+        }
+        
+        uint32_t numbers_period = 0;
+        double cpu_load_total = 0.0;
+        while (!exit_flag_){
+                start();
+                sleep(sampler_period);
+                stop();
+                cpu_load_total += get_cpu_load();
+                numbers_period++;
+                sleep(sampler_period);
+        }
+        if(cpu_load_total != 0.0 && numbers_period != 0) {      
+                cpu_load_period_ = (cpu_load_total / numbers_period);
+        } else {
+                cpu_load_period_ = 0.0;
+        }
+}
+
+void cpu_load_measurer::exit_measure(){
+        exit_flag_ = true;
+}
+
+double cpu_load_measurer::get_cpu_load_period() const {
+        return cpu_load_period_;
 }
 
 void cpu_load_measurer::start() {
@@ -39,8 +68,6 @@ void cpu_load_measurer::start() {
     jiffies_passed_pid_start_ = 0;
     jiffies_passed_pid_stop_ = 0;
     cpu_load_pid_= 0.0;
-    cpu_load_overall_ = 0.0;
-    cpu_load_pid_wo_idle_ = 0.0;
     //start
     jiffies_complete_start_ = read_proc_stat(&jiffies_idle_start_);
     jiffies_passed_pid_start_ = read_proc_pid_stat();
@@ -58,17 +85,6 @@ void cpu_load_measurer::stop() {
                     - jiffies_passed_pid_start_)
             / static_cast<double>(jiffies_complete_stop_
                     - jiffies_complete_start_);
-    cpu_load_overall_ = 100.0
-            * static_cast<double>((jiffies_complete_stop_ - jiffies_idle_stop_)
-                    - (jiffies_complete_start_ - jiffies_idle_start_))
-            / static_cast<double>(jiffies_complete_stop_
-                    - jiffies_complete_start_);
-    cpu_load_pid_wo_idle_ = 100.0
-            * static_cast<double>(jiffies_passed_pid_stop_
-                    - jiffies_passed_pid_start_)
-            / static_cast<double>((jiffies_complete_stop_ - jiffies_idle_stop_)
-                    - (jiffies_complete_start_ - jiffies_idle_start_));
-
 }
 
 void cpu_load_measurer::print_cpu_load() const {
@@ -80,8 +96,6 @@ void cpu_load_measurer::print_cpu_load() const {
             << ")" << std::endl;
     std::cout << "Used Jiffies of pid " << pid_ << ": " << jiffies_passed_pid_stop_ - jiffies_passed_pid_start_ << std::endl;
     std::cout << "Cpu load pid " << pid_ << " [%]: " << cpu_load_pid_ << std::endl;
-    std::cout << "Overall cpu load[%]: " << cpu_load_overall_ << std::endl;
-    std::cout << "Load caused by pid " << pid_ << " of overall cpu load [%]:" << cpu_load_pid_wo_idle_ << std::endl;
 }
 
 double cpu_load_measurer::get_cpu_load() const {

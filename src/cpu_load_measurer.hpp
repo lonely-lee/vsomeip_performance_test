@@ -12,9 +12,12 @@ public:
     cpu_load_measurer(std::uint32_t _pid);
     virtual ~cpu_load_measurer();
     void start();
+    void start_period(uint32_t sampler_period);
     void stop();
     void print_cpu_load() const;
     double get_cpu_load() const;
+    void exit_measure();
+    double get_cpu_load_period() const;
 
 private:
     std::uint64_t read_proc_stat(std::uint64_t* _idle);
@@ -30,6 +33,8 @@ private:
     std::uint64_t jiffies_passed_pid_start_;
     std::uint64_t jiffies_passed_pid_stop_;
     double cpu_load_pid_;
-    double cpu_load_overall_;
-    double cpu_load_pid_wo_idle_;
+    double cpu_load_period_;
+    bool exit_flag_;
 };
+
+

@@ -41,6 +41,7 @@ PRIVATE
 
 add_executable(test_event_server 
     src/test_event_server.cpp 
+    src/cpu_load_measurer.cpp
     src/common.cpp
 )
 

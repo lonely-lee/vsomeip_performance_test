@@ -1,0 +1,57 @@
+[
+{
+  "directory": "/home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/build",
+  "command": "/usr/bin/c++  -isystem /home/hikerlee02/workspace/x86target/include -g -o CMakeFiles/test_method_client.dir/src/test_method_client.cpp.o -c /home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/src/test_method_client.cpp",
+  "file": "/home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/src/test_method_client.cpp"
+},
+{
+  "directory": "/home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/build",
+  "command": "/usr/bin/c++  -isystem /home/hikerlee02/workspace/x86target/include -g -o CMakeFiles/test_method_client.dir/src/cpu_load_measurer.cpp.o -c /home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/src/cpu_load_measurer.cpp",
+  "file": "/home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/src/cpu_load_measurer.cpp"
+},
+{
+  "directory": "/home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/build",
+  "command": "/usr/bin/c++  -isystem /home/hikerlee02/workspace/x86target/include -g -o CMakeFiles/test_method_client.dir/src/common.cpp.o -c /home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/src/common.cpp",
+  "file": "/home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/src/common.cpp"
+},
+{
+  "directory": "/home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/build",
+  "command": "/usr/bin/c++  -isystem /home/hikerlee02/workspace/x86target/include -g -o CMakeFiles/test_method_server.dir/src/test_method_server.cpp.o -c /home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/src/test_method_server.cpp",
+  "file": "/home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/src/test_method_server.cpp"
+},
+{
+  "directory": "/home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/build",
+  "command": "/usr/bin/c++  -isystem /home/hikerlee02/workspace/x86target/include -g -o CMakeFiles/test_method_server.dir/src/cpu_load_measurer.cpp.o -c /home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/src/cpu_load_measurer.cpp",
+  "file": "/home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/src/cpu_load_measurer.cpp"
+},
+{
+  "directory": "/home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/build",
+  "command": "/usr/bin/c++  -isystem /home/hikerlee02/workspace/x86target/include -g -o CMakeFiles/test_method_server.dir/src/common.cpp.o -c /home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/src/common.cpp",
+  "file": "/home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/src/common.cpp"
+},
+{
+  "directory": "/home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/build",
+  "command": "/usr/bin/c++  -isystem /home/hikerlee02/workspace/x86target/include -g -o CMakeFiles/test_event_client.dir/src/test_event_client.cpp.o -c /home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/src/test_event_client.cpp",
+  "file": "/home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/src/test_event_client.cpp"
+},
+{
+  "directory": "/home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/build",
+  "command": "/usr/bin/c++  -isystem /home/hikerlee02/workspace/x86target/include -g -o CMakeFiles/test_event_client.dir/src/common.cpp.o -c /home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/src/common.cpp",
+  "file": "/home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/src/common.cpp"
+},
+{
+  "directory": "/home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/build",
+  "command": "/usr/bin/c++  -isystem /home/hikerlee02/workspace/x86target/include -g -o CMakeFiles/test_event_server.dir/src/test_event_server.cpp.o -c /home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/src/test_event_server.cpp",
+  "file": "/home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/src/test_event_server.cpp"
+},
+{
+  "directory": "/home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/build",
+  "command": "/usr/bin/c++  -isystem /home/hikerlee02/workspace/x86target/include -g -o CMakeFiles/test_event_server.dir/src/cpu_load_measurer.cpp.o -c /home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/src/cpu_load_measurer.cpp",
+  "file": "/home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/src/cpu_load_measurer.cpp"
+},
+{
+  "directory": "/home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/build",
+  "command": "/usr/bin/c++  -isystem /home/hikerlee02/workspace/x86target/include -g -o CMakeFiles/test_event_server.dir/src/common.cpp.o -c /home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/src/common.cpp",
+  "file": "/home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/src/common.cpp"
+}
+]

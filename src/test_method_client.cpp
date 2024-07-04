@@ -32,10 +32,11 @@ public:
         wait_for_availability_(true),
         wait_for_msg_acknowledged_(true),
         is_available_(false),
-        number_of_sent_messages_(0),
+        number_of_test_(0),
         sender_([this]{ run(); }),
         number_of_acknowledged_messages_(0),
-        number_of_calls_(20) {
+        number_of_calls_(1000),
+        sliding_window_size_(5) {
     }
 
     bool Init() {
@@ -69,7 +70,7 @@ public:
         request_->set_method(TEST_METHOD_ID);
 
         ByteVec payload_data(payload_size_);
-        std::memcpy(payload_data.data() + sizeof(timespec), &payload_size_, sizeof(std::size_t));
+        std::memcpy(payload_data.data(), &payload_size_, sizeof(std::size_t));
         auto request_payload = vsomeip::runtime::get()->create_payload(payload_data);
         request_->set_payload(request_payload);
 
@@ -86,6 +87,14 @@ public:
     }
 
     void Stop() {
+        {//通知服务端测试结束
+            std::cout<<"Stopping test"<<std::endl;
+            request_->set_service(TEST_SERVICE_ID);
+            request_->set_instance(TEST_INSTANCE_ID);
+            request_->set_method(SHUTDOWN_METHOD_ID);
+            app_->send(request_);
+        }
+
         running_ = false;
         {
             std::lock_guard<std::mutex> g_lcok(mutex_);
@@ -109,8 +118,8 @@ public:
         const auto average_throughput = payload_size_ * (static_cast<uint64_t>(latencys_.size())) * 1000000 / std::accumulate(latencys_.begin(), latencys_.end(), 0);
         const double average_cpu_load(std::accumulate(cpu_loads_.begin(), cpu_loads_.end(), 0.0) / static_cast<double>(cpu_loads_.size()));
         std::cout << "Sent: " 
-            << number_of_sent_messages_*number_of_calls_
-            << " messages in total (excluding control messages). This caused: "
+            << number_of_test_*number_of_calls_
+            << "request messages in total (all receive response). This caused: "
             << "latency["
             << std::setfill('0') << std::dec
             << average_latency / 1000000
@@ -144,14 +153,14 @@ private:
 
                 if (is_available_) {
                     cpu_load_measurer c(static_cast<std::uint32_t>(::getpid()));
-
+                    send_service_start_measuring(true);
                     get_now_time(before);
                     c.start();
 
                     for (size_t i = 0; i < number_of_calls_; i++)
                     {
                         app_->send(request_);
-                        if(i + 1 == number_of_calls_) {//如果请求发送完毕，则等待响应全部接收完毕
+                        if(((i + 1 )% sliding_window_size_ == 0) || ((i + 1 ) == number_of_calls_)) {//如果请求发送完毕或达到一次性最大请求数量，则等待响应全部接收完毕（或再进行下一次发送）
                             std::unique_lock<std::mutex> u_lock(msg_acknowledged_mutex_);
                             msg_acknowledged_cv_.wait(u_lock, [this]{ return !wait_for_msg_acknowledged_; });
                             wait_for_msg_acknowledged_ = true;
@@ -160,17 +169,18 @@ private:
 
                     c.stop();
                     get_now_time(after);
+                    send_service_start_measuring(false);
                     diff_ts = timespec_diff(before, after);
-                    auto latency_us = ((diff_ts.tv_sec * 1000000) + (diff_ts.tv_nsec / 1000))*0.05;//请求到响应来回除以二
+                    auto latency_us = ((diff_ts.tv_sec * 1000000) + (diff_ts.tv_nsec / 1000)) / (2 * number_of_calls_);//请求到响应来回除以二,同时除以发送请求次数
                     latencys_.push_back(latency_us);
                     cpu_loads_.push_back(std::isfinite(c.get_cpu_load()) ? c.get_cpu_load() : 0.0);
                     
-                    number_of_sent_messages_++;
-                    std::cout <<"The No."<<number_of_sent_messages_<<"Test::"<< "sent " << std::setw(4) << std::setfill('0')
-                            << number_of_calls_ << " messages. CPU load [%]: "
+                    number_of_test_++;
+                    std::cout <<"The No."<<number_of_test_<<" Test "<< "sent " << std::setw(4) << std::setfill('0')
+                            << number_of_calls_ << "request messages(all receive response). CPU load(%)["
                             << std::fixed << std::setprecision(2)
                             << (std::isfinite(c.get_cpu_load()) ? c.get_cpu_load() : 0.0)
-                            <<",latency(us)["
+                            <<"], latency(us)["
                             <<latency_us
                             <<"]"
                             << std::endl;
@@ -186,7 +196,7 @@ private:
                 << std::setw(4) << std::setfill('0') << std::hex << service << "." << instance
                 << "] is "
                 << (is_available ? "available." : "NOT available.")
-                << std::endl;
+                <<std::dec<< std::endl;
 
         if (TEST_SERVICE_ID == service && TEST_INSTANCE_ID == instance) {
             if (is_available_  && !is_available) {
@@ -210,7 +220,20 @@ private:
             wait_for_msg_acknowledged_ = false;
             msg_acknowledged_cv_.notify_one();
             number_of_acknowledged_messages_=0;
+        } else if(number_of_acknowledged_messages_ % sliding_window_size_ ==0){
+            std::cout<<"Received one message:"<<number_of_acknowledged_messages_<<std::endl;
+            std::lock_guard< std::mutex > u_lock(msg_acknowledged_mutex_);
+            wait_for_msg_acknowledged_ = false;
+            msg_acknowledged_cv_.notify_one();
         }
+    }
+
+    void send_service_start_measuring(bool _start_measuring) {
+        std::shared_ptr<vsomeip::message> m = vsomeip::runtime::get()->create_request(protocol_ == protocol_e::PR_TCP);
+        m->set_service(TEST_SERVICE_ID);
+        m->set_instance(TEST_INSTANCE_ID);
+        _start_measuring ? m->set_method(START_METHOD_ID) : m->set_method(STOP_METHOD_ID);
+        app_->send(m);
     }
 
     std::shared_ptr<vsomeip::application> app_;
@@ -227,12 +250,13 @@ private:
     bool wait_for_availability_;
     bool wait_for_msg_acknowledged_;
     bool is_available_;
-    std::uint64_t number_of_sent_messages_;
+    std::uint64_t number_of_test_;
     uint64_t number_of_acknowledged_messages_;
     std::vector<std::uint64_t> latencys_;
     std::vector<std::size_t> throughput_;
     std::vector<double> cpu_loads_;
     uint32_t number_of_calls_;
+    uint32_t sliding_window_size_;
 
     std::thread sender_;
 };
@@ -244,7 +268,7 @@ void handle_signal(int _signal) {
             (_signal == SIGINT || _signal == SIGTERM)) {
         stop_thread = std::thread([its_sample_ptr=its_sample_ptr]{
             its_sample_ptr->Stop();
-        });        
+        }); 
     }
 }
 
@@ -297,11 +321,6 @@ int main(int argc, char** argv) {
         std::cout << "someip服务初始化后，当前进程占用内存大小为：" << mem_size << " KB" << std::endl;
 
         client.Start();
-        if(!get_mem_usage(mem_size)){
-            std::cerr << "无法获取内存使用信息" << std::endl;  
-            return false;    
-        }
-        std::cout << "someip服务启动后，当前进程占用内存大小为：" << mem_size << " KB" << std::endl;
         if (stop_thread.joinable()) {
             stop_thread.join();
         }
@@ -309,6 +328,4 @@ int main(int argc, char** argv) {
     } else {
         return 1;
     }
-
-    return 0;
 }

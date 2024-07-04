@@ -49,7 +49,7 @@
             }
         }
     ],
-    "routing" : "test_method_client",
+    "routing" : "test_event_client",
     "service-discovery" :
     {
         "enable" : "true",
