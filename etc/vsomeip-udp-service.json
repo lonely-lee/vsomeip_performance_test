@@ -10,9 +10,16 @@
     "applications" :
     [
         {
-            "name" : "test_event_server",
+            "name" : "test_method_server",
             "id" : "0x1277"
-
+        },
+        {
+            "name" : "test_event_server",
+            "id" : "0x1278"
+        },
+        {
+            "name" : "test_mix_server",
+            "id" : "0x1279"
         }
     ],
     "services" :
@@ -53,7 +60,7 @@
         }
     ],
     "max-payload-size-unreliable" : "100000",
-    "routing" : "test_method_server",
+    "routing" : "test_mix_server",
     "service-discovery" :
     {
         "enable" : "true",

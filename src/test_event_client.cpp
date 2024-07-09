@@ -2,6 +2,7 @@
 #include "cpu_load_measurer.hpp"
 
 #include <condition_variable>
+#include <csignal>
 #include <unistd.h>
 #include <cmath>
 #include <thread>
@@ -9,12 +10,17 @@
 #include <iomanip>
 #include <iostream>
 #include <vsomeip/vsomeip.hpp>
+#include <numeric> // 包含accumulate的头文件
 
 class TestEventClient {
 public:
     TestEventClient() :
         app_(vsomeip::runtime::get()->create_application()),
-        number_of_demand_(1000) {
+        number_of_demand_(100),
+        number_of_test_(1),
+        number_of_notification_messages_(0),
+        cycle_(500),
+        sender_(std::bind(&TestEventClient::run, this)) {
     }
 
     bool Init() {
@@ -55,13 +61,59 @@ public:
         app_->start();
     }
 
+    void stop() {
+        std::cout<<"Stopping test"<<std::endl;
+        if (is_available_){//通知服务端测试结束
+            std::cout<<"Sending shutdown request"<<std::endl;
+            std::shared_ptr<vsomeip::message> request_ = vsomeip::runtime::get()->create_request();
+            request_->set_service(TEST_SERVICE_ID);
+            request_->set_instance(TEST_INSTANCE_ID);
+            request_->set_method(SHUTDOWN_METHOD_ID);
+            app_->send(request_);
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        running_ = false;
+        is_available_ = false;
+        wait_for_availability_ = false;
+        wait_for_msg_acknowledged_ = false;
+
+        app_->clear_all_handler();
+        app_->unsubscribe(TEST_SERVICE_ID, TEST_INSTANCE_ID, TEST_EVENTGROUP_ID);
+        app_->release_event(TEST_SERVICE_ID, TEST_INSTANCE_ID, TEST_EVENT_ID);
+        app_->release_service(TEST_SERVICE_ID, TEST_INSTANCE_ID);
+
+        cv_.notify_one();
+        notification_cv_.notify_one();
+        if (std::this_thread::get_id() != sender_.get_id()) {
+            std::cout<<"Waiting for sender to join"<<std::endl;
+            if (sender_.joinable()) {
+                std::cout<<"Joining sender"<<std::endl;
+                sender_.join();
+            }
+        } else {
+            std::cout<<"Sender is running on the same thread as this"<<std::endl;
+            sender_.detach();
+        }
+        std::cout<<"Test over"<<std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        app_->stop();
+
+        auto average_cpuload = std::accumulate(cpu_loads_.begin(), cpu_loads_.end(), 0.0) / static_cast<double>(cpu_loads_.size());\
+        auto average_latency = std::accumulate(latencys_.begin(), latencys_.end(), 0.0) / static_cast<double>(latencys_.size());
+        std::cout<<"This test is over:average_cpuload["
+                <<average_cpuload
+                <<"%],average_latency["
+                <<average_latency
+                <<"us]"<<std::endl;
+    }
+
 private:
     void on_availability(vsomeip::service_t service, vsomeip::instance_t instance, bool is_available) {
         std::cout << "Service ["
                 << std::setw(4) << std::setfill('0') << std::hex << service << "." << instance
                 << "] is "
                 << (is_available ? "available." : "NOT available.")
-                << std::endl;
+                <<std::dec<< std::endl;
         
         if (TEST_SERVICE_ID == service && TEST_INSTANCE_ID == instance) {
             if (is_available_  && !is_available) {
@@ -79,8 +131,9 @@ private:
 
     void on_message(const std::shared_ptr<vsomeip::message> &response) {
         number_of_notification_messages_++;
+        std::cout<<"The No."<<number_of_test_<<" test:"<<" Received  number of messages:"<<number_of_notification_messages_<<std::endl;
         if (is_available_ && (number_of_notification_messages_== number_of_demand_)) {
-            std::cout<<"Received all messages:"<<number_of_notification_messages_<<std::endl;
+            std::cout<<"The No."<<number_of_test_<<" test over, The next round of testing is about to begin!!!!!!"<<std::endl;
             std::lock_guard< std::mutex > u_lock(msg_acknowledged_mutex_);
             wait_for_msg_acknowledged_ = false;
             notification_cv_.notify_one();
@@ -94,8 +147,9 @@ private:
             {
                 std::unique_lock<std::mutex> u_lock(mutex_);
                 cv_.wait(u_lock, [this]{return !wait_for_availability_; });
-
+                std::cout << "Service is running_." << std::endl;
                 if (is_available_) {
+                    std::cout << "Service is send_service_start_measuring." << std::endl;
                     cpu_load_measurer c(static_cast<std::uint32_t>(::getpid()));
                     send_service_start_measuring(true);
                     get_now_time(before);
@@ -112,15 +166,15 @@ private:
                     latencys_.push_back(latency_us);
                     cpu_loads_.push_back(std::isfinite(c.get_cpu_load()) ? c.get_cpu_load() : 0.0);
                     
-                    number_of_test_++;
                     std::cout <<"The No."<<number_of_test_<<" Test "<< "receive " << std::setw(4) << std::setfill('0')
-                            << number_of_demand_ << "notification messages. CPU load(%)["
+                            << number_of_demand_ << " notification messages. CPU load(%)["
                             << std::fixed << std::setprecision(2)
                             << (std::isfinite(c.get_cpu_load()) ? c.get_cpu_load() : 0.0)
                             <<"], latency(us)["
                             <<latency_us
                             <<"]"
                             << std::endl;
+                    number_of_test_++;
                 }
 
             }
@@ -150,18 +204,35 @@ private:
     std::vector<double> cpu_loads_;
 
     uint32_t cycle_;
+    std::thread sender_;
 };
+
+TestEventClient *its_sample_ptr(nullptr);
+std::thread stop_thread;
+void handle_signal(int _signal) {
+    if (its_sample_ptr != nullptr &&
+            (_signal == SIGINT || _signal == SIGTERM)) {
+        stop_thread = std::thread([its_sample_ptr=its_sample_ptr]{
+            its_sample_ptr->stop();
+        }); 
+    }
+}
 
 int main(int argc, char** argv) {
 
     TestEventClient client;
+    its_sample_ptr = &client;
+    signal(SIGINT, handle_signal);
+    signal(SIGTERM, handle_signal);
 
     if (client.Init()) {
         client.Start();
+
+        if (stop_thread.joinable()) {
+            stop_thread.join();
+        }
         return 0;
     } else {
         return 1;
     }
-
-    return 0;
 }

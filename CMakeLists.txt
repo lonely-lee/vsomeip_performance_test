@@ -30,7 +30,8 @@ PRIVATE
 )
 
 add_executable(test_event_client 
-    src/test_event_client.cpp 
+    src/test_event_client.cpp
+    src/cpu_load_measurer.cpp
     src/common.cpp
 )
 
@@ -46,6 +47,28 @@ add_executable(test_event_server
 )
 
 target_link_libraries(test_event_server
+PRIVATE
+    vsomeip3
+)
+
+# add_executable(test_mix_client
+#     src/test_mix_client.cpp 
+#     src/cpu_load_measurer.cpp
+#     src/common.cpp
+# )
+
+# target_link_libraries(test_mix_client
+# PRIVATE
+#     vsomeip3
+# )
+
+add_executable(test_mix_server 
+    src/test_mix_server.cpp 
+    src/cpu_load_measurer.cpp
+    src/common.cpp
+)
+
+target_link_libraries(test_mix_server
 PRIVATE
     vsomeip3
 )

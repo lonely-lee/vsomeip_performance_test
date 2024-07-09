@@ -17,7 +17,7 @@
 #define TEST_METHOD_ID        0x0421
 #define STOP_METHOD_ID        0x0422
 #define START_METHOD_ID       0x0423
-#define SHUTDOWN_METHOD_ID       0x0424
+#define SHUTDOWN_METHOD_ID    0x0424
 
 #define TEST_EVENT_ID         0x8778
 

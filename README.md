@@ -14,3 +14,10 @@ cd armbuild
 cmake .. -DCMAKE_TOOLCHAIN_FILE=../cmake/aarch64-toolchain.cmake -DCROSS_TOOLS_PATH="/home/hikerlee02/workspace/armcompilerchains/gcc-linaro-6.5.0-2018.12-x86_64_aarch64-linux-gnu"
 cmake --build .
 ```
+
+# changes
+## 2024-07-09
+- 新增测试用例event
+- 新增混合服务端，包含event和method
+- 代办
+- - 去除统计cpu和内存的代码

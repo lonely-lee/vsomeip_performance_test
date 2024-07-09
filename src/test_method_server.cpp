@@ -52,22 +52,7 @@ public:
         app_->register_message_handler(TEST_SERVICE_ID,TEST_INSTANCE_ID, SHUTDOWN_METHOD_ID,
                 std::bind(&TestMethodServer::on_message_shutdown, this,std::placeholders::_1));
 
-    //     app_->register_message_handler(TEST_SERVICE_ID, TEST_INSTANCE_ID, TEST_METHOD_ID, 
-    //     [this](const std::shared_ptr<vsomeip::message> &request){
-    //         on_message(request);
-    //     });
-    //    app_->register_message_handler(TEST_SERVICE_ID, TEST_INSTANCE_ID, STOP_METHOD_ID, 
-    //     [this](const std::shared_ptr<vsomeip::message> &request){
-    //         on_message_stop_measuring(request);
-    //     });
-    //    app_->register_message_handler(TEST_SERVICE_ID, TEST_INSTANCE_ID, START_METHOD_ID, 
-    //     [this](const std::shared_ptr<vsomeip::message> &request){
-    //         (request);
-    //     });
-    //     app_->register_message_handler(TEST_SERVICE_ID, TEST_INSTANCE_ID, SHUTDOWN_METHOD_ID, 
-    //     [this](const std::shared_ptr<vsomeip::message> &request){
-    //         on_message_shutdown(request);
-    //     });
+
 
         return true;
     }

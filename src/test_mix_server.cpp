@@ -13,16 +13,20 @@
 #include <cmath>
 #include <numeric>
 #include <iomanip>
+#include <cstring>
 
-class TestEventServer {
+class TestMixServer {
 public:
-    TestEventServer(protocol_e protocol, std::size_t payload_size, std::uint32_t cycle) :
+    TestMixServer(protocol_e protocol, std::size_t payload_size, std::uint32_t cycle) :
         app_(vsomeip::runtime::get()->create_application()),
         protocol_(protocol),
-        payload_size_(payload_size + time_payload_size),
-        payload_(vsomeip::runtime::get()->create_payload()),
+        request_payload_size_(payload_size + time_payload_size),
+        notify_payload_size_(1000),
         number_of_send_(0),
         number_of_test_(0),
+        number_of_send_total_(0),
+        number_of_received_request_(0),
+        number_of_received_request_total_ (0),
         running_(true),
         blocked_(false),
         is_offered_(false),
@@ -40,7 +44,7 @@ public:
         std::cout << "Server settings [protocol="
                   << (protocol_ == protocol_e::PR_TCP ? "TCP" : "UDP")
                   << " payload size="
-                  << payload_size_ - time_payload_size
+                  << request_payload_size_ - time_payload_size
                   << " cycle="
                   << cycle_
                   << "ms]"
@@ -54,12 +58,15 @@ public:
                 is_offered_ = true;
             }
         });
+
+        app_->register_message_handler(TEST_SERVICE_ID,TEST_INSTANCE_ID, TEST_METHOD_ID,
+                std::bind(&TestMixServer::on_message, this,std::placeholders::_1));
         app_->register_message_handler(TEST_SERVICE_ID,TEST_INSTANCE_ID, START_METHOD_ID,
-                std::bind(&TestEventServer::on_message_start_measuring, this,std::placeholders::_1));
+                std::bind(&TestMixServer::on_message_start_measuring, this,std::placeholders::_1));
         app_->register_message_handler(TEST_SERVICE_ID,TEST_INSTANCE_ID, STOP_METHOD_ID,
-                std::bind(&TestEventServer::on_message_stop_measuring, this,std::placeholders::_1));
+                std::bind(&TestMixServer::on_message_stop_measuring, this,std::placeholders::_1));
         app_->register_message_handler(TEST_SERVICE_ID,TEST_INSTANCE_ID, SHUTDOWN_METHOD_ID,
-                std::bind(&TestEventServer::on_message_shutdown, this,std::placeholders::_1));
+                std::bind(&TestMixServer::on_message_shutdown, this,std::placeholders::_1));
 
         std::set<vsomeip::eventgroup_t> its_groups;
         its_groups.insert(TEST_EVENTGROUP_ID);
@@ -68,10 +75,6 @@ public:
                 TEST_INSTANCE_ID,
                 TEST_EVENT_ID,
                 its_groups);
-
-        ByteVec payload_data(payload_size_);
-        payload_->set_data(payload_data);
-
         return true;
     }
 
@@ -96,34 +99,66 @@ public:
             notify_thread_.detach();
         }
 
-        const auto average_latency = std::accumulate(latencys_.begin(), latencys_.end(), 0) / static_cast<uint64_t>(latencys_.size());
-        const auto average_throughput = payload_size_ * (static_cast<uint64_t>(latencys_.size())) * 1000000 / std::accumulate(latencys_.begin(), latencys_.end(), 0);
-        const double average_load(std::accumulate(cpu_loads_.begin(), cpu_loads_.end(), 0.0) / static_cast<double>(cpu_loads_.size()));
-        std::cout << "Send: " << number_of_send_total_
-            << " notification messages in total. This caused: "
-            << std::fixed << std::setprecision(2)
-            << average_load << "% load in average (average of "
-            << cpu_loads_.size() << " measurements), latency(us)["
-            << average_latency
-            << "], throughput(bytes/s)["
-            << average_throughput
-            << "]." << std::endl;
+        if(latencys_.size() != 0){
+            const auto total_latency = std::accumulate(latencys_.begin(), latencys_.end(), 0);
+            uint32_t total_payload = request_payload_size_ * number_of_received_request_total_ + number_of_send_total_ * notify_payload_size_;
+            double total_time = std::accumulate(latencys_.begin(), latencys_.end(), 0)/1000000.000 - cycle_/1000.000 * number_of_send_total_;
+            double average_throughput = total_payload / total_time;
+            
+            std::cout << "request_payload_size_: " << request_payload_size_ << std::endl;
+            std::cout << "number_of_received_request_total_: " << number_of_received_request_total_ << std::endl;
+            std::cout << "number_of_send_total_: " << number_of_send_total_ << std::endl;
+            std::cout << "notify_payload_size_: " << notify_payload_size_ << std::endl;
+            std::cout << "total_time: " << total_time << " seconds" << std::endl;
+            std::cout << "total_payload: " << total_payload << " bytes" << std::endl;
+            std::cout << "cycle_: " << cycle_ << " milliseconds" << std::endl;
+            std::cout << "average_throughput: " << average_throughput << " bytes/s" << std::endl;
+            
+            const double average_load(std::accumulate(cpu_loads_.begin(), cpu_loads_.end(), 0.0) / static_cast<double>(cpu_loads_.size()));
+            std::cout << "Send " << number_of_send_total_
+                << " notification messages, recevied and responded "
+                << number_of_received_request_total_
+                <<" requests in total. This caused: "
+                << std::fixed << std::setprecision(2)
+                << average_load << "% load in average (average of "
+                << cpu_loads_.size() << " measurements), latency(us)["
+                << total_latency
+                << "], throughput(bytes/s)["
+                << average_throughput
+                << "]." << std::endl;
+            std::cout << "目前该测试程序针对event的notify次数，不一定准确：该测试程序从收到开始测试的请求及开始统计notify函数的调用次数，"
+                    <<"但每次调用notify函数时，不一定有客户端订阅event，即vsomeip底层并不一定发送notify报文，"
+                    <<"notify的实际值小于等于统计值.建议以客户端的统计报文次数为准" << std::endl;
+        }
 
         app_->stop();
     }
 
 private:
     void notify() {
+        ByteVec payload_data(notify_payload_size_);
+        std::shared_ptr<vsomeip_v3::payload> notify_payload_ = vsomeip::runtime::get()->create_payload(payload_data);
         while (running_) {
             std::unique_lock<std::mutex> u_lock(notify_mutex_);
             notify_cv_.wait(u_lock, [this]{ return is_offered_; });
             while (is_start_){
-                app_->notify(TEST_SERVICE_ID, TEST_INSTANCE_ID, TEST_EVENT_ID, payload_);
+                app_->notify(TEST_SERVICE_ID, TEST_INSTANCE_ID, TEST_EVENT_ID, notify_payload_);
                 number_of_send_++;
-                
                 std::this_thread::sleep_for(std::chrono::milliseconds(cycle_));
             }
         }
+    }
+
+    void on_message(const std::shared_ptr<vsomeip::message> &request) {
+        number_of_received_request_++;
+        auto response = vsomeip::runtime::get()->create_response(request);
+        if(request_payload_size_==0){
+            std::memcpy(&request_payload_size_, request->get_payload()->get_data(), sizeof(std::size_t));
+        }
+        ByteVec payload_data(request_payload_size_);
+        auto response_payload = vsomeip::runtime::get()->create_payload(payload_data);
+        response->set_payload(response_payload);
+        app_->send(response);
     }
 
     void on_message_start_measuring(const std::shared_ptr<vsomeip::message>& _request)
@@ -144,12 +179,15 @@ private:
         is_start_ = false;
         cpu_load_measurer_.stop();
         get_now_time(after_);
+        number_of_send_total_ += number_of_send_;
+        number_of_received_request_total_ += number_of_received_request_;
         timespec diff_ts = timespec_diff(before_, after_);
-        auto latency_us = ((diff_ts.tv_sec * 1000000) + (diff_ts.tv_nsec / 1000)) / (2 * number_of_send_);//请求到响应来回除以二，同时除以发送请求次数
+        auto latency_us = (diff_ts.tv_sec * 1000000) + (diff_ts.tv_nsec / 1000);//总的延迟
         latencys_.push_back(latency_us);
         number_of_test_++;
         std::cout <<"The No."<<number_of_test_<< " send " << std::setw(4) << std::setfill('0')
-        << number_of_send_ << " notification messages. CPU load(%)["
+        << number_of_send_ << " notification messages.Received and Responded " << std::setw(4)<<std::setfill('0')
+        <<number_of_received_request_<<" requests. CPU load(%)["
         << std::fixed << std::setprecision(2)
         << (std::isfinite(cpu_load_measurer_.get_cpu_load()) ? cpu_load_measurer_.get_cpu_load() : 0.0)
         <<"], latency(us)["
@@ -158,6 +196,7 @@ private:
         std::cout << "The No."<<number_of_test_<<" testing has ended, and the next round of testing is about to begin......" << std::endl;
         cpu_loads_.push_back(std::isfinite(cpu_load_measurer_.get_cpu_load()) ? cpu_load_measurer_.get_cpu_load() : 0.0);
         number_of_send_ = 0;
+        number_of_received_request_ = 0;
     }
 
     void on_message_shutdown(const std::shared_ptr<vsomeip::message>& _request){
@@ -167,10 +206,10 @@ private:
     }
 
     std::shared_ptr<vsomeip::application> app_;
-    std::shared_ptr<vsomeip::payload> payload_;
     protocol_e protocol_;
-    std::size_t payload_size_;
+    std::size_t request_payload_size_,notify_payload_size_;
     uint32_t number_of_send_,number_of_send_total_;
+    uint32_t number_of_received_request_,number_of_received_request_total_;
 
     bool is_start_;
     uint32_t number_of_test_;
@@ -196,7 +235,7 @@ private:
 int main(int argc, char** argv) {
     bool use_tcp = false;
     bool be_quiet = false;
-    std::uint32_t cycle = 50; // Default: 1s
+    std::uint32_t cycle = 50; // Default: 0.05s
     std::size_t payload_size = 1024;
 
     std::string tcp_enable("--tcp");
@@ -224,7 +263,7 @@ int main(int argc, char** argv) {
         i++;
     }
 
-    TestEventServer server(use_tcp ? protocol_e::PR_TCP : protocol_e::PR_UDP, payload_size, cycle);
+    TestMixServer server(use_tcp ? protocol_e::PR_TCP : protocol_e::PR_UDP, payload_size, cycle);
 
     if (server.Init()) {
         server.Start();
