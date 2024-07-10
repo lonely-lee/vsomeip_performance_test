@@ -1,5 +1,4 @@
 #include "common.hpp"
-#include "cpu_load_measurer.hpp"
 
 #include <chrono>
 #include <csignal>
@@ -33,7 +32,7 @@ public:
         wait_for_msg_acknowledged_(true),
         is_available_(false),
         number_of_test_(0),
-        sender_([this]{ run(); }),
+        sender_(std::bind(&TestMethodClient::run, this)),
         number_of_acknowledged_messages_(0),
         number_of_calls_(1000),
         sliding_window_size_(5) {
@@ -87,60 +86,57 @@ public:
     }
 
     void Stop() {
-        {//通知服务端测试结束
+        if (is_available_){//通知服务端测试结束
             std::cout<<"Stopping test"<<std::endl;
             request_->set_service(TEST_SERVICE_ID);
             request_->set_instance(TEST_INSTANCE_ID);
             request_->set_method(SHUTDOWN_METHOD_ID);
             app_->send(request_);
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         }
-
         running_ = false;
         {
-            std::lock_guard<std::mutex> g_lcok(mutex_);
-            wait_for_availability_ = false;
-            cv_.notify_one();
+            std::lock_guard<std::mutex> u_lcok(msg_acknowledged_mutex_);
+            wait_for_msg_acknowledged_ = false;
+            msg_acknowledged_cv_.notify_all();
         }
 
+        {
+            std::lock_guard<std::mutex> u_lcok(mutex_);
+            wait_for_availability_ = false;
+            is_available_ = false;
+            cv_.notify_all();
+        }
         if (sender_.joinable()) {
             sender_.join();
+        } else {
+            sender_.detach();
         }
-
         app_->clear_all_handler();
         app_->release_service(TEST_SERVICE_ID, TEST_INSTANCE_ID);
-        app_->stop();
 
         if(latencys_.empty()){
             std::cout <<"This test have no data"<<std::endl;
-            return;
-        }
-        const auto average_latency = std::accumulate(latencys_.begin(), latencys_.end(), 0) / static_cast<uint64_t>(latencys_.size());
-        const auto average_throughput = payload_size_ * (static_cast<uint64_t>(latencys_.size())) * 1000000 / std::accumulate(latencys_.begin(), latencys_.end(), 0);
-        const double average_cpu_load(std::accumulate(cpu_loads_.begin(), cpu_loads_.end(), 0.0) / static_cast<double>(cpu_loads_.size()));
-        std::cout << "Sent: " 
-            << number_of_test_*number_of_calls_
-            << "request messages in total (all receive response). This caused: "
-            << "latency["
-            << std::setfill('0') << std::dec
-            << average_latency / 1000000
-            << "."
-            << std::setw(6) << average_latency % 1000000  
-            << "s], CPU load["
-            << std::fixed << std::setprecision(2)
-            << average_cpu_load
-            << "%], throughput["
-            <<average_throughput<<"(Byte/s)]"
-            << std::endl;
+        } else{
+            const auto average_latency = std::accumulate(latencys_.begin(), latencys_.end(), 0) / static_cast<uint64_t>(latencys_.size());
+            const auto average_throughput = payload_size_ * (static_cast<uint64_t>(latencys_.size())) * 1000000 / std::accumulate(latencys_.begin(), latencys_.end(), 0);
+            std::cout << "Sent: " 
+                << number_of_test_*number_of_calls_
+                << "request messages in total (all receive response). This caused: "
+                << "latency["
+                << std::setfill('0') << std::dec
+                << average_latency / 1000000
+                << "."
+                << std::setw(6) << average_latency % 1000000  
+                << "s], throughput["
+                <<average_throughput<<"(Byte/s)]"
+                << std::endl;
 
-        std::vector<double> cpu_load_no_zero;
-        for(const auto &v : cpu_loads_) {
-            if(v > 0.0) {
-                cpu_load_no_zero.push_back(v);
-            }
+            
+            handleDatas(payload_size_,average_throughput,average_latency);
         }
-        const double average_load_no_zero(std::accumulate(cpu_load_no_zero.begin(), cpu_load_no_zero.end(), 0.0) / static_cast<double>(cpu_load_no_zero.size()));
-        
-        handleDatas(payload_size_,average_throughput,average_latency,average_cpu_load,average_load_no_zero);
+
+        app_->stop();
     }
 
 private:
@@ -150,12 +146,9 @@ private:
             {
                 std::unique_lock<std::mutex> u_lock(mutex_);
                 cv_.wait(u_lock, [this]{return !wait_for_availability_; });
-
                 if (is_available_) {
-                    cpu_load_measurer c(static_cast<std::uint32_t>(::getpid()));
                     send_service_start_measuring(true);
                     get_now_time(before);
-                    c.start();
 
                     for (size_t i = 0; i < number_of_calls_; i++)
                     {
@@ -165,22 +158,21 @@ private:
                             msg_acknowledged_cv_.wait(u_lock, [this]{ return !wait_for_msg_acknowledged_; });
                             wait_for_msg_acknowledged_ = true;
                         }
+                        if(!running_){
+                            break;
+                        }
                     }
 
-                    c.stop();
                     get_now_time(after);
                     send_service_start_measuring(false);
                     diff_ts = timespec_diff(before, after);
                     auto latency_us = ((diff_ts.tv_sec * 1000000) + (diff_ts.tv_nsec / 1000)) / (2 * number_of_calls_);//请求到响应来回除以二,同时除以发送请求次数
                     latencys_.push_back(latency_us);
-                    cpu_loads_.push_back(std::isfinite(c.get_cpu_load()) ? c.get_cpu_load() : 0.0);
                     
                     number_of_test_++;
                     std::cout <<"The No."<<number_of_test_<<" Test "<< "sent " << std::setw(4) << std::setfill('0')
-                            << number_of_calls_ << "request messages(all receive response). CPU load(%)["
+                            << number_of_calls_ << "request messages(all receive response). latency(us)["
                             << std::fixed << std::setprecision(2)
-                            << (std::isfinite(c.get_cpu_load()) ? c.get_cpu_load() : 0.0)
-                            <<"], latency(us)["
                             <<latency_us
                             <<"]"
                             << std::endl;
@@ -254,7 +246,6 @@ private:
     uint64_t number_of_acknowledged_messages_;
     std::vector<std::uint64_t> latencys_;
     std::vector<std::size_t> throughput_;
-    std::vector<double> cpu_loads_;
     uint32_t number_of_calls_;
     uint32_t sliding_window_size_;
 
@@ -277,12 +268,6 @@ int main(int argc, char** argv) {
     std::uint32_t cycle = 1000; // Default: 1s
     std::size_t payload_size = 1024;
 
-    std::size_t mem_size = 0;
-    if(!get_mem_usage(mem_size)){
-        std::cerr << "无法获取内存使用信息" << std::endl;  
-        return false;    
-    }
-    std::cout << "程序初始化后，当前进程占用内存大小为：" << mem_size << " KB" << std::endl;
 
     std::string tcp_enable("--tcp");
     std::string udp_enable("--udp");
@@ -314,12 +299,6 @@ int main(int argc, char** argv) {
     signal(SIGINT, handle_signal);
     signal(SIGTERM, handle_signal);
     if (client.Init()) {
-        if(!get_mem_usage(mem_size)){
-            std::cerr << "无法获取内存使用信息" << std::endl;  
-            return false;    
-        }
-        std::cout << "someip服务初始化后，当前进程占用内存大小为：" << mem_size << " KB" << std::endl;
-
         client.Start();
         if (stop_thread.joinable()) {
             stop_thread.join();

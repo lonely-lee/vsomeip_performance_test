@@ -1,0 +1,96 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4
+					]
+				}
+			],
+			"name" : "",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "vsomeip_performance_test",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "test_event_client::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_event_client-4697dd9c2e4de78c9fe2.json",
+					"name" : "test_event_client",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_event_server::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_event_server-238d5af9a5a555c0598e.json",
+					"name" : "test_event_server",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_method_client::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_method_client-a53714be18ca7fef1b07.json",
+					"name" : "test_method_client",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_method_server::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_method_server-3646e3d7ddf677f59f08.json",
+					"name" : "test_method_server",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_mix_server::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_mix_server-1346efd25f42396e73d2.json",
+					"name" : "test_mix_server",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test/build",
+		"source" : "/home/hikerlee02/workspace/vsomeip-test/gitworks/vsomeip_performance_test"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 3
+	}
+}

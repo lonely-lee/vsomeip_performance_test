@@ -8,15 +8,15 @@ export LD_LIBRARY_PATH=/home/hikerlee02/workspace/x86target/lib:$LD_LIBRARY_PATH
 case $1 in  
     1)  
         echo "Executing test_method_client"  
-        export VSOMEIP_CONFIGURATION=/someip/etc/vsomeip-udp-client.json
+        export VSOMEIP_CONFIGURATION=./../etc/vsomeip-udp-client.json
         export VSOMEIP_APPLICATION_NAME=test_method_client
-        ./test_method_client
+        ./../build/test_method_client
         ;;  
     2)  
         echo "Executing test_method_server"    
-        export VSOMEIP_CONFIGURATION=/someip/etc/vsomeip-udp-service.json
+        export VSOMEIP_CONFIGURATION=./../etc/vsomeip-udp-service.json
         export VSOMEIP_APPLICATION_NAME=test_method_server
-        ./test_method_server
+        ./../build/test_method_server
         ;;  
     3)  
         echo "Executing test_event_client"    

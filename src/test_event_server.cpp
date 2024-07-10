@@ -1,5 +1,4 @@
 #include "common.hpp"
-#include "cpu_load_measurer.hpp"
 
 #include <chrono>
 #include <sstream>
@@ -27,8 +26,7 @@ public:
         blocked_(false),
         is_offered_(false),
         cycle_(cycle),
-        notify_thread_([this]{ notify(); }),
-        cpu_load_measurer_(static_cast<std::uint32_t>(::getpid())) {
+        notify_thread_([this]{ notify(); }){
     }
 
     bool Init() {
@@ -98,12 +96,9 @@ public:
 
         const auto average_latency = std::accumulate(latencys_.begin(), latencys_.end(), 0) / static_cast<uint64_t>(latencys_.size());
         const auto average_throughput = payload_size_ * (static_cast<uint64_t>(latencys_.size())) * 1000000 / std::accumulate(latencys_.begin(), latencys_.end(), 0);
-        const double average_load(std::accumulate(cpu_loads_.begin(), cpu_loads_.end(), 0.0) / static_cast<double>(cpu_loads_.size()));
         std::cout << "Send: " << number_of_send_total_
-            << " notification messages in total. This caused: "
+            << " notification messages in total. This caused: latency(us/message)["
             << std::fixed << std::setprecision(2)
-            << average_load << "% load in average (average of "
-            << cpu_loads_.size() << " measurements), latency(us)["
             << average_latency
             << "], throughput(bytes/s)["
             << average_throughput
@@ -131,7 +126,6 @@ private:
         std::cout<< "Start measuring......" << std::endl;
         (void)_request;
         is_start_ = true;
-        cpu_load_measurer_.start();
         get_now_time(before_);
 
         std::lock_guard<std::mutex> g_lock(notify_mutex_);
@@ -142,21 +136,20 @@ private:
     {
         (void)_request;
         is_start_ = false;
-        cpu_load_measurer_.stop();
         get_now_time(after_);
         timespec diff_ts = timespec_diff(before_, after_);
-        auto latency_us = ((diff_ts.tv_sec * 1000000) + (diff_ts.tv_nsec / 1000)) / (2 * number_of_send_);//请求到响应来回除以二，同时除以发送请求次数
+        auto latency_us = ((diff_ts.tv_sec * 1000000000) + diff_ts.tv_nsec ) / (1000 * number_of_send_);//每条notification直接的时间间隔，包括notify的周期
+        double throuput_bytes = payload_size_ * number_of_send_/(((diff_ts.tv_sec + diff_ts.tv_nsec / 1000000000.000)) - cycle_*number_of_send_);
         latencys_.push_back(latency_us);
         number_of_test_++;
         std::cout <<"The No."<<number_of_test_<< " send " << std::setw(4) << std::setfill('0')
-        << number_of_send_ << " notification messages. CPU load(%)["
+        << number_of_send_ << " notification messages.cycle(ms)["
+        <<cycle_<<"]. latency(us,Including cycles)["
         << std::fixed << std::setprecision(2)
-        << (std::isfinite(cpu_load_measurer_.get_cpu_load()) ? cpu_load_measurer_.get_cpu_load() : 0.0)
-        <<"], latency(us)["
         <<latency_us
-        <<"]"<<std::endl;
+        <<"]. throughput(bytes/s,Excluding cycles)["
+        <<throuput_bytes<<"]"<<std::endl;
         std::cout << "The No."<<number_of_test_<<" testing has ended, and the next round of testing is about to begin......" << std::endl;
-        cpu_loads_.push_back(std::isfinite(cpu_load_measurer_.get_cpu_load()) ? cpu_load_measurer_.get_cpu_load() : 0.0);
         number_of_send_ = 0;
     }
 
@@ -174,7 +167,6 @@ private:
 
     bool is_start_;
     uint32_t number_of_test_;
-    cpu_load_measurer cpu_load_measurer_;
 
     std::mutex offer_mutex_;
     std::condition_variable offer_cv_;

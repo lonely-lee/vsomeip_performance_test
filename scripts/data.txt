@@ -1,0 +1,4 @@
+payload_size | average_throughput | average_latency
+1048 | 494106 | 2121
+1048 | 588433 | 1781
+1048 | 629618 | 1664

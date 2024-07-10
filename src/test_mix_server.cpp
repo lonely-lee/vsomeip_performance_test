@@ -1,5 +1,4 @@
 #include "common.hpp"
-#include "cpu_load_measurer.hpp"
 
 #include <chrono>
 #include <sstream>
@@ -31,8 +30,7 @@ public:
         blocked_(false),
         is_offered_(false),
         cycle_(cycle),
-        notify_thread_([this]{ notify(); }),
-        cpu_load_measurer_(static_cast<std::uint32_t>(::getpid())) {
+        notify_thread_([this]{ notify(); }) {
     }
 
     bool Init() {
@@ -114,14 +112,11 @@ public:
             std::cout << "cycle_: " << cycle_ << " milliseconds" << std::endl;
             std::cout << "average_throughput: " << average_throughput << " bytes/s" << std::endl;
             
-            const double average_load(std::accumulate(cpu_loads_.begin(), cpu_loads_.end(), 0.0) / static_cast<double>(cpu_loads_.size()));
             std::cout << "Send " << number_of_send_total_
                 << " notification messages, recevied and responded "
                 << number_of_received_request_total_
-                <<" requests in total. This caused: "
+                <<" requests in total. This caused: latency(us)["
                 << std::fixed << std::setprecision(2)
-                << average_load << "% load in average (average of "
-                << cpu_loads_.size() << " measurements), latency(us)["
                 << total_latency
                 << "], throughput(bytes/s)["
                 << average_throughput
@@ -166,7 +161,6 @@ private:
         std::cout<< "Start measuring......" << std::endl;
         (void)_request;
         is_start_ = true;
-        cpu_load_measurer_.start();
         get_now_time(before_);
 
         std::lock_guard<std::mutex> g_lock(notify_mutex_);
@@ -177,7 +171,6 @@ private:
     {
         (void)_request;
         is_start_ = false;
-        cpu_load_measurer_.stop();
         get_now_time(after_);
         number_of_send_total_ += number_of_send_;
         number_of_received_request_total_ += number_of_received_request_;
@@ -187,14 +180,10 @@ private:
         number_of_test_++;
         std::cout <<"The No."<<number_of_test_<< " send " << std::setw(4) << std::setfill('0')
         << number_of_send_ << " notification messages.Received and Responded " << std::setw(4)<<std::setfill('0')
-        <<number_of_received_request_<<" requests. CPU load(%)["
-        << std::fixed << std::setprecision(2)
-        << (std::isfinite(cpu_load_measurer_.get_cpu_load()) ? cpu_load_measurer_.get_cpu_load() : 0.0)
-        <<"], latency(us)["
+        <<number_of_received_request_<<" requests. latency(us)["
         <<latency_us
         <<"]"<<std::endl;
         std::cout << "The No."<<number_of_test_<<" testing has ended, and the next round of testing is about to begin......" << std::endl;
-        cpu_loads_.push_back(std::isfinite(cpu_load_measurer_.get_cpu_load()) ? cpu_load_measurer_.get_cpu_load() : 0.0);
         number_of_send_ = 0;
         number_of_received_request_ = 0;
     }
@@ -213,7 +202,6 @@ private:
 
     bool is_start_;
     uint32_t number_of_test_;
-    cpu_load_measurer cpu_load_measurer_;
 
     std::mutex offer_mutex_;
     std::condition_variable offer_cv_;
@@ -226,7 +214,6 @@ private:
 
     std::thread notify_thread_;
 
-    std::vector<double> cpu_loads_;
     std::vector<uint64_t> latencys_;
 
     timespec before_,after_;

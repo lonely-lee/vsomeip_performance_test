@@ -1,5 +1,4 @@
 #include "common.hpp"
-#include "cpu_load_measurer.hpp"
 
 #include <condition_variable>
 #include <csignal>
@@ -70,8 +69,8 @@ public:
             request_->set_instance(TEST_INSTANCE_ID);
             request_->set_method(SHUTDOWN_METHOD_ID);
             app_->send(request_);
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         running_ = false;
         is_available_ = false;
         wait_for_availability_ = false;
@@ -98,11 +97,9 @@ public:
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         app_->stop();
 
-        auto average_cpuload = std::accumulate(cpu_loads_.begin(), cpu_loads_.end(), 0.0) / static_cast<double>(cpu_loads_.size());\
         auto average_latency = std::accumulate(latencys_.begin(), latencys_.end(), 0.0) / static_cast<double>(latencys_.size());
-        std::cout<<"This test is over:average_cpuload["
-                <<average_cpuload
-                <<"%],average_latency["
+        std::cout<<"This test is over:"
+                <<"average_latency["
                 <<average_latency
                 <<"us]"<<std::endl;
     }
@@ -150,27 +147,21 @@ private:
                 std::cout << "Service is running_." << std::endl;
                 if (is_available_) {
                     std::cout << "Service is send_service_start_measuring." << std::endl;
-                    cpu_load_measurer c(static_cast<std::uint32_t>(::getpid()));
                     send_service_start_measuring(true);
                     get_now_time(before);
-                    c.start();
                     std::unique_lock<std::mutex> u_lock(msg_acknowledged_mutex_);
                     notification_cv_.wait(u_lock, [this]{ return !wait_for_msg_acknowledged_; });
                     wait_for_msg_acknowledged_ = true;
 
-                    c.stop();
                     get_now_time(after);
                     send_service_start_measuring(false);
                     diff_ts = timespec_diff(before, after);
                     auto latency_us = ((diff_ts.tv_sec * 1000000) + (diff_ts.tv_nsec / 1000)) / (2 * number_of_demand_);//请求到响应来回除以二,同时除以发送请求次数
                     latencys_.push_back(latency_us);
-                    cpu_loads_.push_back(std::isfinite(c.get_cpu_load()) ? c.get_cpu_load() : 0.0);
                     
                     std::cout <<"The No."<<number_of_test_<<" Test "<< "receive " << std::setw(4) << std::setfill('0')
-                            << number_of_demand_ << " notification messages. CPU load(%)["
-                            << std::fixed << std::setprecision(2)
-                            << (std::isfinite(c.get_cpu_load()) ? c.get_cpu_load() : 0.0)
-                            <<"], latency(us)["
+                            << number_of_demand_ << " notification messages."
+                            <<" latency(us)["
                             <<latency_us
                             <<"]"
                             << std::endl;
@@ -201,8 +192,6 @@ private:
     uint32_t number_of_notification_messages_;
     uint32_t number_of_demand_;
     std::vector<std::uint64_t> latencys_;
-    std::vector<double> cpu_loads_;
-
     uint32_t cycle_;
     std::thread sender_;
 };

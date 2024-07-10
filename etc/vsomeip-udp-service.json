@@ -60,7 +60,7 @@
         }
     ],
     "max-payload-size-unreliable" : "100000",
-    "routing" : "test_mix_server",
+    "routing" : "test_method_server",
     "service-discovery" :
     {
         "enable" : "true",
