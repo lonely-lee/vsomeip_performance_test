@@ -1,0 +1,2 @@
+protocol(1:udp|0:tcp) | payload_size(Bytes) | number_of_calls | sliding_size | average_throughput(Byte/s) | average_latency(us)
+1 | 1048 | 1000 | 100 | 1907882 | 549

@@ -22,10 +22,9 @@ public:
         payload_size_(payload_size + time_payload_size),
         payload_(vsomeip::runtime::get()->create_payload()),
         number_of_send_(0),
-        number_of_test_(0),
         number_of_send_total_(0),
+        number_of_test_(0),
         running_(true),
-        blocked_(false),
         is_offered_(false),
         cycle_(cycle),
         notify_thread_([this]{ notify(); }){
@@ -49,7 +48,6 @@ public:
         app_->register_state_handler([this](vsomeip::state_type_e state){
             if (state == vsomeip::state_type_e::ST_REGISTERED) {
                 std::lock_guard<std::mutex> g_lock(offer_mutex_);
-                blocked_ = true;
                 app_->offer_service(TEST_SERVICE_ID, TEST_INSTANCE_ID);
                 is_offered_ = true;
             }
@@ -80,20 +78,26 @@ public:
     }
 
     void stop(){
-        std::cout<< "Stopping server......" << std::endl;
-        blocked_ = true;
-        app_->clear_all_handler();
-        app_->stop_offer_service(TEST_SERVICE_ID, TEST_INSTANCE_ID);
-        notify_cv_.notify_one();
-        running_ = false;
-        is_offered_ = true;
-        is_start_ = false;
-        if (notify_thread_.joinable()) {
-            std::cout<< "Joining notify thread......" << std::endl;
-            notify_thread_.join();
-        } else {
-            std::cout<< "Notify thread is not joinable......" << std::endl;
-            notify_thread_.detach();
+        {
+            running_ = false;
+            std::lock_guard<std::mutex> u_lcok(notify_mutex_);
+            notify_cv_.notify_one();
+            is_start_ = false;
+        }
+        if (std::this_thread::get_id() != notify_thread_.get_id()) {
+            if (notify_thread_.joinable()) {
+                notify_thread_.join();
+            }
+            else {
+                notify_thread_.detach();
+            }
+        }
+        {
+            std::lock_guard<std::mutex> g_lcok(offer_mutex_);
+            std::cout<< "Stopping server......" << std::endl;
+            is_offered_ = true;
+            app_->clear_all_handler();
+            app_->stop_offer_service(TEST_SERVICE_ID, TEST_INSTANCE_ID);          
         }
 
         if(latencys_.size() != 0){
@@ -106,11 +110,10 @@ public:
                 << "], throughput(bytes/s)["
                 << average_throughput
                 << "]." << std::endl;
-        } else{
-            std::cout<< "No latency data was recorded." << std::endl;
         }
 
         app_->stop();
+        std::cout<< "Server stopped." << std::endl;
     }
 
 private:
@@ -131,10 +134,10 @@ private:
     {
         std::cout<< "Start measuring......" << std::endl;
         (void)_request;
-        is_start_ = true;
         get_now_time(before_);
 
         std::lock_guard<std::mutex> g_lock(notify_mutex_);
+        is_start_ = true;
         notify_cv_.notify_one();
     }
 
@@ -176,23 +179,33 @@ private:
     uint32_t number_of_test_;
 
     std::mutex offer_mutex_;
-    std::condition_variable offer_cv_;
     std::mutex notify_mutex_;
      std::condition_variable notify_cv_;
     bool running_;
-    bool blocked_;
     bool is_offered_;
     std::uint32_t cycle_;
 
     std::thread notify_thread_;
 
-    std::vector<double> cpu_loads_;
     std::vector<uint64_t> latencys_;
 
     timespec before_,after_;
 };
 
+
+TestEventServer *its_sample_ptr(nullptr);
+std::thread stop_thread;
+void handle_signal(int _signal) {
+    if (its_sample_ptr != nullptr &&
+            (_signal == SIGINT || _signal == SIGTERM)) {
+        stop_thread = std::thread([its_sample_ptr=its_sample_ptr]{
+            its_sample_ptr->stop();
+            std::cout<< "Server diaoyong stop." << std::endl;
+        }); 
+    }
+}
 int main(int argc, char** argv) {
+
     bool use_tcp = false;
     bool be_quiet = false;
     std::uint32_t cycle = 50; // Default: 1s
@@ -224,13 +237,20 @@ int main(int argc, char** argv) {
     }
 
     TestEventServer server(use_tcp ? protocol_e::PR_TCP : protocol_e::PR_UDP, payload_size, cycle);
+    its_sample_ptr = &server;
+    signal(SIGINT, handle_signal);
+    signal(SIGTERM, handle_signal);
 
     if (server.Init()) {
         server.Start();
+        if (stop_thread.joinable()) {
+            stop_thread.join();
+        } else{
+            stop_thread.detach();
+        }
+        std::cout<< "return 0." << std::endl;
         return 0;
     } else {
         return 1;
     }
-
-    return 0;
 }

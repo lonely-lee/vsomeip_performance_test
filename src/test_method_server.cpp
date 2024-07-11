@@ -58,20 +58,27 @@ public:
 
     void stop()
     {
-        std::lock_guard<std::mutex> g_lcok(mutex_);
-        blocked_ = true;
-        app_->clear_all_handler();
-        app_->stop_offer_service(TEST_SERVICE_ID, TEST_INSTANCE_ID);
+        {
+            std::lock_guard<std::mutex> g_lcok(mutex_);
+            blocked_ = true;
+            app_->clear_all_handler();
+            app_->stop_offer_service(TEST_SERVICE_ID, TEST_INSTANCE_ID);          
+        }
 
-        const auto average_latency = std::accumulate(latencys_.begin(), latencys_.end(), 0) / static_cast<uint64_t>(latencys_.size());
-        const auto average_throughput = payload_size_ * (static_cast<uint64_t>(latencys_.size())) * 1000000 / std::accumulate(latencys_.begin(), latencys_.end(), 0);
-        std::cout << "Received: " << number_of_received_messages_total_
-            << " in total (excluding control messages). This caused: latency(us)["
-            << std::fixed << std::setprecision(2)
-            << average_latency
-            << "], throughput(bytes/s)["
-            << average_throughput
-            << "]." << std::endl;
+        if(latencys_.empty()){
+            std::cout <<"This test have no data"<<std::endl;
+        }else {
+            const auto average_latency = std::accumulate(latencys_.begin(), latencys_.end(), 0) / static_cast<uint64_t>(latencys_.size());
+            const auto average_throughput = payload_size_ * (static_cast<uint64_t>(latencys_.size())) * 1000000 / std::accumulate(latencys_.begin(), latencys_.end(), 0);
+            std::cout << "Received: " << number_of_received_messages_total_
+                << " in total (excluding control messages). This caused: latency(us)["
+                << std::fixed << std::setprecision(2)
+                << average_latency
+                << "], throughput(bytes/s)["
+                << average_throughput
+                << "]." << std::endl;
+        }
+        
 
         std::cout << "Stopping..."<<std::endl;
         app_->stop();

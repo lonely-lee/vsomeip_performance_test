@@ -48,6 +48,6 @@ bool get_mem_usage(std::size_t& mem_sizes);
 
 
 /* Handle Data*/
-bool handleDatas(std::size_t payload_size,const unsigned long average_throughput,const unsigned long average_latency);
+bool handleDatas(bool is_udp,uint32_t number_of_calls, std::size_t payload_size,const unsigned long average_throughput,const unsigned long average_latency,uint32_t sliding_window_size);
 
 #endif // VSOMEIP_PERFORMANCE_TEST_COMMON_HPP

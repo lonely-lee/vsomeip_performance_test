@@ -23,7 +23,7 @@
             "id" : "0x1345"
         },
         {
-            "name" : "fourth-client-sample",
+            "name" : "test_event_client02",
             "id" : "0x1346"
         }
     ],
@@ -49,7 +49,7 @@
             }
         }
     ],
-    "routing" : "test_method_client",
+    "routing" : "test_event_client",
     "service-discovery" :
     {
         "enable" : "true",

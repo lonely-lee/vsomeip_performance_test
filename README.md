@@ -15,6 +15,11 @@ cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/aarch64-toolchain.cmake -DCROSS_TOOLS_PATH
 cmake --build .
 ```
 
+## detaild test_app
+### test_method_client
+
+
+
 # changes
 ## 2024-07-09
 - 新增测试用例event

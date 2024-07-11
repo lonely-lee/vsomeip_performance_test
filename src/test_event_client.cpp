@@ -19,6 +19,7 @@ public:
         number_of_test_(1),
         number_of_notification_messages_(0),
         cycle_(500),
+        running_(true),
         sender_(std::bind(&TestEventClient::run, this)) {
     }
 
@@ -72,36 +73,42 @@ public:
             std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         }
         running_ = false;
-        is_available_ = false;
-        wait_for_availability_ = false;
-        wait_for_msg_acknowledged_ = false;
 
         app_->clear_all_handler();
         app_->unsubscribe(TEST_SERVICE_ID, TEST_INSTANCE_ID, TEST_EVENTGROUP_ID);
         app_->release_event(TEST_SERVICE_ID, TEST_INSTANCE_ID, TEST_EVENT_ID);
         app_->release_service(TEST_SERVICE_ID, TEST_INSTANCE_ID);
 
-        cv_.notify_one();
-        notification_cv_.notify_one();
+        {
+            std::lock_guard<std::mutex> u_lcok(msg_acknowledged_mutex_);
+            wait_for_msg_acknowledged_ = false;
+            notification_cv_.notify_all();
+        }
+
+        {
+            std::lock_guard<std::mutex> u_lcok(mutex_);
+            wait_for_availability_ = false;
+            is_available_ = false;
+            cv_.notify_all();
+        }
+
         if (std::this_thread::get_id() != sender_.get_id()) {
-            std::cout<<"Waiting for sender to join"<<std::endl;
             if (sender_.joinable()) {
-                std::cout<<"Joining sender"<<std::endl;
                 sender_.join();
             }
-        } else {
-            std::cout<<"Sender is running on the same thread as this"<<std::endl;
-            sender_.detach();
+            else {
+                sender_.detach();
+            }
         }
-        std::cout<<"Test over"<<std::endl;
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        if(latencys_.size() != 0){
+            auto average_latency = std::accumulate(latencys_.begin(), latencys_.end(), 0.0) / static_cast<double>(latencys_.size());
+            std::cout<<"This test is over:"
+                    <<"average_latency["
+                    <<average_latency
+                    <<"us]"<<std::endl;
+        }
+        
         app_->stop();
-
-        auto average_latency = std::accumulate(latencys_.begin(), latencys_.end(), 0.0) / static_cast<double>(latencys_.size());
-        std::cout<<"This test is over:"
-                <<"average_latency["
-                <<average_latency
-                <<"us]"<<std::endl;
     }
 
 private:
@@ -114,12 +121,12 @@ private:
         
         if (TEST_SERVICE_ID == service && TEST_INSTANCE_ID == instance) {
             if (is_available_  && !is_available) {
-                is_available_ = false;
                 std::lock_guard<std::mutex> g_lcok(mutex_);
+                is_available_ = false;
                 wait_for_availability_ = true;
             } else if (is_available && !is_available_) {
-                is_available_ = true;
                 std::lock_guard<std::mutex> g_lcok(mutex_);
+                is_available_ = true;
                 wait_for_availability_ = false;
                 cv_.notify_one();
             }
@@ -144,14 +151,15 @@ private:
             {
                 std::unique_lock<std::mutex> u_lock(mutex_);
                 cv_.wait(u_lock, [this]{return !wait_for_availability_; });
-                std::cout << "Service is running_." << std::endl;
                 if (is_available_) {
                     std::cout << "Service is send_service_start_measuring." << std::endl;
                     send_service_start_measuring(true);
                     get_now_time(before);
-                    std::unique_lock<std::mutex> u_lock(msg_acknowledged_mutex_);
-                    notification_cv_.wait(u_lock, [this]{ return !wait_for_msg_acknowledged_; });
-                    wait_for_msg_acknowledged_ = true;
+                    {                    
+                        std::unique_lock<std::mutex> u_lock(msg_acknowledged_mutex_);
+                        notification_cv_.wait(u_lock, [this]{ return !wait_for_msg_acknowledged_; });
+                        wait_for_msg_acknowledged_ = true;
+                    }
 
                     get_now_time(after);
                     send_service_start_measuring(false);
@@ -169,7 +177,7 @@ private:
                 }
 
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(cycle_));
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         }
     }
 
@@ -219,6 +227,8 @@ int main(int argc, char** argv) {
 
         if (stop_thread.joinable()) {
             stop_thread.join();
+        } else{
+            stop_thread.detach();
         }
         return 0;
     } else {

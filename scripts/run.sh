@@ -8,31 +8,31 @@ export LD_LIBRARY_PATH=/home/hikerlee02/workspace/x86target/lib:$LD_LIBRARY_PATH
 case $1 in  
     1)  
         echo "Executing test_method_client"  
-        export VSOMEIP_CONFIGURATION=./../etc/vsomeip-udp-client.json
+        export VSOMEIP_CONFIGURATION=./../etc/vsomeip-udp-method-client.json
         export VSOMEIP_APPLICATION_NAME=test_method_client
-        ./../build/test_method_client
+        ./../build/test_method_client --size 4000
         ;;  
     2)  
         echo "Executing test_method_server"    
-        export VSOMEIP_CONFIGURATION=./../etc/vsomeip-udp-service.json
+        export VSOMEIP_CONFIGURATION=./../etc/vsomeip-udp-method-service.json
         export VSOMEIP_APPLICATION_NAME=test_method_server
         ./../build/test_method_server
         ;;  
     3)  
         echo "Executing test_event_client"    
-        export VSOMEIP_CONFIGURATION=./../etc/vsomeip-udp-client.json
+        export VSOMEIP_CONFIGURATION=./../etc/vsomeip-udp-event-client.json
         export VSOMEIP_APPLICATION_NAME=test_event_client
         ./../build/test_event_client
         ;;  
     4)  
         echo "Executing test_event_server"    
-        export VSOMEIP_CONFIGURATION=./../etc/vsomeip-udp-service.json
+        export VSOMEIP_CONFIGURATION=./../etc/vsomeip-udp-event-service.json
         export VSOMEIP_APPLICATION_NAME=test_event_server
         ./../build/test_event_server
         ;;
     5)  
         echo "Executing test_mix_server"    
-        export VSOMEIP_CONFIGURATION=./../etc/vsomeip-udp-service.json
+        export VSOMEIP_CONFIGURATION=./../etc/vsomeip-udp-mix-service.json
         export VSOMEIP_APPLICATION_NAME=test_mix_server
         ./../build/test_mix_server
         ;; 
