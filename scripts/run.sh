@@ -10,7 +10,8 @@ case $1 in
         echo "Executing test_method_client"  
         export VSOMEIP_CONFIGURATION=./../etc/vsomeip-udp-method-client.json
         export VSOMEIP_APPLICATION_NAME=test_method_client
-        ./../build/test_method_client --size 4000
+        # ./../build/test_method_client --size 4000 --cycle 50
+        ./../build/test_method_client -p UDP -c 5 -m ASYNC -pl 400
         ;;  
     2)  
         echo "Executing test_method_server"    

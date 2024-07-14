@@ -15,8 +15,8 @@
 #define TEST_SERVICE_ID       0x1234
 #define TEST_INSTANCE_ID      0x5678
 #define TEST_METHOD_ID        0x0421
-#define STOP_METHOD_ID        0x0422
-#define START_METHOD_ID       0x0423
+#define START_METHOD_ID       0x0422
+#define STOP_METHOD_ID        0x0423
 #define SHUTDOWN_METHOD_ID    0x0424
 
 #define TEST_EVENT_ID         0x8778
@@ -33,6 +33,7 @@ using ByteType = std::uint8_t;
 using ByteVec = std::vector<ByteType>;
 
 constexpr std::size_t time_payload_size = sizeof(timespec) + sizeof(std::size_t);
+static constexpr uint8_t load_test_data(0xDD);
 
 [[nodiscard]] std::string timespec_to_str(const timespec &ts);
 

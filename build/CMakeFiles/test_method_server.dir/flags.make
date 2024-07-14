@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -isystem /home/hikerlee02/workspace/x86target/include
 
-CXX_FLAGS = 
+CXX_FLAGS = -g
 

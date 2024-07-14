@@ -17,7 +17,7 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
 
 set(CMAKE_INSTALL_RPATH "\$ORIGIN/../lib")
 
-set(CMAKE_PREFIX_PATH "/home/hikerlee02/workspace/armtarget")
+set(CMAKE_PREFIX_PATH "/home/hikerlee02/workspace/tmplib")
 
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
