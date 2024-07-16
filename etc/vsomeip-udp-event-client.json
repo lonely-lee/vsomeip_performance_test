@@ -40,8 +40,29 @@
         {
             "service":"0x1234",
             "instance":"0x5678",
-            "unicast": "172.18.0.2", 
+            "unicast": "192.254.8.2", 
             "unreliable":"30509",
+            "events" :
+            [
+                {
+                    "event" : "0x8778",
+                    "is_field" : "true",
+                    "is_reliable" : "true",
+                    "update-cycle" : 0
+                },
+                {
+                    "event" : "0x8779",
+                    "is_field" : "true",
+                    "is_reliable" : "true"
+                }
+            ],
+            "eventgroups" :
+            [
+                {
+                    "eventgroup" : "0x4465",
+                    "events" : [ "0x8778", "0x8779" ]
+                }
+            ],
             "someip-tp": {
                 "client-to-service": [
                     "0x0421"
@@ -52,7 +73,7 @@
     "routing" : "test_event_client",
     "service-discovery" :
     {
-        "enable" : "true",
+        "enable" : "false",
         "multicast" : "239.0.0.255",
         "port" : "30490",
         "protocol" : "udp",

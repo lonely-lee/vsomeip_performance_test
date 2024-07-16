@@ -176,10 +176,12 @@ int main(int argc, char** argv) {
 class cpu_load_test_service
 {
 public:
-    cpu_load_test_service() :
+    cpu_load_test_service(protocol_e _protocol) :
+                    protocol_(_protocol),
                     app_(vsomeip::runtime::get()->create_application()),
                     is_registered_(false),
                     blocked_(false),
+                    number_of_tests_(0),
                     number_of_received_messages_(0),
                     number_of_received_messages_total_(0),
                     payload_size_(0),
@@ -267,11 +269,11 @@ public:
     void on_message(const std::shared_ptr<vsomeip::message>& _request)
     {
         number_of_received_messages_++;
-        number_of_received_messages_total_++;
         // send response
         auto response = vsomeip::runtime::get()->create_response(_request);
         if(payload_size_==0){
             std::memcpy(&payload_size_, _request->get_payload()->get_data(), sizeof(std::size_t));
+            payload_size_ = static_cast<uint32_t>(payload_size_);
         }
         ByteVec payload_data(payload_size_);
         auto response_payload = vsomeip::runtime::get()->create_payload(payload_data);
@@ -296,36 +298,43 @@ public:
         //std::cout<<"收到的请求为结束测试:"<<_request->get_method()<<std::endl;
 
         latencys_.push_back(latency_us);
-        std::cout <<"The No."<<"number_of_test_"<< " Received " << std::setw(4) << std::setfill('0')
+        std::cout <<"The No."<<++number_of_tests_<< " Received " << std::setw(4) << std::setfill('0')
         << number_of_received_messages_ << " messages. latency(us)["
         <<latency_us
-        <<"]"<<std::endl;
+        <<"], Throughput(Bytes/s)["
+        <<(number_of_received_messages_*payload_size_*1000000/latency_us)
+        <<"]."<<std::endl;
+        number_of_received_messages_total_ += number_of_received_messages_;
         number_of_received_messages_ = 0;
     }
 
     void on_message_shutdown(
             const std::shared_ptr<vsomeip::message>& _request){
         (void)_request;
-        std::cout << "Shutdown method was called, going down now."<<std::endl;
-        std::cout << "Received: " << number_of_received_messages_total_
-            << " in total (excluding control messages). This caused: "
-            <<std::endl;
 
-        std::cout << "Sent: " << number_of_received_messages_total_
-            << " messages in total (excluding control messages). This caused: "<<std::endl;
-
+        std::cout<<">>>>>>>>>>>>>>>               TEST RESULT               <<<<<<<<<<<<<<<"<<std::endl;
         if(latencys_.empty()){
             std::cout <<"This test have no data"<<std::endl;
-        }else {
-            const auto average_latency = std::accumulate(latencys_.begin(), latencys_.end(), 0) / static_cast<uint64_t>(latencys_.size());
-            const auto average_throughput = payload_size_ * (static_cast<uint64_t>(latencys_.size())) * 1000000 / std::accumulate(latencys_.begin(), latencys_.end(), 0);
-            std::cout << "Received: " << number_of_received_messages_total_
-                << " in total (excluding control messages). This caused: latency(us)["
-                << std::fixed << std::setprecision(2)
-                << average_latency
-                << "], throughput(bytes/s)["
-                << average_throughput
-                << "]." << std::endl;
+        } else{
+            const auto average_latency = std::accumulate(latencys_.begin(), latencys_.end(), 0) / (number_of_received_messages_total_ * 2);
+            const auto average_throughput = (payload_size_ *number_of_received_messages_total_ * 1000000) / std::accumulate(latencys_.begin(), latencys_.end(), 0);
+            std::cout << "Protoc:"<<"(protocol_ == protocol_e::PR_TCP ?)"
+                <<", execute "<< number_of_tests_ << " tests. Receive: " 
+                << number_of_received_messages_total_
+                << " request messages per test(all send response)."<<std::endl;
+            std::cout<<"The byte size of both the request and response messages is "<<payload_size_<<" bytes. "<<std::endl;
+            std::cout<<"This caused: "
+                << "average latency(every message send or receive)["
+                << std::setfill('0') << std::dec
+                << average_latency / 1000000
+                << "."
+                << std::setw(6) << average_latency % 1000000  
+                << "s], average throughput["
+                <<average_throughput<<"(Byte/s)]."
+                << std::endl;
+            handleDatas("method_server_data.txt",(protocol_ == protocol_e::PR_UDP),
+                        number_of_received_messages_total_/number_of_tests_,number_of_tests_,
+                        payload_size_,average_throughput,average_latency);
         }
         stop();
     }
@@ -341,6 +350,7 @@ public:
     }
 
 private:
+    protocol_e protocol_;
     std::shared_ptr<vsomeip::application> app_;
     bool is_registered_;
 
@@ -349,6 +359,7 @@ private:
     bool blocked_;
     std::uint32_t number_of_received_messages_;
     std::uint32_t number_of_received_messages_total_;
+    std::uint32_t number_of_tests_;
     std::thread offer_thread_;
 
     std::vector<uint64_t> latencys_;
@@ -356,9 +367,39 @@ private:
     std::size_t payload_size_;
 };
 
+
+// this variables are changed via cmdline parameters
+static protocol_e protocol(protocol_e::PR_UNKNOWN);
 int main(int argc, char** argv)
 {
-    cpu_load_test_service test_service;
+    int i = 0;
+    while (i < argc) {
+        if(std::string("--protocol") == std::string(argv[i])
+        || std::string("-p") == std::string(argv[i])) {
+            if(std::string("udp") == std::string(argv[i+1]) ||
+                    std::string("UDP") == std::string(argv[i+1])) {
+                protocol = protocol_e::PR_UDP;
+                i++;
+            } else if(std::string("tcp") == std::string(argv[i+1]) ||
+                    std::string("TCP") == std::string(argv[i+1])) {
+                protocol = protocol_e::PR_TCP;
+                i++;
+            }
+        } else if(std::string("--help") == std::string(argv[i])
+        || std::string("-h") == std::string(argv[i])) {
+            std::cout << "Available options:" << std::endl;
+            std::cout << "--protocol|-p: valid values TCP or UDP" << std::endl;
+        }
+        i++;
+    }
+
+
+    if(protocol == protocol_e::PR_UNKNOWN) {
+        std::cerr << "Please specify valid protocol mode, see --help" << std::endl;
+        return(EXIT_FAILURE);
+    }
+
+    cpu_load_test_service test_service(protocol);
     if (test_service.init()) {
         test_service.start();
     }

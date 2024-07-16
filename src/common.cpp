@@ -79,18 +79,39 @@ bool get_mem_usage(std::size_t& mem_sizes) {
 
 /*Data Handle */
 
-bool handleDatas(bool is_udp,uint32_t number_of_calls, std::size_t payload_size,const unsigned long average_throughput,const unsigned long average_latency,uint32_t sliding_window_size){
-    std::ofstream outfile("data.txt", std::ios::app);
+bool handleDatas(std::string filename, bool is_udp,
+                uint32_t number_of_request, uint32_t number_of_calls, std::size_t payload_size,
+                const unsigned long average_throughput,const unsigned long average_latency){
+    std::ofstream outfile(filename, std::ios::app);
     if (!outfile.is_open()) {  
         return false;  
     }  
-    std::ifstream infile("data.txt");  
+    std::ifstream infile(filename);  
     std::string line;  
     if (!std::getline(infile, line)) {
-        outfile << "protocol(1:udp|0:tcp) | payload_size(Bytes) | number_of_calls | sliding_size | average_throughput(Byte/s) | average_latency(us)" << std::endl;  
+        outfile << "protocol(1:udp|0:tcp) | payload_size(Bytes) | number_of_tests | number_of_send | average_throughput(Byte/s) | average_latency(us)" << std::endl;  
     }  
     infile.close();
-    outfile << is_udp <<" | "<< payload_size <<" | "<< number_of_calls<<" | "<< sliding_window_size<< " | " << average_throughput <<" | "<< average_latency<<std::endl;  
+    outfile << is_udp <<" | "<< payload_size <<" | "<< number_of_calls<<" | "<<number_of_request<< " | " << average_throughput <<" | "<< average_latency<<std::endl;  
     outfile.close();
     return true;
+}
+
+bool handleDatas(std::string filename, bool is_udp,uint32_t cycle,
+                uint32_t number_of_notify, uint32_t number_of_test, std::size_t payload_size,
+                const unsigned long average_throughput,const unsigned long average_latency){
+    std::ofstream outfile(filename, std::ios::app);
+    if (!outfile.is_open()) {  
+        return false;  
+    }  
+    std::ifstream infile(filename);  
+    std::string line;  
+    if (!std::getline(infile, line)) {
+        outfile << "protocol(1:udp|0:tcp) | payload_size(Bytes) | cycle(ms) | number_of_notify | number_of_test | average_throughput(Byte/s) | average_latency(us)" << std::endl;  
+    }  
+    infile.close();
+    outfile << is_udp <<" | "<< payload_size <<" | "<< cycle<<" | "<<number_of_notify<<" | "<< number_of_test<< " | " << average_throughput <<" | "<< average_latency<<std::endl;  
+    outfile.close();
+    return true;
+
 }

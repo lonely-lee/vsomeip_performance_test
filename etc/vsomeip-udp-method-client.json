@@ -6,7 +6,7 @@
         "level" : "debug",
         "console" : "true",
         "file" : { "enable" : "true", "path" : "/var/log/vsomeip.log" },
-        "dlt" : "true"
+        "dlt" : "false"
     },
     "applications" :
     [
@@ -32,8 +32,7 @@
         {
             "service" : "0x1234",
             "instance" : "0x5678",
-            "unreliable" : [ 40000, 40002 ],
-            "reliable" : { "port" : "50000", "enable-magic-cookies" : "false" }
+            "unreliable" : [ 40000, 40002 ]
         }
     ],
     "services":
@@ -43,7 +42,6 @@
             "instance":"0x5678",
             "unicast": "192.254.8.2", 
             "unreliable":"30509",
-            "reliable" : { "port" : "30509", "enable-magic-cookies" : "false" },
             "someip-tp": {
                 "client-to-service": [
                     "0x0421"

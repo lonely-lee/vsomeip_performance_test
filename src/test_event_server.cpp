@@ -97,8 +97,8 @@ public:
         }
 
         if(latencys_.size() != 0){
-            const auto average_latency = std::accumulate(latencys_.begin(), latencys_.end(), 0) / static_cast<uint64_t>(latencys_.size());
-            const auto average_throughput = payload_size_ * (static_cast<uint64_t>(latencys_.size())) * 1000000 / std::accumulate(latencys_.begin(), latencys_.end(), 0);
+            const auto average_latency = (std::accumulate(latencys_.begin(), latencys_.end(), 0) - cycle_* (number_of_send_total_ - 1)) / static_cast<uint64_t>(latencys_.size());
+            const auto average_throughput = payload_size_ * number_of_send_total_ * 1000000 / (std::accumulate(latencys_.begin(), latencys_.end(), 0) - 1000 * cycle_ * (number_of_send_total_-number_of_test_));
             std::cout << "Send: " << number_of_send_total_
                 << " notification messages in total. This caused: latency(us/message)["
                 << std::fixed << std::setprecision(2)
@@ -106,6 +106,8 @@ public:
                 << "], throughput(bytes/s)["
                 << average_throughput
                 << "]." << std::endl;
+                handleDatas("event_server_data.txt",(protocol_ == protocol_e::PR_UDP),cycle_,number_of_send_total_/number_of_test_,
+                            number_of_test_,payload_size_,average_throughput,average_latency);
         } else{
             std::cout<< "No latency data was recorded." << std::endl;
         }
@@ -119,6 +121,7 @@ private:
             std::unique_lock<std::mutex> u_lock(notify_mutex_);
             notify_cv_.wait(u_lock, [this]{ return is_offered_; });
             while (is_start_){
+                //std::cout<< "Send notification message......:"<<number_of_send_ << std::endl;
                 app_->notify(TEST_SERVICE_ID, TEST_INSTANCE_ID, TEST_EVENT_ID, payload_);
                 number_of_send_++;
                 
@@ -140,24 +143,29 @@ private:
 
     void on_message_stop_measuring(const std::shared_ptr<vsomeip::message>& _request)
     {
+        std::cout<< "Stop measuring......" << std::endl;
         (void)_request;
         is_start_ = false;
         get_now_time(after_);
-        timespec diff_ts = timespec_diff(before_, after_);
-        auto latency_us = ((diff_ts.tv_sec * 1000000000) + diff_ts.tv_nsec ) / (1000 * number_of_send_);//每条notification直接的时间间隔，包括notify的周期
-        double throuput_bytes = payload_size_ * number_of_send_/(((diff_ts.tv_sec + diff_ts.tv_nsec / 1000000000.000)) - cycle_*number_of_send_);
-        latencys_.push_back(latency_us);
-        number_of_test_++;
-        std::cout <<"The No."<<number_of_test_<< " send " << std::setw(4) << std::setfill('0')
-        << number_of_send_ << " notification messages.cycle(ms)["
-        <<cycle_<<"]. latency(us,Including cycles)["
-        << std::fixed << std::setprecision(2)
-        <<latency_us
-        <<"]. throughput(bytes/s,Excluding cycles)["
-        <<throuput_bytes<<"]"<<std::endl;
-        std::cout << "The No."<<number_of_test_<<" testing has ended, and the next round of testing is about to begin......" << std::endl;
-        number_of_send_total_ += number_of_send_;
-        number_of_send_ = 0;
+        if(number_of_send_ != 0){
+            timespec diff_ts = timespec_diff(before_, after_);
+            auto latency_us = ((diff_ts.tv_sec * 1000000000) + diff_ts.tv_nsec) / 1000;//每条notification直接的时间间隔，包括notify的周期
+            auto throuput_bytes = payload_size_ * number_of_send_ * 1000000 / (latency_us - cycle_*1000 * (number_of_send_ - 1));//每条notification直接的时间间隔，包括notify的周期
+            latencys_.push_back(latency_us);
+            number_of_test_++;
+            std::cout <<"The No."<<number_of_test_<< " test send " << std::setw(4) << std::setfill('0')
+            << number_of_send_ << " notification messages.cycle(ms)["
+            <<cycle_<<"]. latency(us,except cycles)["
+            << std::fixed << std::setprecision(2)
+            <<latency_us- cycle_ * (number_of_send_ - 1) * 1000
+            <<"]. throughput(bytes/s,Excluding cycles)["
+            <<throuput_bytes<<"]"<<std::endl;
+            std::cout << "The No."<<number_of_test_<<" testing has ended, and the next round of testing is about to begin......" << std::endl;
+            number_of_send_total_ += number_of_send_;
+            number_of_send_ = 0;            
+        } else{
+            std::cout<< "No notification messages was sended." << std::endl;
+        }
     }
 
     void on_message_shutdown(const std::shared_ptr<vsomeip::message>& _request){

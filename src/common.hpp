@@ -11,6 +11,10 @@
 #include <string>  
 #include <cstdlib>
 #include <algorithm>
+#include <iostream>
+#include <sys/socket.h>  
+#include <arpa/inet.h>  
+#include <unistd.h>  
 
 #define TEST_SERVICE_ID       0x1234
 #define TEST_INSTANCE_ID      0x5678
@@ -48,7 +52,15 @@ bool get_mem_usage(std::size_t& mem_sizes);
 [[nodiscard]] timespec timespec_diff(const timespec &start, const timespec &end);
 
 
-/* Handle Data*/
-bool handleDatas(bool is_udp,uint32_t number_of_calls, std::size_t payload_size,const unsigned long average_throughput,const unsigned long average_latency,uint32_t sliding_window_size);
+/* Handle Data with method*/
+bool handleDatas(std::string filename, bool is_udp,
+                uint32_t number_of_request, uint32_t number_of_calls, std::size_t payload_size,
+                const unsigned long average_throughput,const unsigned long average_latency);
+
+/* Handle Data with method*/
+bool handleDatas(std::string filename, bool is_udp,uint32_t cycle,
+                uint32_t number_of_notify, uint32_t number_of_test, std::size_t payload_size,
+                const unsigned long average_throughput,const unsigned long average_latency);
+
 
 #endif // VSOMEIP_PERFORMANCE_TEST_COMMON_HPP
