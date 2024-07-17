@@ -1,66 +1,79 @@
 {
-    "unicast" : "172.18.0.2",
+    "unicast" : "172.18.0.3",
+    "netmask" : "255.255.255.0",
     "logging" :
     {
         "level" : "debug",
-        "console" : "true",
-        "file" : { "enable" : "false", "path" : "/tmp/vsomeip.log" },
-        "dlt" : "false"
+        "console" : "false",
+        "file" : { "enable" : "true", "path" : "/someip/log/event-tcp-client.log" },
+        "dlt" : "true"
     },
     "applications" :
     [
         {
-            "name" : "test_method_server",
-            "id" : "0x1277"
+            "name" : "test_method_client",
+            "id" : "0x1343"
         },
         {
-            "name" : "test_event_server",
-            "id" : "0x1278"
+            "name" : "test_event_client",
+            "id" : "0x1344"
         },
         {
-            "name" : "test_mix_server",
-            "id" : "0x1279"
+            "name" : "test_method_client1",
+            "id" : "0x1345"
+        },
+        {
+            "name" : "test_event_client02",
+            "id" : "0x1346"
         }
     ],
-    "services" :
+    "clients" :
     [
         {
             "service" : "0x1234",
             "instance" : "0x5678",
-            "unreliable" : "30509",
+            "reliable": {
+                "port":"40001",
+                "enable-magic-cookies":"false"
+            }
+        }
+    ],
+    "services":
+    [
+        {
+            "service":"0x1234",
+            "instance":"0x5678",
+            "unicast": "172.18.0.2", 
+            "unreliable":"30509",
             "events" :
             [
                 {
                     "event" : "0x8778",
                     "is_field" : "true",
+                    "is_reliable" : "true",
                     "update-cycle" : 0
                 },
                 {
                     "event" : "0x8779",
-                    "is_field" : "true"
+                    "is_field" : "true",
+                    "is_reliable" : "true"
                 }
             ],
             "eventgroups" :
             [
                 {
                     "eventgroup" : "0x4465",
-                    "events" : [ "0x8778", "0x8779" ],
-                    "multicast" :
-                    {
-                        "address" : "239.1.1.255",
-                        "port" : "32344"
-                    }
+                    "events" : [ "0x8778", "0x8779" ]
                 }
             ],
             "someip-tp": {
-                "service-to-client": [
-                    "0x0421"
+                "client-to-service": [
+                    "0x0421","0x8778", "0x8779"
                 ]
             }
         }
     ],
-    "max-payload-size-unreliable" : "100000",
-    "routing" : "test_method_server",
+    "routing" : "test_event_client",
     "service-discovery" :
     {
         "enable" : "true",

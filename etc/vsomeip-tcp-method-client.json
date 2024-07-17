@@ -32,7 +32,10 @@
         {
             "service" : "0x1234",
             "instance" : "0x5678",
-            "unreliable" : [ 40000, 40002 ]
+            "reliable": {
+                "port":"40001",
+                "enable-magic-cookies":"false"
+            }
         }
     ],
     "services":
@@ -41,7 +44,10 @@
             "service":"0x1234",
             "instance":"0x5678",
             "unicast": "172.18.0.2", 
-            "unreliable":"30509",
+            "reliable": {
+                "port":"40001",
+                "enable-magic-cookies":"false"
+            },
             "someip-tp": {
                 "client-to-service": [
                     "0x0421"

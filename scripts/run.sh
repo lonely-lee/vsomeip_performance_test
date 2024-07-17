@@ -3,7 +3,7 @@ if [ "$#" -ne 1 ]; then
     echo "Usage: $0 <1|2|3|4|5>"  
     exit 1  
 fi
-export LD_LIBRARY_PATH=/home/hikerlee02/workspace/x86target/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=./../lib:$LD_LIBRARY_PATH
 
 case $1 in  
     1)  
@@ -11,7 +11,7 @@ case $1 in
         export VSOMEIP_CONFIGURATION=./../etc/vsomeip-udp-method-client.json
         export VSOMEIP_APPLICATION_NAME=test_method_client
         # ./../build/test_method_client --size 4000 --cycle 50
-        ./../build/test_method_client -p TCP -c 10 -m ASYNC -pl 1500
+        ./../build/test_method_client -p UDP -c 10 -m ASYNC -pl 150
         ;;  
     2)  
         echo "Executing test_method_server"    

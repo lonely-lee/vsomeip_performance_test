@@ -23,6 +23,7 @@ public:
         number_of_notification_messages_(0),
         payload_size_(0),
         wait_for_msg_acknowledged_(true),
+        wait_until_subscription_accepted_(true),
         cycle_(cycle),
         running_(true),
         sender_(std::bind(&TestEventClient::run, this)),
@@ -31,17 +32,6 @@ public:
 
 
     ~TestEventClient() {
-        {
-            std::lock_guard<std::mutex> u_lcok(mutex_);
-            wait_for_availability_ = false;
-            is_available_ = false;
-            cv_.notify_one();
-        }
-        {
-            std::lock_guard<std::mutex> u_lcok(msg_acknowledged_mutex_);
-            wait_for_msg_acknowledged_ = false;
-            notification_cv_.notify_one();
-        }
         if(sender_.joinable()){
             sender_.join();
         }else {
@@ -63,7 +53,7 @@ public:
 
         app_->register_message_handler(TEST_SERVICE_ID, TEST_INSTANCE_ID, TEST_EVENT_ID, 
         [this](const std::shared_ptr<vsomeip::message> &response){
-            on_message(response);
+            on_notification(response);
         });
 
         app_->register_availability_handler(TEST_SERVICE_ID, TEST_INSTANCE_ID,
@@ -78,6 +68,13 @@ public:
                 TEST_INSTANCE_ID,
                 TEST_EVENT_ID,
                 its_groups);
+        app_->register_subscription_status_handler(TEST_SERVICE_ID,
+                TEST_INSTANCE_ID, TEST_EVENTGROUP_ID,
+                TEST_EVENT_ID,
+                std::bind(&TestEventClient::on_subscription_status_changed, this,
+                          std::placeholders::_1, std::placeholders::_2,
+                          std::placeholders::_3, std::placeholders::_4,
+                          std::placeholders::_5));
         app_->subscribe(TEST_SERVICE_ID, TEST_INSTANCE_ID, TEST_EVENTGROUP_ID);
 
         return true;
@@ -90,13 +87,14 @@ public:
     void stop() {
         std::cout<<"Stopping test"<<std::endl;
         if (is_available_){//通知服务端测试结束
+            is_available_ = false;
             std::cout<<"Sending shutdown request"<<std::endl;
             std::shared_ptr<vsomeip::message> request_ = vsomeip::runtime::get()->create_request();
             request_->set_service(TEST_SERVICE_ID);
             request_->set_instance(TEST_INSTANCE_ID);
             request_->set_method(SHUTDOWN_METHOD_ID);
             app_->send(request_);
-            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+            std::this_thread::sleep_for(std::chrono::milliseconds(2000));
         }
         running_ = false;
 
@@ -106,21 +104,26 @@ public:
         app_->release_service(TEST_SERVICE_ID, TEST_INSTANCE_ID);
 
         if(latencys_.size() != 0){
-            auto average_latency = std::accumulate(latencys_.begin(), latencys_.end(), 0.0) / static_cast<double>(latencys_.size());
-            auto average_throughput = payload_size_ * number_of_notify_ * test_total_  * 1.000000 / std::accumulate(latencys_.begin(), latencys_.end(), 0.0) * 1000000;
+            uint64_t average_latency = (std::accumulate(latencys_.begin(), latencys_.end(), 0) - cycle_* test_total_*(number_of_notify_ - 1) * 1000) / static_cast<uint64_t>(latencys_.size());
+            average_latency = average_latency/number_of_notify_;
+            auto average_throughput = payload_size_ * number_of_notify_ * test_total_  * 1.000000 / (std::accumulate(latencys_.begin(), latencys_.end(), 0.0) - cycle_ * (number_of_notify_ - 1) * test_total_* 1000) * 1000000;
             std::cout<<"This test is over:"
-                    <<"average_latency(us)["
-                    <<average_latency - 
+                    << "Protoc:"<<(protocol_ == protocol_e::PR_TCP ? "TCP" : "UDP" )
+                    <<", execute "<< test_total_ << " tests. Receive: " 
+                    << number_of_notify_<< " notification messages per test(all receive response)."<<std::endl;
+            std::cout<<"The byte size of notification messages is "<<payload_size_<<" bytes. "<<std::endl;
+            std::cout<<"this cause: average_latency(us,except cycle)["
+                    <<average_latency
                     <<"], average throughput(Bytes/s,except cycle)["
-                    <<average_throughput<<"]"<<std::endl;
-            handleDatas("event_server_data.txt",(protocol_ == protocol_e::PR_UDP),cycle_,number_of_notify_,
+                    <<average_throughput
+                    <<"]"<<std::endl;
+            handleDatas("event_client_data.txt",(protocol_ == protocol_e::PR_UDP),cycle_,number_of_notify_,
                         number_of_test_,payload_size_,average_throughput,average_latency);
         } else{
             std::cout<<"No data to handle"<<std::endl;
         }
     }
 
-private:
     void on_availability(vsomeip::service_t service, vsomeip::instance_t instance, bool is_available) {
         std::cout << "Service ["
                 << std::setw(4) << std::setfill('0') << std::hex << service << "." << instance
@@ -142,7 +145,19 @@ private:
         }
     }
 
-    void on_message(const std::shared_ptr<vsomeip::message> &response) {
+    void on_subscription_status_changed(const vsomeip::service_t _service,
+                                        const vsomeip::instance_t _instance,
+                                        const vsomeip::eventgroup_t _eventgroup,
+                                        const vsomeip::event_t _event,
+                                        const uint16_t error_code) {
+        if (error_code == 0x0u) { // accepted
+            std::lock_guard<std::mutex> its_lock(mutex_);
+            wait_until_subscription_accepted_ = false;
+            cv_.notify_one();
+        }
+    }
+
+    void on_notification(const std::shared_ptr<vsomeip::message> &response) {
         number_of_notification_messages_++;
         if(payload_size_ == 0){
             payload_size_ = response->get_length();
@@ -163,7 +178,15 @@ private:
         while (wait_for_availability_) {
             cv_.wait(its_lock);
         }
-        for(number_of_test_ = 1; number_of_test_ < test_total_+1; ++number_of_test_){
+
+        while (wait_until_subscription_accepted_) {
+            if (std::cv_status::timeout == cv_.wait_for(its_lock, std::chrono::seconds(30))) {
+                std::cout << "Subscription wasn't accepted in time!"<<std::endl;
+                break;
+            }
+        }
+
+        for(number_of_test_ = 1; number_of_test_ <= test_total_; ++number_of_test_){
             std::cout << "Service is send_service_start_measuring." << std::endl;
             send_service_start_measuring(true);
             get_now_time(before);
@@ -175,23 +198,21 @@ private:
             get_now_time(after);
             send_service_start_measuring(false);
             diff_ts = timespec_diff(before, after);
-            auto latency_us = ((diff_ts.tv_sec * 1000000000) + diff_ts.tv_nsec) / 1000;//测试过程总延迟
+            uint64_t latency_us = diff_ts.tv_sec * 1000000 + diff_ts.tv_nsec / 1000;//测试过程总延迟
             latencys_.push_back(latency_us);
-            auto throughput = payload_size_ * number_of_notify_ * 1000000 / (latency_us - cycle_*1000 * (number_of_notify_ - 1));
+            //std::cout<<"latency_us:"<<latency_us-cycle_ * (number_of_notify_ - 1) * 1000<<std::endl;
+            auto throughput = payload_size_ * number_of_notify_ * 1.000000 / (latency_us - cycle_*1000 * (number_of_notify_ - 1))*1000000;
             std::cout <<"The No."<<number_of_test_<<" Test "<< "receive " << std::setw(4) << std::setfill('0')
                     << number_of_notify_ << " notification messages."
                     <<" latency(us,except cycle)["
-                    <<latency_us- cycle_ * (number_of_notify_ - 1) * 1000
+                    <<((latency_us - cycle_ * (number_of_notify_ - 1) * 1000)/number_of_notify_)
                     <<"], throughput(Bytes/s)["
-                    <<throughput<<"]"
+                    <<throughput<<"]."
                     << std::endl;
             std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         }
 
-        wait_for_availability_ = true;
-
         stop();
-        sleep(1);//等待shutdown报文发送完毕
         if (initialized_) {
             app_->stop();
         }
@@ -205,6 +226,7 @@ private:
         app_->send(m);
     }
 
+private:
     protocol_e protocol_;
     std::shared_ptr<vsomeip::application> app_;
     std::mutex mutex_,msg_acknowledged_mutex_;
@@ -212,6 +234,7 @@ private:
     bool running_;
     bool wait_for_availability_,wait_for_msg_acknowledged_;
     bool is_available_;
+    bool wait_until_subscription_accepted_;
 
     uint32_t payload_size_;
     uint32_t test_total_;
@@ -225,23 +248,23 @@ private:
     std::atomic<bool> initialized_;
 };
 
-TestEventClient *its_sample_ptr(nullptr);
-std::thread stop_thread;
-void handle_signal(int _signal) {
-    if (its_sample_ptr != nullptr &&
-            (_signal == SIGINT || _signal == SIGTERM)) {
-        stop_thread = std::thread([its_sample_ptr=its_sample_ptr]{
-            its_sample_ptr->stop();
-        }); 
-    }
-}
+// TestEventClient *its_sample_ptr(nullptr);
+// std::thread stop_thread;
+// void handle_signal(int _signal) {
+//     if (its_sample_ptr != nullptr &&
+//             (_signal == SIGINT || _signal == SIGTERM)) {
+//         stop_thread = std::thread([its_sample_ptr=its_sample_ptr]{
+//             its_sample_ptr->stop();
+//         }); 
+//     }
+// }
 
 
 // this variables are changed via cmdline parameters
 static protocol_e protocol(protocol_e::PR_UDP);
 static std::uint32_t number_of_notify(6);
 static std::uint32_t number_of_test(3);
-static std::uint32_t payload_size(400);
+static std::uint32_t cycle(50);
 int main(int argc, char** argv) {
 
     int i = 0;
@@ -271,17 +294,17 @@ int main(int argc, char** argv) {
             try {
                 number_of_test = static_cast<std::uint32_t>(std::stoul(std::string(argv[i+1]), nullptr, 10));
             } catch (const std::exception &e) {
-                std::cerr << "Please specify a valid value for number of calls" << std::endl;
+                std::cerr << "Please specify a valid value for test" << std::endl;
                 return(EXIT_FAILURE);
             }
             i++;
-        } else if(std::string("--payload-size") == std::string(argv[i])
-        || std::string("-pl") == std::string(argv[i])) {
+        } else if(std::string("--cycle") == std::string(argv[i])
+        || std::string("-c") == std::string(argv[i])) {
             try {
-                payload_size = static_cast<std::uint32_t>(std::stoul(std::string(argv[i+1]), nullptr, 10));
-                std::cout<<"payload_size:"<<payload_size << std::endl;
+                cycle = static_cast<std::uint32_t>(std::stoul(std::string(argv[i+1]), nullptr, 10));
+                std::cout<<"cycle:"<<cycle << std::endl;
             } catch (const std::exception &e) {
-                std::cerr << "Please specify a valid values for payload size" << std::endl;
+                std::cerr << "Please specify a valid values for cycle" << std::endl;
                 return(EXIT_FAILURE);
             }
             i++;
@@ -291,12 +314,12 @@ int main(int argc, char** argv) {
             std::cout << "--protocol|-p: valid values TCP or UDP" << std::endl;
             std::cout << "--notify|-n: number of message notify from server" << std::endl;
             std::cout << "--test|-t: number of test" << std::endl;
-            std::cout << "--payload-size|-pl: payload size in Bytes default: 40" << std::endl;
+            std::cout << "--cycle|-c: cycle notify" << std::endl;
         }
         i++;
     }
 
-    TestEventClient client(protocol, number_of_notify, number_of_test, payload_size);
+    TestEventClient client(protocol, number_of_notify, number_of_test, cycle);
     // its_sample_ptr = &client;
     // signal(SIGINT, handle_signal);
     // signal(SIGTERM, handle_signal);

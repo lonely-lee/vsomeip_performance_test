@@ -1,10 +1,10 @@
 {
-    "unicast" : "192.254.8.102",
+    "unicast" : "172.18.0.2",
     "logging" :
     {
         "level" : "debug",
-        "console" : "true",
-        "file" : { "enable" : "false", "path" : "/tmp/vsomeip.log" },
+        "console" : "false",
+        "file" : { "enable" : "true", "path" : "/someip/log/udp-event-server.log" },
         "dlt" : "false"
     },
     "applications" :
@@ -54,7 +54,7 @@
             ],
             "someip-tp": {
                 "service-to-client": [
-                    "0x0421"
+                    "0x0421","0x8778","0x8779"
                 ]
             }
         }

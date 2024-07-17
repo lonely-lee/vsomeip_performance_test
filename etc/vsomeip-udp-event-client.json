@@ -1,11 +1,11 @@
 {
-    "unicast" : "192.254.8.102",
+    "unicast" : "172.18.0.3",
     "netmask" : "255.255.255.0",
     "logging" :
     {
         "level" : "debug",
-        "console" : "true",
-        "file" : { "enable" : "true", "path" : "/var/log/vsomeip.log" },
+        "console" : "false",
+        "file" : { "enable" : "true", "path" : "/someip/log/udp-event-client.log" },
         "dlt" : "true"
     },
     "applications" :
@@ -40,20 +40,20 @@
         {
             "service":"0x1234",
             "instance":"0x5678",
-            "unicast": "192.254.8.2", 
+            "unicast": "172.18.0.2", 
             "unreliable":"30509",
             "events" :
             [
                 {
                     "event" : "0x8778",
                     "is_field" : "true",
-                    "is_reliable" : "true",
+                    "is_reliable" : "false",
                     "update-cycle" : 0
                 },
                 {
                     "event" : "0x8779",
                     "is_field" : "true",
-                    "is_reliable" : "true"
+                    "is_reliable" : "false"
                 }
             ],
             "eventgroups" :
@@ -65,7 +65,7 @@
             ],
             "someip-tp": {
                 "client-to-service": [
-                    "0x0421"
+                    "0x0421","0x8778", "0x8779"
                 ]
             }
         }
@@ -73,7 +73,7 @@
     "routing" : "test_event_client",
     "service-discovery" :
     {
-        "enable" : "false",
+        "enable" : "true",
         "multicast" : "239.0.0.255",
         "port" : "30490",
         "protocol" : "udp",

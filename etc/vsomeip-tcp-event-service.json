@@ -3,8 +3,8 @@
     "logging" :
     {
         "level" : "debug",
-        "console" : "true",
-        "file" : { "enable" : "false", "path" : "/tmp/vsomeip.log" },
+        "console" : "false",
+        "file" : { "enable" : "true", "path" : "/someip/log/tcp-event-server.log" },
         "dlt" : "false"
     },
     "applications" :
@@ -27,17 +27,22 @@
         {
             "service" : "0x1234",
             "instance" : "0x5678",
-            "unreliable" : "30509",
+            "reliable": {
+                "port":"40001",
+                "enable-magic-cookies":"false"
+            },
             "events" :
             [
                 {
                     "event" : "0x8778",
                     "is_field" : "true",
+                    "is_reliable" : "true",
                     "update-cycle" : 0
                 },
                 {
                     "event" : "0x8779",
-                    "is_field" : "true"
+                    "is_field" : "true",
+                    "is_reliable" : "true"
                 }
             ],
             "eventgroups" :
@@ -54,13 +59,13 @@
             ],
             "someip-tp": {
                 "service-to-client": [
-                    "0x0421"
+                    "0x0421","0x8778","0x8779"
                 ]
             }
         }
     ],
     "max-payload-size-unreliable" : "100000",
-    "routing" : "test_method_server",
+    "routing" : "test_event_server",
     "service-discovery" :
     {
         "enable" : "true",

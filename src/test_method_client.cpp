@@ -24,20 +24,18 @@ using namespace std::chrono_literals;
 class cpu_load_test_client
 {
 public:
-    cpu_load_test_client(protocol_e _protocol, std::uint32_t number_of_request,std::uint32_t _number_of_calls,
-                        std::uint32_t _payload_size, bool _call_service_sync,
-                        bool _shutdown_service) :
+    cpu_load_test_client(protocol_e _protocol, std::uint32_t number_of_request,std::uint32_t _number_of_test,
+                        std::uint32_t _payload_size,bool _shutdown_service) :
             protocol_(_protocol),
             app_(vsomeip::runtime::get()->create_application()),
             request_(vsomeip::runtime::get()->create_request(protocol_ == protocol_e::PR_TCP)),
-            call_service_sync_(_call_service_sync),
             shutdown_service_at_end_(_shutdown_service),
-            sliding_window_size_(_number_of_calls),
+            sliding_window_size_(_number_of_test),
             wait_for_availability_(true),
             is_available_(false),
             number_of_requests_(number_of_request),
-            number_of_calls_(_number_of_calls),
-            number_of_calls_current_(0),
+            number_of_test_(_number_of_test),
+            number_of_test_current_(0),
             number_of_sent_messages_(0),
             number_of_sent_messages_total_(0),
             number_of_acknowledged_messages_(0),
@@ -96,12 +94,12 @@ private:
         if(latencys_.empty()){
             std::cout <<"This test have no data"<<std::endl;
         } else{
-            const unsigned long average_latency = std::accumulate(latencys_.begin(), latencys_.end(), 0) / (number_of_requests_ * number_of_calls_ * 2);
-            unsigned long int  total_payload = payload_size_ * number_of_requests_ * number_of_calls_;
+            const unsigned long average_latency = std::accumulate(latencys_.begin(), latencys_.end(), 0) / (number_of_requests_ * number_of_test_ * 2);
+            unsigned long int  total_payload = payload_size_ * number_of_requests_ * number_of_test_;
             double average_throughput = static_cast<double>(total_payload) / std::accumulate(latencys_.begin(), latencys_.end(), 0)*1000000;
             //std::cout<<"total_payload"<<total_payload<<std::endl;
             std::cout << "Protoc:"<<(protocol_ == protocol_e::PR_TCP ? "TCP" : "UDP" )
-                <<", execute "<< number_of_calls_ << " tests. Sent: " 
+                <<", execute "<< number_of_test_ << " tests. Sent: " 
                 << number_of_requests_
                 << " request messages per test(all receive response)."<<std::endl;
             std::cout<<"The byte size of both the request and response messages is "<<payload_size_<<" bytes. "<<std::endl;
@@ -117,7 +115,7 @@ private:
 
             
             handleDatas("method_client_data.txt",(protocol_ == protocol_e::PR_UDP),
-                        number_of_requests_,number_of_calls_,payload_size_,
+                        number_of_requests_,number_of_test_,payload_size_,
                         average_throughput,average_latency);
         }
     }
@@ -152,17 +150,9 @@ private:
         std::cout<<"resp length:"<<_response->get_length()<<std::endl;
 
         number_of_acknowledged_messages_++;
-        if(call_service_sync_)
-        {
-            // We notify the sender thread every time a message was acknowledged
-            std::lock_guard<std::mutex> lk(all_msg_acknowledged_mutex_);
-            wait_for_all_msg_acknowledged_ = false;
-            all_msg_acknowledged_cv_.notify_one();
-        }
-        else
         {
             // We notify the sender thread only if all sent messages have been acknowledged
-            if(number_of_acknowledged_messages_ == number_of_calls_current_)
+            if(number_of_acknowledged_messages_ == number_of_test_current_)
             {
                 std::lock_guard<std::mutex> lk(all_msg_acknowledged_mutex_);
                 number_of_acknowledged_messages_ = 0;
@@ -194,13 +184,12 @@ private:
         request_->set_payload(payload);
 
         // lock the mutex
-        for(std::uint32_t i=1; i <= number_of_calls_; i++) {
-            number_of_calls_current_ = i;
+        for(std::uint32_t i=1; i <= number_of_test_; i++) {
+            number_of_test_current_ = i;
             sliding_window_size_ = 1;
             std::unique_lock<std::mutex> lk(all_msg_acknowledged_mutex_);
             send_messages_async(lk, number_of_requests_);
             sleep(1);//防止测试结束和测试开始的someip报文合并成一条报文，便于调试
-            //call_service_sync_ ? send_messages_sync(lk, i) : send_messages_async(lk, i);
         }
 
         wait_for_availability_ = true;
@@ -255,9 +244,9 @@ private:
         get_now_time(after);
         send_service_start_measuring(false);
         diff_ts = timespec_diff(before, after);
-        auto latency_us = ((diff_ts.tv_sec * 1000000) + (diff_ts.tv_nsec / 1000)) / (2 * number_of_calls_);//请求到响应来回除以二,同时除以发送请求次数
+        auto latency_us = ((diff_ts.tv_sec * 1000000) + (diff_ts.tv_nsec / 1000)) / (2 * number_of_test_);//请求到响应来回除以二,同时除以发送请求次数
         latencys_.push_back(latency_us);
-        std::cout <<"The No."<<number_of_calls_current_<<" Test "<< " sent " << std::setw(4) << std::setfill('0')
+        std::cout <<"The No."<<number_of_test_current_<<" Test "<< " sent " << std::setw(4) << std::setfill('0')
             << number_of_requests_ << " request messages(all receive response). latency(us)["
             << std::fixed << std::setprecision(2)
             <<latency_us
@@ -286,15 +275,14 @@ private:
     protocol_e protocol_;
     std::shared_ptr<vsomeip::application> app_;
     std::shared_ptr<vsomeip::message> request_;
-    bool call_service_sync_;
     bool shutdown_service_at_end_;
     std::uint32_t sliding_window_size_;
     std::mutex mutex_;
     std::condition_variable condition_;
     bool wait_for_availability_;
     bool is_available_;
-    std::uint32_t number_of_calls_;
-    std::uint32_t number_of_calls_current_;
+    std::uint32_t number_of_test_;
+    std::uint32_t number_of_test_current_;
     std::uint32_t number_of_sent_messages_;
     std::uint32_t number_of_sent_messages_total_;
     std::uint32_t number_of_acknowledged_messages_;
@@ -326,7 +314,7 @@ void handle_signal(int _signal) {
 // this variables are changed via cmdline parameters
 static protocol_e protocol(protocol_e::PR_UDP);
 static std::uint32_t number_of_requests_(10);
-static std::uint32_t number_of_calls(0);
+static std::uint32_t number_of_test(0);
 static std::uint32_t payload_size(40);
 static bool call_service_sync(true);
 static bool shutdown_service(true);
@@ -349,7 +337,7 @@ int main(int argc, char** argv)
         } else if(std::string("--calls") == std::string(argv[i])
         || std::string("-c") == std::string(argv[i])) {
             try {
-                number_of_calls = static_cast<std::uint32_t>(std::stoul(std::string(argv[i+1]), nullptr, 10));
+                number_of_test = static_cast<std::uint32_t>(std::stoul(std::string(argv[i+1]), nullptr, 10));
             } catch (const std::exception &e) {
                 std::cerr << "Please specify a valid value for number of calls" << std::endl;
                 return(EXIT_FAILURE);
@@ -364,17 +352,6 @@ int main(int argc, char** argv)
                 return(EXIT_FAILURE);
             }
             i++;
-        } else if(std::string("--mode") == std::string(argv[i])
-        || std::string("-m") == std::string(argv[i])) {
-            if(std::string("sync") == std::string(argv[i+1]) ||
-                    std::string("SYNC") == std::string(argv[i+1])) {
-                call_service_sync = true;
-                i++;
-            } else if(std::string("async") == std::string(argv[i+1]) ||
-                    std::string("ASYNC") == std::string(argv[i+1])) {
-                call_service_sync = false;
-                i++;
-            }
         } else if(std::string("--payload-size") == std::string(argv[i])
         || std::string("-pl") == std::string(argv[i])) {
             try {
@@ -390,7 +367,6 @@ int main(int argc, char** argv)
             std::cout << "Available options:" << std::endl;
             std::cout << "--protocol|-p: valid values TCP or UDP" << std::endl;
             std::cout << "--calls|-c: number of message calls to do" << std::endl;
-            std::cout << "--mode|-m: mode sync or async" << std::endl;
             std::cout << "--payload-size|-pl: payload size in Bytes default: 40" << std::endl;
         }
         i++;
@@ -400,12 +376,12 @@ int main(int argc, char** argv)
         std::cerr << "Please specify valid protocol mode, see --help" << std::endl;
         return(EXIT_FAILURE);
     }
-    if(!number_of_calls) {
-        std::cerr << "Please specify valid number of calls, see --help" << std::endl;
+    if(!number_of_test) {
+        std::cerr << "Please specify valid number of tests, see --help" << std::endl;
         return(EXIT_FAILURE);
     }
 
-    cpu_load_test_client test_client_(protocol,number_of_requests_, number_of_calls, payload_size, call_service_sync, shutdown_service);
+    cpu_load_test_client test_client_(protocol,number_of_requests_, number_of_test, payload_size, shutdown_service);
     // its_sample_ptr = &test_client_;
     // signal(SIGINT, handle_signal);
     // signal(SIGTERM, handle_signal);

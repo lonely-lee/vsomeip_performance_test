@@ -97,15 +97,21 @@ public:
         }
 
         if(latencys_.size() != 0){
-            const auto average_latency = (std::accumulate(latencys_.begin(), latencys_.end(), 0) - cycle_* (number_of_send_total_ - 1)) / static_cast<uint64_t>(latencys_.size());
+            auto average_latency = (std::accumulate(latencys_.begin(), latencys_.end(), 0) - cycle_* (number_of_send_total_ - number_of_test_) * 1000) / static_cast<uint64_t>(latencys_.size());
+            average_latency = average_latency*number_of_test_/number_of_send_total_;
             const auto average_throughput = payload_size_ * number_of_send_total_ * 1000000 / (std::accumulate(latencys_.begin(), latencys_.end(), 0) - 1000 * cycle_ * (number_of_send_total_-number_of_test_));
-            std::cout << "Send: " << number_of_send_total_
-                << " notification messages in total. This caused: latency(us/message)["
-                << std::fixed << std::setprecision(2)
-                << average_latency
-                << "], throughput(bytes/s)["
-                << average_throughput
-                << "]." << std::endl;
+            
+            std::cout<<"This test is over:"
+                    << "Protoc:"<<(protocol_ == protocol_e::PR_TCP ? "TCP" : "UDP" )
+                    <<", execute "<< number_of_test_ << " tests. Sent: " 
+                    << number_of_send_total_/number_of_test_<< " notification messages per test(all receive response)."<<std::endl;
+            std::cout<<"The byte size of notification messages is "<<payload_size_<<" bytes. "<<std::endl;
+            std::cout<<"this cause: average_latency(us,except cycle)["
+                    <<average_latency
+                    <<"], average throughput(Bytes/s,except cycle)["
+                    <<average_throughput
+                    <<"]"<<std::endl;
+
                 handleDatas("event_server_data.txt",(protocol_ == protocol_e::PR_UDP),cycle_,number_of_send_total_/number_of_test_,
                             number_of_test_,payload_size_,average_throughput,average_latency);
         } else{
@@ -149,7 +155,7 @@ private:
         get_now_time(after_);
         if(number_of_send_ != 0){
             timespec diff_ts = timespec_diff(before_, after_);
-            auto latency_us = ((diff_ts.tv_sec * 1000000000) + diff_ts.tv_nsec) / 1000;//每条notification直接的时间间隔，包括notify的周期
+            auto latency_us = (diff_ts.tv_sec * 1000000) + diff_ts.tv_nsec / 1000;//每条notification直接的时间间隔，包括notify的周期
             auto throuput_bytes = payload_size_ * number_of_send_ * 1000000 / (latency_us - cycle_*1000 * (number_of_send_ - 1));//每条notification直接的时间间隔，包括notify的周期
             latencys_.push_back(latency_us);
             number_of_test_++;
@@ -157,9 +163,9 @@ private:
             << number_of_send_ << " notification messages.cycle(ms)["
             <<cycle_<<"]. latency(us,except cycles)["
             << std::fixed << std::setprecision(2)
-            <<latency_us- cycle_ * (number_of_send_ - 1) * 1000
+            <<((latency_us- cycle_ * (number_of_send_ - 1) * 1000)/number_of_send_)
             <<"]. throughput(bytes/s,Excluding cycles)["
-            <<throuput_bytes<<"]"<<std::endl;
+            <<throuput_bytes<<"]."<<std::endl;
             std::cout << "The No."<<number_of_test_<<" testing has ended, and the next round of testing is about to begin......" << std::endl;
             number_of_send_total_ += number_of_send_;
             number_of_send_ = 0;            
