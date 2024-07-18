@@ -1,4 +1,4 @@
-#!/bin/sh  
+#!/bin/bash  
   
 small_start_size=100
 small_end_size=1300
@@ -10,15 +10,6 @@ big_step_size=20000
 
 protocol_type=UDP
 
-statistics_resoure() {
-    echo "Start statistical resource usage"
-    while pgrep -f "$1" >/dev/null; do
-        cpu_usage=$(ps aux | grep testApp | grep -v grep | awk '{print $3}')
-        echo "$(date '+%Y-%m-%d %H:%M:%S:%3N') $cpu_usage" >> $testLog
-        sleep 0.01
-    done
-}
-
 statistics_resoure() {  
     local pid=$1  
     local name=$2  
@@ -28,7 +19,7 @@ statistics_resoure() {
     echo "Start statistical resource usage"
   
     # 检查 PID 是否存在  
-    if ! pgrep -x -f "$pid" > /dev/null; then  
+    if  !kill -0 $pid 2>/dev/null; then  
         echo "Error: Process $pid does not exist."  
         return 1  
     fi  
@@ -37,7 +28,7 @@ statistics_resoure() {
     echo "Timestamp, CPU (%), Memory (RSS KB)" > "$output_file"  
   
     # 无限循环，直到进程不再存在  
-    while pgrep -x -f "$pid" > /dev/null; do  
+    while kill -0 $pid 2>/dev/null; do  
         # 使用 ps 获取 CPU 和 RSS 内存占用  
         # 注意：这里的 -o rss= 和 -o %cpu= 需要根据你的 ps 版本进行调整  
         # 某些系统可能需要使用 -o rss=, -o %cpu= 或者其他格式  
@@ -57,7 +48,6 @@ statistics_resoure() {
   
     echo "Process $pid has ended."  
 } 
-
 export LD_LIBRARY_PATH=./../lib:$LD_LIBRARY_PATH
 export VSOMEIP_CONFIGURATION=./../etc/vsomeip-udp-event-service.json
 export VSOMEIP_APPLICATION_NAME=test_event_server
@@ -82,20 +72,21 @@ for i in {1,2};do
         echo "$i.$j. exec [./../build/test_event_server --protocol $protocol_type --size $size --notify 100 --test 10 --cycle 50]
                 Please enter 'a' when ready to start......" 
         read input
-        ./../build/test_event_server --protocol $protocol_type --size $size --notify 100 --test 10 --cycle 50&  
-        pid=$!  
-        calculate_resoure $pid test_event_server $size $protocol_type
+        ./test_event_server --protocol $protocol_type --size $size --notify 100 --test 10 --cycle 50&  
+        pid=$! 
+        # wait $pid
+        statistics_resoure $pid test_event_server $size $protocol_type
         
         echo "$i.$j. The PID of test_event_server is: $pid."
         
         while pgrep -f "test_event_ser" >/dev/null; do  
-            echo "./../build/test_event_server --size $size --cycle 50 still running,wait 1s..." 
+            echo "./test_event_server --size $size --cycle 50 still running,wait 1s..." 
             sleep 1  
         done 
 
         sleep 1
         echo "$i.$j. Finished running with --protocol $protocol_type --size $size"  
-        j=$j+1
+        j=$((j+1))
     done
 done
   
