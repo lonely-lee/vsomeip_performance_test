@@ -8,6 +8,56 @@ big_start_size=1500
 big_end_size=81500
 big_step_size=20000
 
+protocol_type=UDP
+
+statistics_resoure() {
+    echo "Start statistical resource usage"
+    while pgrep -f "$1" >/dev/null; do
+        cpu_usage=$(ps aux | grep testApp | grep -v grep | awk '{print $3}')
+        echo "$(date '+%Y-%m-%d %H:%M:%S:%3N') $cpu_usage" >> $testLog
+        sleep 0.01
+    done
+}
+
+statistics_resoure() {  
+    local pid=$1  
+    local name=$2  
+    local payload=$3  
+    local protocal=$4  
+    local output_file="${name}_${payload}_${protocal}.txt" 
+    echo "Start statistical resource usage"
+  
+    # 检查 PID 是否存在  
+    if ! pgrep -x -f "$pid" > /dev/null; then  
+        echo "Error: Process $pid does not exist."  
+        return 1  
+    fi  
+  
+    # 写入标题到输出文件  
+    echo "Timestamp, CPU (%), Memory (RSS KB)" > "$output_file"  
+  
+    # 无限循环，直到进程不再存在  
+    while pgrep -x -f "$pid" > /dev/null; do  
+        # 使用 ps 获取 CPU 和 RSS 内存占用  
+        # 注意：这里的 -o rss= 和 -o %cpu= 需要根据你的 ps 版本进行调整  
+        # 某些系统可能需要使用 -o rss=, -o %cpu= 或者其他格式  
+        info=$(ps -p $pid -o %cpu=,rss= --no-headers)  
+        cpu=$(echo "$info" | awk '{print $1}')  
+        memory=$(echo "$info" | awk '{print $2}')  
+  
+        # 获取当前时间戳  
+        timestamp=$(date +%s.%N | cut -b1-14)  # 截取前14位作为时间戳  
+  
+        # 写入日志  
+        echo "$timestamp, $cpu, $memory" >> "$output_file"  
+  
+        # 等待0.01秒  
+        sleep 0.01  
+    done  
+  
+    echo "Process $pid has ended."  
+} 
+
 export LD_LIBRARY_PATH=./../lib:$LD_LIBRARY_PATH
 export VSOMEIP_CONFIGURATION=./../etc/vsomeip-udp-event-service.json
 export VSOMEIP_APPLICATION_NAME=test_event_server
@@ -21,85 +71,32 @@ echo "The preset notification cycle for this test is 50ms,
         with 10 tests run per round and 100 notification messages sent and received per test" 
 
 
-echo "Firstly, test using UDP communication and changing the payload size from $small_start_size to $small_end_size with step size of $small_step_size"
-for size in $(seq $small_start_size $small_step_size $small_end_size); do  
-    echo "1. exec [./test_event_server --protocol UDP --size $size --notify 100 --test 10 --cycle 50]
-            Please enter 'a' when ready to start......" 
-    read input
-    ./test_event_server --protocol UDP --size $size --notify 100 --test 10 --cycle 50&  
-    pid=$!  
-    
-    echo "2. The PID of test_event_server is: $pid.Please enter 'b' when app over......"
-    read over
-    
-    while pgrep -f "test_event_ser" >/dev/null; do  
-        echo "./test_event_server --size $size --cycle 50 still running,wait 1s..." 
-        sleep 1  
-    done 
+for i in {1,2};do
+    if [ $i -eq 2 ];then
+        protocol_type=TCP
+        export VSOMEIP_CONFIGURATION=./../etc/vsomeip-tcp-event-service.json
+    fi
+    j=1
+    echo "$i. Test using $protocol_type communication and changing the payload size from $small_start_size to $small_end_size with step size of $small_step_size"
+    for size in $(seq $small_start_size $small_step_size $small_end_size); do  
+        echo "$i.$j. exec [./../build/test_event_server --protocol $protocol_type --size $size --notify 100 --test 10 --cycle 50]
+                Please enter 'a' when ready to start......" 
+        read input
+        ./../build/test_event_server --protocol $protocol_type --size $size --notify 100 --test 10 --cycle 50&  
+        pid=$!  
+        calculate_resoure $pid test_event_server $size $protocol_type
+        
+        echo "$i.$j. The PID of test_event_server is: $pid."
+        
+        while pgrep -f "test_event_ser" >/dev/null; do  
+            echo "./../build/test_event_server --size $size --cycle 50 still running,wait 1s..." 
+            sleep 1  
+        done 
 
-    sleep 1
-    echo "3. Finished running with --protocol UDP --size $size"  
-done
-
-echo "secondly, test using UDP communication and changing the payload size from $big_start_size to $big_end_size with step size of $big_step_size"
-for size in $(seq $big_start_size $big_step_size $big_end_size); do  
-    echo "1. exec [./test_event_server --protocol UDP --size $size --notify 100 --test 10 --cycle 50]
-            Please enter 'a' when ready to start......" 
-    read input
-    ./test_event_server --protocol UDP --size $size --notify 100 --test 10 --cycle 50&  
-    pid=$!  
-    
-    echo "2. The PID of test_event_server is: $pid.Please enter 'b' when app over......"
-    read over
-    
-    while pgrep -f "test_event_ser" >/dev/null; do  
-        echo "./test_event_server --size $size --cycle 50 still running,wait 1s..." 
-        sleep 1  
-    done 
-
-    sleep 1
-    echo "3. Finished running with --protocol UDP --size $size"  
-done
-
-export VSOMEIP_CONFIGURATION=./../etc/vsomeip-tcp-event-service.json
-echo "Thirdly, test using UDTCPP communication and changing the payload size from $small_start_size to $small_end_size with step size of $small_step_size"
-for size in $(seq $small_start_size $small_step_size $small_end_size); do  
-    echo "1. exec [./test_event_server --protocol TCP --size $size --notify 100 --test 10 --cycle 50]
-            Please enter 'a' when ready to start......" 
-    read input
-    ./test_event_server --protocol TCP --size $size --notify 100 --test 10 --cycle 50&  
-    pid=$!  
-    
-    echo "2. The PID of test_event_server is: $pid.Please enter 'b' when app over......"
-    read over
-    
-    while pgrep -f "test_event_ser" >/dev/null; do  
-        echo "./test_event_server --size $size --cycle 50 still running,wait 1s..." 
-        sleep 1  
-    done 
-
-    sleep 1
-    echo "3. Finished running with --protocol TCP --size $size"  
-done
-
-echo "Fourthly, test using TCP communication and changing the payload size from $big_start_size to $big_end_size with step size of $big_step_size"
-for size in $(seq $big_start_size $big_step_size $big_end_size); do  
-    echo "1. exec [./test_event_server --protocol TCP --size $size --notify 100 --test 10 --cycle 50]
-            Please enter 'a' when ready to start......" 
-    read input
-    ./test_event_server --protocol TCP --size $size --notify 100 --test 10 --cycle 50&  
-    pid=$!  
-    
-    echo "2. The PID of test_event_server is: $pid.Please enter 'b' when app over......"
-    read over
-    
-    while pgrep -f "test_event_ser" >/dev/null; do  
-        echo "./test_event_server --size $size --cycle 50 still running,wait 1s..." 
-        sleep 1  
-    done 
-
-    sleep 1
-    echo "3. Finished running with --protocol TCP --size $size"  
+        sleep 1
+        echo "$i.$j. Finished running with --protocol $protocol_type --size $size"  
+        j=$j+1
+    done
 done
   
 echo "All tests completed."

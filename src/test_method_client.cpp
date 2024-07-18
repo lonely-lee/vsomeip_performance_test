@@ -94,9 +94,8 @@ private:
         if(latencys_.empty()){
             std::cout <<"This test have no data"<<std::endl;
         } else{
-            const unsigned long average_latency = std::accumulate(latencys_.begin(), latencys_.end(), 0) / (number_of_requests_ * number_of_test_ * 2);
-            unsigned long int  total_payload = payload_size_ * number_of_requests_ * number_of_test_;
-            double average_throughput = static_cast<double>(total_payload) / std::accumulate(latencys_.begin(), latencys_.end(), 0)*1000000;
+            const unsigned long average_latency = std::accumulate(latencys_.begin(), latencys_.end(), 0) / static_cast<uint64_t>(latencys_.size());
+            unsigned long int average_throughput = payload_size_*1.000000 / average_latency*1000000;
             //std::cout<<"total_payload"<<total_payload<<std::endl;
             std::cout << "Protoc:"<<(protocol_ == protocol_e::PR_TCP ? "TCP" : "UDP" )
                 <<", execute "<< number_of_test_ << " tests. Sent: " 
@@ -147,7 +146,7 @@ private:
         }
     }
     void on_message(const std::shared_ptr<vsomeip::message> &_response) {
-        std::cout<<"resp length:"<<_response->get_length()<<std::endl;
+        //std::cout<<"resp length:"<<_response->get_length()<<std::endl;
 
         number_of_acknowledged_messages_++;
         {
@@ -201,27 +200,6 @@ private:
         }
     }
 
-
-    void send_messages_sync(std::unique_lock<std::mutex>& lk, std::uint32_t _messages_to_send) {
-        send_service_start_measuring(true);
-        for (number_of_sent_messages_ = 0;
-                number_of_sent_messages_ < _messages_to_send;
-                number_of_sent_messages_++, number_of_sent_messages_total_++)
-        {
-            app_->send(request_);
-            // wait until the send messages has been acknowledged
-            while(wait_for_all_msg_acknowledged_) {
-                all_msg_acknowledged_cv_.wait(lk);
-            }
-            wait_for_all_msg_acknowledged_ = true;
-        }
-        send_service_start_measuring(false);
-        std::cout << "Synchronously sent " << std::setw(4) << std::setfill('0')
-            << number_of_sent_messages_ << " messages. CPU load [%]: "
-            <<std::endl;
-
-    }
-
     void send_messages_async(std::unique_lock<std::mutex>& lk, std::uint32_t _messages_to_send) {
         timespec before,after,diff_ts;
         std::cout<<"Testing begins!"<<std::endl;
@@ -244,14 +222,14 @@ private:
         get_now_time(after);
         send_service_start_measuring(false);
         diff_ts = timespec_diff(before, after);
-        auto latency_us = ((diff_ts.tv_sec * 1000000) + (diff_ts.tv_nsec / 1000)) / (2 * number_of_test_);//请求到响应来回除以二,同时除以发送请求次数
+        auto latency_us = ((diff_ts.tv_sec * 1000000) + (diff_ts.tv_nsec / 1000)) / (2 * number_of_requests_);//请求到响应来回除以二,同时除以发送请求次数
         latencys_.push_back(latency_us);
         std::cout <<"The No."<<number_of_test_current_<<" Test "<< " sent " << std::setw(4) << std::setfill('0')
             << number_of_requests_ << " request messages(all receive response). latency(us)["
             << std::fixed << std::setprecision(2)
             <<latency_us
             <<"], Throughput(Bytes/s)["
-            <<(_messages_to_send*payload_size_*1000000/latency_us)
+            <<(payload_size_*1000000/latency_us)
             <<"]."<<std::endl;
     }
 
@@ -334,8 +312,8 @@ int main(int argc, char** argv)
                 protocol = protocol_e::PR_TCP;
                 i++;
             }
-        } else if(std::string("--calls") == std::string(argv[i])
-        || std::string("-c") == std::string(argv[i])) {
+        } else if(std::string("--test") == std::string(argv[i])
+        || std::string("-t") == std::string(argv[i])) {
             try {
                 number_of_test = static_cast<std::uint32_t>(std::stoul(std::string(argv[i+1]), nullptr, 10));
             } catch (const std::exception &e) {
@@ -343,8 +321,8 @@ int main(int argc, char** argv)
                 return(EXIT_FAILURE);
             }
             i++;
-        } else if(std::string("--send") == std::string(argv[i])
-        || std::string("-s") == std::string(argv[i])) {
+        } else if(std::string("--request") == std::string(argv[i])
+        || std::string("-r") == std::string(argv[i])) {
             try {
                 number_of_requests_ = static_cast<std::uint32_t>(std::stoul(std::string(argv[i+1]), nullptr, 10));
             } catch (const std::exception &e) {
@@ -366,7 +344,8 @@ int main(int argc, char** argv)
         || std::string("-h") == std::string(argv[i])) {
             std::cout << "Available options:" << std::endl;
             std::cout << "--protocol|-p: valid values TCP or UDP" << std::endl;
-            std::cout << "--calls|-c: number of message calls to do" << std::endl;
+            std::cout << "--test|-t: number of message test to do" << std::endl;
+            std::cout << "--request|-r: number of request to send" << std::endl;
             std::cout << "--payload-size|-pl: payload size in Bytes default: 40" << std::endl;
         }
         i++;

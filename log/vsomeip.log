@@ -1,0 +1,990 @@
+2024-07-18 15:31:43.464661 [warning] Reliability type for event [1234.5678.8778] was not configured Using : RT_UNRELIABLE
+2024-07-18 15:31:43.467827 [warning] Reliability type for event [1234.5678.8779] was not configured Using : RT_UNRELIABLE
+2024-07-18 15:31:43.468525 [info] Using configuration file: "./../etc/vsomeip-udp-method-service.json".
+2024-07-18 15:31:43.468710 [info] Parsed vsomeip configuration in 0ms
+2024-07-18 15:31:43.468840 [info] Configuration module loaded.
+2024-07-18 15:31:43.469560 [info] Security disabled!
+2024-07-18 15:31:43.469711 [info] Initializing vsomeip (3.4.10) application "test_method_server".
+2024-07-18 15:31:43.469979 [info] Instantiating routing manager [Host].
+2024-07-18 15:31:43.471200 [info] create_routing_root: Routing root @ /tmp/vsomeip-0
+2024-07-18 15:31:43.472696 [info] Service Discovery enabled. Trying to load module.
+2024-07-18 15:31:43.475351 [info] Service Discovery module loaded.
+2024-07-18 15:31:43.478662 [info] Application(test_method_server, 1277) is initialized (11, 100).
+2024-07-18 15:31:43.484540 [info] Starting vsomeip application "test_method_server" (1277) using 2 threads I/O nice 255
+2024-07-18 15:31:43.489425 [info] Client [1277] routes unicast:192.254.8.102, netmask:255.255.255.0
+2024-07-18 15:31:43.488635 [info] main dispatch thread id from application: 1277 (test_method_server) is: 74e53a1fd640 TID: 86486
+2024-07-18 15:31:43.489115 [info] shutdown thread id from application: 1277 (test_method_server) is: 74e5399fc640 TID: 86487
+2024-07-18 15:31:43.506266 [info] Watchdog is disabled!
+2024-07-18 15:31:43.514887 [info] io thread id from application: 1277 (test_method_server) is: 74e53bd35bc0 TID: 86483
+2024-07-18 15:31:43.515014 [info] create_local_server: Listening @ /tmp/vsomeip-1277
+2024-07-18 15:31:43.514412 [info] io thread id from application: 1277 (test_method_server) is: 74e5389fa640 TID: 86489
+2024-07-18 15:31:43.517537 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 15:31:43.518364 [info] OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 15:31:43.518247 [info] Network interface "enp0s9" state changed: up
+2024-07-18 15:31:53.521977 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 15:32:03.546439 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 15:32:13.594334 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 15:32:23.605336 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 15:32:33.609817 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 15:32:43.615197 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 15:32:53.637162 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 15:35:31.084153 [warning] Reliability type for event [1234.5678.8778] was not configured Using : RT_UNRELIABLE
+2024-07-18 15:35:31.086277 [warning] Reliability type for event [1234.5678.8779] was not configured Using : RT_UNRELIABLE
+2024-07-18 15:35:31.087006 [info] Using configuration file: "./../etc/vsomeip-udp-method-service.json".
+2024-07-18 15:35:31.087707 [info] Parsed vsomeip configuration in 0ms
+2024-07-18 15:35:31.087877 [info] Configuration module loaded.
+2024-07-18 15:35:31.088019 [info] Security disabled!
+2024-07-18 15:35:31.088248 [info] Initializing vsomeip (3.4.10) application "test_method_server".
+2024-07-18 15:35:31.088530 [info] Instantiating routing manager [Host].
+2024-07-18 15:35:31.090215 [info] create_routing_root: Routing root @ /tmp/vsomeip-0
+2024-07-18 15:35:31.092615 [info] Service Discovery enabled. Trying to load module.
+2024-07-18 15:35:31.095139 [info] Service Discovery module loaded.
+2024-07-18 15:35:31.097661 [info] Application(test_method_server, 1277) is initialized (11, 100).
+2024-07-18 15:35:31.098516 [info] Starting vsomeip application "test_method_server" (1277) using 2 threads I/O nice 255
+2024-07-18 15:35:31.099327 [info] Client [1277] routes unicast:192.254.8.102, netmask:255.255.255.0
+2024-07-18 15:35:31.100185 [info] main dispatch thread id from application: 1277 (test_method_server) is: 7b9da79fd640 TID: 87313
+2024-07-18 15:35:31.100544 [info] shutdown thread id from application: 1277 (test_method_server) is: 7b9da71fc640 TID: 87314
+2024-07-18 15:35:31.101505 [info] Watchdog is disabled!
+2024-07-18 15:35:31.107468 [info] io thread id from application: 1277 (test_method_server) is: 7b9da94c0bc0 TID: 87310
+2024-07-18 15:35:31.107801 [info] io thread id from application: 1277 (test_method_server) is: 7b9da61fa640 TID: 87316
+2024-07-18 15:35:31.110020 [info] create_local_server: Listening @ /tmp/vsomeip-1277
+2024-07-18 15:35:31.111410 [info] OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 15:35:31.109488 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 15:35:31.112830 [info] Network interface "enp0s9" state changed: up
+2024-07-18 15:35:31.117057 [info] Route "224.0.0.0/4 if: enp0s9 gw: n/a" state changed: up
+2024-07-18 15:35:31.118873 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:35:31.119326 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:35:31.120336 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30509
+2024-07-18 15:35:31.121551 [info] SOME/IP routing ready.
+2024-07-18 15:35:31.120920 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:35:41.114852 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 15:35:51.123672 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 15:35:54.926141 [info] STOP OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 15:35:54.927026 [info] Stopping vsomeip application "test_method_server" (1277).
+2024-07-18 15:36:15.609478 [warning] Reliability type for event [1234.5678.8778] was not configured Using : RT_UNRELIABLE
+2024-07-18 15:36:15.612113 [warning] Reliability type for event [1234.5678.8779] was not configured Using : RT_UNRELIABLE
+2024-07-18 15:36:15.613601 [info] Using configuration file: "./../etc/vsomeip-udp-method-service.json".
+2024-07-18 15:36:15.614352 [info] Parsed vsomeip configuration in 0ms
+2024-07-18 15:36:15.614576 [info] Configuration module loaded.
+2024-07-18 15:36:15.615422 [info] Security disabled!
+2024-07-18 15:36:15.615576 [info] Initializing vsomeip (3.4.10) application "test_method_server".
+2024-07-18 15:36:15.615887 [info] Instantiating routing manager [Host].
+2024-07-18 15:36:15.622266 [info] create_routing_root: Routing root @ /tmp/vsomeip-0
+2024-07-18 15:36:15.624618 [info] Service Discovery enabled. Trying to load module.
+2024-07-18 15:36:15.629687 [info] Service Discovery module loaded.
+2024-07-18 15:36:15.631684 [info] Application(test_method_server, 1277) is initialized (11, 100).
+2024-07-18 15:36:15.655419 [info] Starting vsomeip application "test_method_server" (1277) using 2 threads I/O nice 255
+2024-07-18 15:36:15.669945 [info] main dispatch thread id from application: 1277 (test_method_server) is: 7346397fd640 TID: 87520
+2024-07-18 15:36:15.670195 [info] Client [1277] routes unicast:192.254.8.102, netmask:255.255.255.0
+2024-07-18 15:36:15.672721 [info] shutdown thread id from application: 1277 (test_method_server) is: 734638ffc640 TID: 87521
+2024-07-18 15:36:15.682048 [info] Watchdog is disabled!
+2024-07-18 15:36:15.685727 [info] io thread id from application: 1277 (test_method_server) is: 73463b329bc0 TID: 87517
+2024-07-18 15:36:15.689726 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 15:36:15.686923 [info] create_local_server: Listening @ /tmp/vsomeip-1277
+2024-07-18 15:36:15.699656 [info] OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 15:36:15.685164 [info] io thread id from application: 1277 (test_method_server) is: 7346337fe640 TID: 87523
+2024-07-18 15:36:15.697576 [info] Network interface "enp0s9" state changed: up
+2024-07-18 15:36:15.709825 [info] Route "224.0.0.0/4 if: enp0s9 gw: n/a" state changed: up
+2024-07-18 15:36:15.730493 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:36:15.736062 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:36:15.738430 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30509
+2024-07-18 15:36:15.738818 [info] SOME/IP routing ready.
+2024-07-18 15:36:15.739150 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:36:19.599487 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 15:36:19.602043 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:36:19.602883 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:36:19.653564 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:36:21.810781 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 15:36:21.822513 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:36:21.822900 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:36:21.874256 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:36:23.829423 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 15:36:23.831931 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:36:23.832665 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:36:23.882057 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:36:25.699991 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 15:36:26.837974 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 15:36:26.845624 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:36:26.856580 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:36:26.923877 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:36:28.869863 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 15:36:28.873187 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:36:28.874209 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:36:28.923480 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:36:30.879747 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 15:36:30.890566 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:36:30.891153 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:36:30.945160 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:36:32.904471 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 15:36:32.907882 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:36:32.909035 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:36:32.958958 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:36:34.913203 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 15:36:34.915920 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:36:34.939049 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:36:34.970946 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:36:35.704099 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 15:36:37.970023 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 15:36:37.972685 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:36:37.973299 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:36:37.032666 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:36:39.981933 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 15:36:39.984623 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:36:39.985126 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:36:39.037042 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:36:40.537368 [info] STOP OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 15:36:40.541255 [info] Stopping vsomeip application "test_method_server" (1277).
+2024-07-18 15:46:25.930011 [warning] Reliability type for event [1234.5678.8778] was not configured Using : RT_UNRELIABLE
+2024-07-18 15:46:25.931853 [warning] Reliability type for event [1234.5678.8779] was not configured Using : RT_UNRELIABLE
+2024-07-18 15:46:25.932623 [info] Using configuration file: "./../etc/vsomeip-udp-method-service.json".
+2024-07-18 15:46:25.933328 [info] Parsed vsomeip configuration in 0ms
+2024-07-18 15:46:25.933494 [info] Configuration module loaded.
+2024-07-18 15:46:25.933627 [info] Security disabled!
+2024-07-18 15:46:25.934232 [info] Initializing vsomeip (3.4.10) application "test_method_server".
+2024-07-18 15:46:25.934493 [info] Instantiating routing manager [Host].
+2024-07-18 15:46:25.935619 [info] create_routing_root: Routing root @ /tmp/vsomeip-0
+2024-07-18 15:46:25.937896 [info] Service Discovery enabled. Trying to load module.
+2024-07-18 15:46:25.940999 [info] Service Discovery module loaded.
+2024-07-18 15:46:25.942613 [info] Application(test_method_server, 1277) is initialized (11, 100).
+2024-07-18 15:46:25.944178 [info] Starting vsomeip application "test_method_server" (1277) using 2 threads I/O nice 255
+2024-07-18 15:46:25.945071 [info] Client [1277] routes unicast:192.254.8.102, netmask:255.255.255.0
+2024-07-18 15:46:25.944795 [info] main dispatch thread id from application: 1277 (test_method_server) is: 7b392e5fd640 TID: 88672
+2024-07-18 15:46:25.948252 [info] Watchdog is disabled!
+2024-07-18 15:46:25.948364 [info] shutdown thread id from application: 1277 (test_method_server) is: 7b392ddfc640 TID: 88673
+2024-07-18 15:46:25.954760 [info] io thread id from application: 1277 (test_method_server) is: 7b39300b1bc0 TID: 88669
+2024-07-18 15:46:25.954864 [info] io thread id from application: 1277 (test_method_server) is: 7b392d5fb640 TID: 88675
+2024-07-18 15:46:25.957994 [info] create_local_server: Listening @ /tmp/vsomeip-1277
+2024-07-18 15:46:25.958634 [info] OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 15:46:25.958932 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 15:46:25.959001 [info] Network interface "enp0s9" state changed: up
+2024-07-18 15:46:25.960927 [info] Route "224.0.0.0/4 if: enp0s9 gw: n/a" state changed: up
+2024-07-18 15:46:25.961906 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:46:25.962133 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:46:25.962466 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30509
+2024-07-18 15:46:25.962600 [info] SOME/IP routing ready.
+2024-07-18 15:46:25.963511 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:46:30.228740 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 15:46:30.231917 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:46:30.233033 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:46:30.283958 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:46:32.243371 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 15:46:32.246145 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:46:32.259870 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:46:32.300710 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:46:34.263383 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 15:46:34.266520 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:46:34.267627 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:46:34.320166 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:46:35.968423 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 15:46:37.271529 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 15:46:37.272733 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:46:37.274204 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:46:37.331102 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:46:39.280045 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 15:46:39.283613 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:46:39.295575 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:46:39.342772 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:46:41.300423 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 15:46:41.302153 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:46:41.302936 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:46:41.348723 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:46:43.310231 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 15:46:43.312404 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:46:43.313436 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:46:43.369421 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:46:45.320433 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 15:46:45.324151 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:46:45.325011 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:46:45.375211 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:46:45.984749 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 15:46:48.333528 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 15:46:48.336965 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:46:48.337758 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:46:48.391295 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:46:50.379686 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 15:46:50.383590 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:46:50.385162 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:46:50.449402 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:46:51.524570 [info] STOP OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 15:46:51.525680 [info] Stopping vsomeip application "test_method_server" (1277).
+2024-07-18 15:48:08.071193 [warning] Reliability type for event [1234.5678.8778] was not configured Using : RT_UNRELIABLE
+2024-07-18 15:48:08.072989 [warning] Reliability type for event [1234.5678.8779] was not configured Using : RT_UNRELIABLE
+2024-07-18 15:48:08.073672 [info] Using configuration file: "./../etc/vsomeip-udp-method-service.json".
+2024-07-18 15:48:08.073808 [info] Parsed vsomeip configuration in 0ms
+2024-07-18 15:48:08.073924 [info] Configuration module loaded.
+2024-07-18 15:48:08.074043 [info] Security disabled!
+2024-07-18 15:48:08.074132 [info] Initializing vsomeip (3.4.10) application "test_method_server".
+2024-07-18 15:48:08.074326 [info] Instantiating routing manager [Host].
+2024-07-18 15:48:08.075109 [info] create_routing_root: Routing root @ /tmp/vsomeip-0
+2024-07-18 15:48:08.077342 [info] Service Discovery enabled. Trying to load module.
+2024-07-18 15:48:08.080456 [info] Service Discovery module loaded.
+2024-07-18 15:48:08.084331 [info] Application(test_method_server, 1277) is initialized (11, 100).
+2024-07-18 15:48:08.086268 [info] Starting vsomeip application "test_method_server" (1277) using 2 threads I/O nice 255
+2024-07-18 15:48:08.088120 [info] Client [1277] routes unicast:192.254.8.102, netmask:255.255.255.0
+2024-07-18 15:48:08.087741 [info] shutdown thread id from application: 1277 (test_method_server) is: 7d1babdfc640 TID: 88964
+2024-07-18 15:48:08.088865 [info] main dispatch thread id from application: 1277 (test_method_server) is: 7d1bac5fd640 TID: 88963
+2024-07-18 15:48:08.091837 [info] Watchdog is disabled!
+2024-07-18 15:48:08.096086 [info] io thread id from application: 1277 (test_method_server) is: 7d1bae0abbc0 TID: 88960
+2024-07-18 15:48:08.098675 [info] io thread id from application: 1277 (test_method_server) is: 7d1baadfa640 TID: 88966
+2024-07-18 15:48:08.100153 [info] Network interface "enp0s9" state changed: up
+2024-07-18 15:48:08.101162 [info] Route "224.0.0.0/4 if: enp0s9 gw: n/a" state changed: up
+2024-07-18 15:48:08.101541 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:48:08.101706 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 15:48:08.099212 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 15:48:08.098142 [info] create_local_server: Listening @ /tmp/vsomeip-1277
+2024-07-18 15:48:08.104267 [info] OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 15:48:08.103697 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 15:48:08.102974 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30509
+2024-07-18 15:48:08.116132 [info] SOME/IP routing ready.
+2024-07-18 15:48:18.109530 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 15:48:28.115123 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 15:48:31.951666 [info] STOP OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 15:48:31.952340 [info] Stopping vsomeip application "test_method_server" (1277).
+2024-07-18 16:13:44.109418 [warning] Reliability type for event [1234.5678.8778] was not configured Using : RT_UNRELIABLE
+2024-07-18 16:13:44.110968 [warning] Reliability type for event [1234.5678.8779] was not configured Using : RT_UNRELIABLE
+2024-07-18 16:13:44.111636 [info] Using configuration file: "./../etc/vsomeip-udp-method-service.json".
+2024-07-18 16:13:44.111768 [info] Parsed vsomeip configuration in 0ms
+2024-07-18 16:13:44.111885 [info] Configuration module loaded.
+2024-07-18 16:13:44.113033 [info] Security disabled!
+2024-07-18 16:13:44.113271 [info] Initializing vsomeip (3.4.10) application "test_method_server".
+2024-07-18 16:13:44.113487 [info] Instantiating routing manager [Host].
+2024-07-18 16:13:44.114740 [info] create_routing_root: Routing root @ /tmp/vsomeip-0
+2024-07-18 16:13:44.115843 [info] Service Discovery enabled. Trying to load module.
+2024-07-18 16:13:44.118366 [info] Service Discovery module loaded.
+2024-07-18 16:13:44.120264 [info] Application(test_method_server, 1277) is initialized (11, 100).
+2024-07-18 16:13:44.121532 [info] Starting vsomeip application "test_method_server" (1277) using 2 threads I/O nice 255
+2024-07-18 16:13:44.122473 [info] Client [1277] routes unicast:192.254.8.102, netmask:255.255.255.0
+2024-07-18 16:13:44.121536 [info] main dispatch thread id from application: 1277 (test_method_server) is: 73e3b09fd640 TID: 91370
+2024-07-18 16:13:44.121889 [info] shutdown thread id from application: 1277 (test_method_server) is: 73e3b01fc640 TID: 91371
+2024-07-18 16:13:44.124440 [info] Watchdog is disabled!
+2024-07-18 16:13:44.128965 [info] io thread id from application: 1277 (test_method_server) is: 73e3af1fa640 TID: 91373
+2024-07-18 16:13:44.129893 [info] io thread id from application: 1277 (test_method_server) is: 73e3b24e5bc0 TID: 91367
+2024-07-18 16:13:44.133512 [info] create_local_server: Listening @ /tmp/vsomeip-1277
+2024-07-18 16:13:44.155319 [info] OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 16:13:44.157288 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:13:44.157447 [info] Network interface "enp0s9" state changed: up
+2024-07-18 16:13:44.162314 [info] Route "224.0.0.0/4 if: enp0s9 gw: n/a" state changed: up
+2024-07-18 16:13:44.163872 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:13:44.164206 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:13:44.164965 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30509
+2024-07-18 16:13:44.166719 [info] SOME/IP routing ready.
+2024-07-18 16:13:44.164340 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:13:48.935829 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:13:48.945761 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:13:48.952290 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:13:48.021303 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:13:50.956695 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:13:50.958823 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:13:50.959755 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:13:50.010872 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:13:52.970227 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:13:52.973130 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:13:52.974085 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:13:52.025585 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:13:54.161904 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:13:54.980225 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:13:54.983641 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:13:54.984644 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:13:55.081823 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:13:57.993594 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:13:57.996576 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:13:57.997619 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:13:57.049875 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:13:59.003592 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:13:59.006271 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:13:59.007293 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:13:59.079678 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:14:01.050300 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:14:01.054402 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:14:01.055474 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:14:01.114971 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:14:03.062039 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:14:03.065363 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:14:03.066514 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:14:03.118079 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:14:04.165213 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:14:06.072722 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:14:06.076718 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:14:06.077239 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:14:06.129702 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:14:08.083139 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:14:08.085342 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:14:08.086305 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:14:08.197020 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:14:09.009144 [info] STOP OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 16:14:09.011965 [info] Stopping vsomeip application "test_method_server" (1277).
+2024-07-18 16:19:37.963797 [warning] Reliability type for event [1234.5678.8778] was not configured Using : RT_UNRELIABLE
+2024-07-18 16:19:37.965940 [warning] Reliability type for event [1234.5678.8779] was not configured Using : RT_UNRELIABLE
+2024-07-18 16:19:37.966886 [info] Using configuration file: "./../etc/vsomeip-udp-method-service.json".
+2024-07-18 16:19:37.967021 [info] Parsed vsomeip configuration in 0ms
+2024-07-18 16:19:37.967148 [info] Configuration module loaded.
+2024-07-18 16:19:37.967275 [info] Security disabled!
+2024-07-18 16:19:37.967387 [info] Initializing vsomeip (3.4.10) application "test_method_server".
+2024-07-18 16:19:37.967781 [info] Instantiating routing manager [Host].
+2024-07-18 16:19:37.970575 [info] create_routing_root: Routing root @ /tmp/vsomeip-0
+2024-07-18 16:19:37.973534 [info] Service Discovery enabled. Trying to load module.
+2024-07-18 16:19:37.976787 [info] Service Discovery module loaded.
+2024-07-18 16:19:37.979532 [info] Application(test_method_server, 1277) is initialized (11, 100).
+2024-07-18 16:19:37.980742 [info] Starting vsomeip application "test_method_server" (1277) using 2 threads I/O nice 255
+2024-07-18 16:19:37.983127 [info] main dispatch thread id from application: 1277 (test_method_server) is: 7c94a5ffd640 TID: 92016
+2024-07-18 16:19:37.983493 [info] Client [1277] routes unicast:192.254.8.102, netmask:255.255.255.0
+2024-07-18 16:19:37.983485 [info] shutdown thread id from application: 1277 (test_method_server) is: 7c94a57fc640 TID: 92017
+2024-07-18 16:19:37.988935 [info] Watchdog is disabled!
+2024-07-18 16:19:37.994860 [info] io thread id from application: 1277 (test_method_server) is: 7c94a7b6bbc0 TID: 92013
+2024-07-18 16:19:37.996167 [info] create_local_server: Listening @ /tmp/vsomeip-1277
+2024-07-18 16:19:37.996983 [info] OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 16:19:37.996416 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:19:37.998243 [info] Network interface "enp0s9" state changed: up
+2024-07-18 16:19:37.996234 [info] io thread id from application: 1277 (test_method_server) is: 7c949ffff640 TID: 92019
+2024-07-18 16:19:37.000378 [info] Route "224.0.0.0/4 if: enp0s9 gw: n/a" state changed: up
+2024-07-18 16:19:37.001123 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:19:37.001596 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:19:37.003207 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30509
+2024-07-18 16:19:37.004550 [info] SOME/IP routing ready.
+2024-07-18 16:19:37.004840 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:19:40.164937 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:19:40.166874 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:19:40.167728 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:19:40.222466 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:19:42.169832 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:19:42.171614 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:19:42.172473 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:19:42.227465 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:19:44.179766 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:19:44.182152 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:19:44.183145 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:19:44.239490 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:19:47.188510 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:19:47.190086 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:19:47.190726 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:19:47.238192 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:19:47.002331 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:19:49.194274 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:19:49.197037 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:19:49.197955 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:19:49.254813 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:19:51.203951 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:19:51.206441 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:19:51.207218 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:19:51.277951 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:19:53.210278 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:19:53.212209 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:19:53.212917 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:19:53.282173 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:19:55.267708 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:19:55.269452 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:19:55.269781 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:19:55.333109 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:19:57.014982 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:19:58.290291 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:19:58.311757 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:19:58.312144 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:19:58.364199 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:20:00.328133 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:20:00.330631 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:20:00.331334 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:20:00.381782 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:20:01.991174 [info] STOP OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 16:20:01.991700 [info] Stopping vsomeip application "test_method_server" (1277).
+2024-07-18 16:20:40.967534 [warning] Reliability type for event [1234.5678.8778] was not configured Using : RT_UNRELIABLE
+2024-07-18 16:20:40.969559 [warning] Reliability type for event [1234.5678.8779] was not configured Using : RT_UNRELIABLE
+2024-07-18 16:20:40.970389 [info] Using configuration file: "./../etc/vsomeip-udp-method-service.json".
+2024-07-18 16:20:40.970528 [info] Parsed vsomeip configuration in 0ms
+2024-07-18 16:20:40.970649 [info] Configuration module loaded.
+2024-07-18 16:20:40.970765 [info] Security disabled!
+2024-07-18 16:20:40.970866 [info] Initializing vsomeip (3.4.10) application "test_method_server".
+2024-07-18 16:20:40.971074 [info] Instantiating routing manager [Host].
+2024-07-18 16:20:40.972393 [info] create_routing_root: Routing root @ /tmp/vsomeip-0
+2024-07-18 16:20:40.973376 [info] Service Discovery enabled. Trying to load module.
+2024-07-18 16:20:40.976055 [info] Service Discovery module loaded.
+2024-07-18 16:20:40.979759 [info] Application(test_method_server, 1277) is initialized (11, 100).
+2024-07-18 16:20:40.980272 [info] Starting vsomeip application "test_method_server" (1277) using 2 threads I/O nice 255
+2024-07-18 16:20:40.981522 [info] Client [1277] routes unicast:192.254.8.102, netmask:255.255.255.0
+2024-07-18 16:20:40.983322 [info] Watchdog is disabled!
+2024-07-18 16:20:40.982947 [info] shutdown thread id from application: 1277 (test_method_server) is: 703e699fc640 TID: 92256
+2024-07-18 16:20:40.980767 [info] main dispatch thread id from application: 1277 (test_method_server) is: 703e6a1fd640 TID: 92255
+2024-07-18 16:20:40.988565 [info] io thread id from application: 1277 (test_method_server) is: 703e6bcbfbc0 TID: 92252
+2024-07-18 16:20:40.990561 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:20:40.992199 [info] Network interface "enp0s9" state changed: up
+2024-07-18 16:20:40.990432 [info] io thread id from application: 1277 (test_method_server) is: 703e691fb640 TID: 92258
+2024-07-18 16:20:40.993774 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30509
+2024-07-18 16:20:40.998856 [info] create_local_server: Listening @ /tmp/vsomeip-1277
+2024-07-18 16:20:40.999394 [info] Route "224.0.0.0/4 if: enp0s9 gw: n/a" state changed: up
+2024-07-18 16:20:40.999853 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:20:40.001049 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:20:40.001875 [info] SOME/IP routing ready.
+2024-07-18 16:20:40.002931 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:20:40.999184 [info] OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 16:20:50.994247 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:21:00.004675 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:21:03.822971 [info] STOP OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 16:21:03.824233 [info] Stopping vsomeip application "test_method_server" (1277).
+2024-07-18 16:21:13.452800 [warning] Reliability type for event [1234.5678.8778] was not configured Using : RT_UNRELIABLE
+2024-07-18 16:21:13.454976 [warning] Reliability type for event [1234.5678.8779] was not configured Using : RT_UNRELIABLE
+2024-07-18 16:21:13.460014 [info] Using configuration file: "./../etc/vsomeip-udp-method-service.json".
+2024-07-18 16:21:13.461545 [info] Parsed vsomeip configuration in 0ms
+2024-07-18 16:21:13.472490 [info] Configuration module loaded.
+2024-07-18 16:21:13.473763 [info] Security disabled!
+2024-07-18 16:21:13.473932 [info] Initializing vsomeip (3.4.10) application "test_method_server".
+2024-07-18 16:21:13.474204 [info] Instantiating routing manager [Host].
+2024-07-18 16:21:13.475512 [info] create_routing_root: Routing root @ /tmp/vsomeip-0
+2024-07-18 16:21:13.478243 [info] Service Discovery enabled. Trying to load module.
+2024-07-18 16:21:13.482202 [info] Service Discovery module loaded.
+2024-07-18 16:21:13.484654 [info] Application(test_method_server, 1277) is initialized (11, 100).
+2024-07-18 16:21:13.486510 [info] Starting vsomeip application "test_method_server" (1277) using 2 threads I/O nice 255
+2024-07-18 16:21:13.487682 [info] Client [1277] routes unicast:192.254.8.102, netmask:255.255.255.0
+2024-07-18 16:21:13.488676 [info] main dispatch thread id from application: 1277 (test_method_server) is: 7f9a2e7fd640 TID: 92462
+2024-07-18 16:21:13.492100 [info] Watchdog is disabled!
+2024-07-18 16:21:13.492170 [info] shutdown thread id from application: 1277 (test_method_server) is: 7f9a2dffc640 TID: 92463
+2024-07-18 16:21:13.522021 [info] create_local_server: Listening @ /tmp/vsomeip-1277
+2024-07-18 16:21:13.522522 [info] OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 16:21:13.537944 [info] io thread id from application: 1277 (test_method_server) is: 7f9a2d7fb640 TID: 92465
+2024-07-18 16:21:13.544248 [info] io thread id from application: 1277 (test_method_server) is: 7f9a302b8bc0 TID: 92459
+2024-07-18 16:21:13.546369 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:21:13.547453 [info] Network interface "enp0s9" state changed: up
+2024-07-18 16:21:13.550960 [info] Route "224.0.0.0/4 if: enp0s9 gw: n/a" state changed: up
+2024-07-18 16:21:13.558392 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:21:13.559520 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:21:13.560227 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30509
+2024-07-18 16:21:13.560706 [info] SOME/IP routing ready.
+2024-07-18 16:21:13.560898 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:21:16.531756 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:21:16.534531 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:21:16.535364 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:21:16.596071 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:21:18.543288 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:21:18.546148 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:21:18.546998 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:21:18.636052 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:21:20.549993 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:21:20.550813 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:21:20.551032 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:21:20.603660 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:21:22.557355 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:21:22.558800 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:21:22.559514 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:21:22.611497 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:21:23.550965 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:21:25.948376 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:21:25.949231 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:21:25.949863 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:21:25.024235 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:21:27.962952 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:21:27.964603 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:21:27.965485 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:21:27.018362 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:21:29.970570 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:21:29.972846 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:21:29.973306 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:21:29.041830 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:21:31.984297 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:21:31.985840 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:21:31.002577 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:21:31.036385 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:21:33.567485 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:21:33.012639 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:21:33.014265 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:21:33.015171 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:21:33.067956 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:21:36.020107 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:21:36.021856 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:21:36.022765 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:21:36.083206 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:21:37.676683 [info] STOP OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 16:21:37.677919 [info] Stopping vsomeip application "test_method_server" (1277).
+2024-07-18 16:23:44.146255 [warning] Reliability type for event [1234.5678.8778] was not configured Using : RT_UNRELIABLE
+2024-07-18 16:23:44.152822 [warning] Reliability type for event [1234.5678.8779] was not configured Using : RT_UNRELIABLE
+2024-07-18 16:23:44.154689 [info] Using configuration file: "./../etc/vsomeip-udp-method-service.json".
+2024-07-18 16:23:44.154922 [info] Parsed vsomeip configuration in 1ms
+2024-07-18 16:23:44.155050 [info] Configuration module loaded.
+2024-07-18 16:23:44.155168 [info] Security disabled!
+2024-07-18 16:23:44.155260 [info] Initializing vsomeip (3.4.10) application "test_method_server".
+2024-07-18 16:23:44.155460 [info] Instantiating routing manager [Host].
+2024-07-18 16:23:44.156831 [info] create_routing_root: Routing root @ /tmp/vsomeip-0
+2024-07-18 16:23:44.159610 [info] Service Discovery enabled. Trying to load module.
+2024-07-18 16:23:44.162443 [info] Service Discovery module loaded.
+2024-07-18 16:23:44.164145 [info] Application(test_method_server, 1277) is initialized (11, 100).
+2024-07-18 16:23:44.166196 [info] Starting vsomeip application "test_method_server" (1277) using 2 threads I/O nice 255
+2024-07-18 16:23:44.168868 [info] main dispatch thread id from application: 1277 (test_method_server) is: 733b753fd640 TID: 92835
+2024-07-18 16:23:44.169294 [info] shutdown thread id from application: 1277 (test_method_server) is: 733b74bfc640 TID: 92836
+2024-07-18 16:23:44.170634 [info] Client [1277] routes unicast:192.254.8.102, netmask:255.255.255.0
+2024-07-18 16:23:44.180816 [info] Watchdog is disabled!
+2024-07-18 16:23:44.183646 [info] io thread id from application: 1277 (test_method_server) is: 733b76f60bc0 TID: 92832
+2024-07-18 16:23:44.183914 [info] io thread id from application: 1277 (test_method_server) is: 733b6f7fe640 TID: 92838
+2024-07-18 16:23:44.184930 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:23:44.185261 [info] Network interface "enp0s9" state changed: up
+2024-07-18 16:23:44.186153 [info] Route "224.0.0.0/4 if: enp0s9 gw: n/a" state changed: up
+2024-07-18 16:23:44.186643 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:23:44.188699 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:23:44.189579 [info] SOME/IP routing ready.
+2024-07-18 16:23:44.190448 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:23:44.190777 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30509
+2024-07-18 16:23:44.195789 [info] create_local_server: Listening @ /tmp/vsomeip-1277
+2024-07-18 16:23:44.197262 [info] OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 16:23:54.187052 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:24:04.195489 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:24:07.022323 [info] STOP OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 16:24:07.023038 [info] Stopping vsomeip application "test_method_server" (1277).
+2024-07-18 16:25:29.159158 [warning] Reliability type for event [1234.5678.8778] was not configured Using : RT_UNRELIABLE
+2024-07-18 16:25:29.161316 [warning] Reliability type for event [1234.5678.8779] was not configured Using : RT_UNRELIABLE
+2024-07-18 16:25:29.162160 [info] Using configuration file: "./../etc/vsomeip-udp-method-service.json".
+2024-07-18 16:25:29.162470 [info] Parsed vsomeip configuration in 0ms
+2024-07-18 16:25:29.162591 [info] Configuration module loaded.
+2024-07-18 16:25:29.162711 [info] Security disabled!
+2024-07-18 16:25:29.162801 [info] Initializing vsomeip (3.4.10) application "test_method_server".
+2024-07-18 16:25:29.163062 [info] Instantiating routing manager [Host].
+2024-07-18 16:25:29.164148 [info] create_routing_root: Routing root @ /tmp/vsomeip-0
+2024-07-18 16:25:29.166867 [info] Service Discovery enabled. Trying to load module.
+2024-07-18 16:25:29.169823 [info] Service Discovery module loaded.
+2024-07-18 16:25:29.171601 [info] Application(test_method_server, 1277) is initialized (11, 100).
+2024-07-18 16:25:29.174770 [info] Starting vsomeip application "test_method_server" (1277) using 2 threads I/O nice 255
+2024-07-18 16:25:29.176316 [info] Client [1277] routes unicast:192.254.8.102, netmask:255.255.255.0
+2024-07-18 16:25:29.176203 [info] shutdown thread id from application: 1277 (test_method_server) is: 7b29155fc640 TID: 93141
+2024-07-18 16:25:29.181307 [info] Watchdog is disabled!
+2024-07-18 16:25:29.181165 [info] main dispatch thread id from application: 1277 (test_method_server) is: 7b2915dfd640 TID: 93140
+2024-07-18 16:25:29.185115 [info] io thread id from application: 1277 (test_method_server) is: 7b290ffff640 TID: 93143
+2024-07-18 16:25:29.191161 [info] create_local_server: Listening @ /tmp/vsomeip-1277
+2024-07-18 16:25:29.184988 [info] io thread id from application: 1277 (test_method_server) is: 7b291794ebc0 TID: 93137
+2024-07-18 16:25:29.193811 [info] Network interface "enp0s9" state changed: up
+2024-07-18 16:25:29.191572 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:25:29.191709 [info] OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 16:25:29.203117 [info] Route "224.0.0.0/4 if: enp0s9 gw: n/a" state changed: up
+2024-07-18 16:25:29.204272 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:25:29.205065 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:25:29.206463 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30509
+2024-07-18 16:25:29.207869 [info] SOME/IP routing ready.
+2024-07-18 16:25:29.206885 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:25:32.923914 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:25:32.926942 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:25:32.928005 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:25:32.989108 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:25:34.939951 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:25:34.942758 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:25:34.943554 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:25:34.001165 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:25:36.946663 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:25:36.948039 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:25:36.948403 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:25:36.001324 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:25:38.954784 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:25:38.957381 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:25:38.958172 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:25:38.971923 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:25:39.213874 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:25:41.969810 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:25:41.971456 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:25:41.972317 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:25:41.023191 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:25:43.982115 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:25:43.984665 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:25:43.985761 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:25:43.998967 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:25:45.994746 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:25:45.997364 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:25:45.998418 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:25:45.049702 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:25:47.011378 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:25:47.014171 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:25:47.015195 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:25:47.067847 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:25:49.217309 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:25:50.020398 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:25:50.023247 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:25:50.023705 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:25:50.073235 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:25:52.034328 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:25:52.035647 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:25:52.036255 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:25:52.049932 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:25:53.974353 [info] STOP OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 16:25:53.975296 [info] Stopping vsomeip application "test_method_server" (1277).
+2024-07-18 16:26:56.586945 [warning] Reliability type for event [1234.5678.8778] was not configured Using : RT_UNRELIABLE
+2024-07-18 16:26:56.588583 [warning] Reliability type for event [1234.5678.8779] was not configured Using : RT_UNRELIABLE
+2024-07-18 16:26:56.589281 [info] Using configuration file: "./../etc/vsomeip-udp-method-service.json".
+2024-07-18 16:26:56.589413 [info] Parsed vsomeip configuration in 0ms
+2024-07-18 16:26:56.589530 [info] Configuration module loaded.
+2024-07-18 16:26:56.589644 [info] Security disabled!
+2024-07-18 16:26:56.589741 [info] Initializing vsomeip (3.4.10) application "test_method_server".
+2024-07-18 16:26:56.589940 [info] Instantiating routing manager [Host].
+2024-07-18 16:26:56.590704 [info] create_routing_root: Routing root @ /tmp/vsomeip-0
+2024-07-18 16:26:56.591998 [info] Service Discovery enabled. Trying to load module.
+2024-07-18 16:26:56.593957 [info] Service Discovery module loaded.
+2024-07-18 16:26:56.595071 [info] Application(test_method_server, 1277) is initialized (11, 100).
+2024-07-18 16:26:56.596981 [info] Starting vsomeip application "test_method_server" (1277) using 2 threads I/O nice 255
+2024-07-18 16:26:56.598859 [info] Client [1277] routes unicast:192.254.8.102, netmask:255.255.255.0
+2024-07-18 16:26:56.599425 [info] main dispatch thread id from application: 1277 (test_method_server) is: 79baba1fd640 TID: 93353
+2024-07-18 16:26:56.600932 [info] Watchdog is disabled!
+2024-07-18 16:26:56.599340 [info] shutdown thread id from application: 1277 (test_method_server) is: 79bab99fc640 TID: 93354
+2024-07-18 16:26:56.606868 [info] io thread id from application: 1277 (test_method_server) is: 79babbccabc0 TID: 93350
+2024-07-18 16:26:56.607950 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:26:56.610723 [info] Network interface "enp0s9" state changed: up
+2024-07-18 16:26:56.607673 [info] io thread id from application: 1277 (test_method_server) is: 79bab89fa640 TID: 93356
+2024-07-18 16:26:56.608678 [info] create_local_server: Listening @ /tmp/vsomeip-1277
+2024-07-18 16:26:56.615463 [info] OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 16:26:56.612459 [info] Route "224.0.0.0/4 if: enp0s9 gw: n/a" state changed: up
+2024-07-18 16:26:56.617007 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:26:56.617185 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:26:56.617504 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30509
+2024-07-18 16:26:56.617629 [info] SOME/IP routing ready.
+2024-07-18 16:26:56.616848 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:27:06.619836 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:27:16.624094 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:27:19.875468 [info] STOP OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 16:27:19.876886 [info] Stopping vsomeip application "test_method_server" (1277).
+2024-07-18 16:27:59.673456 [warning] Reliability type for event [1234.5678.8778] was not configured Using : RT_UNRELIABLE
+2024-07-18 16:27:59.676234 [warning] Reliability type for event [1234.5678.8779] was not configured Using : RT_UNRELIABLE
+2024-07-18 16:27:59.677504 [info] Using configuration file: "./../etc/vsomeip-udp-method-service.json".
+2024-07-18 16:27:59.678465 [info] Parsed vsomeip configuration in 0ms
+2024-07-18 16:27:59.678683 [info] Configuration module loaded.
+2024-07-18 16:27:59.678812 [info] Security disabled!
+2024-07-18 16:27:59.678908 [info] Initializing vsomeip (3.4.10) application "test_method_server".
+2024-07-18 16:27:59.679114 [info] Instantiating routing manager [Host].
+2024-07-18 16:27:59.680478 [info] create_routing_root: Routing root @ /tmp/vsomeip-0
+2024-07-18 16:27:59.682964 [info] Service Discovery enabled. Trying to load module.
+2024-07-18 16:27:59.685408 [info] Service Discovery module loaded.
+2024-07-18 16:27:59.687347 [info] Application(test_method_server, 1277) is initialized (11, 100).
+2024-07-18 16:27:59.687946 [info] Starting vsomeip application "test_method_server" (1277) using 2 threads I/O nice 255
+2024-07-18 16:27:59.688707 [info] Client [1277] routes unicast:192.254.8.102, netmask:255.255.255.0
+2024-07-18 16:27:59.688396 [info] main dispatch thread id from application: 1277 (test_method_server) is: 7295eabfd640 TID: 93588
+2024-07-18 16:27:59.691621 [info] shutdown thread id from application: 1277 (test_method_server) is: 7295ea3fc640 TID: 93589
+2024-07-18 16:27:59.692942 [info] Watchdog is disabled!
+2024-07-18 16:27:59.707105 [info] io thread id from application: 1277 (test_method_server) is: 7295ec735bc0 TID: 93585
+2024-07-18 16:27:59.707420 [info] io thread id from application: 1277 (test_method_server) is: 7295e93fa640 TID: 93591
+2024-07-18 16:27:59.709190 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:27:59.709668 [info] Network interface "enp0s9" state changed: up
+2024-07-18 16:27:59.711803 [info] Route "224.0.0.0/4 if: enp0s9 gw: n/a" state changed: up
+2024-07-18 16:27:59.713222 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:27:59.713492 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:27:59.713779 [info] SOME/IP routing ready.
+2024-07-18 16:27:59.714200 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:27:59.715591 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30509
+2024-07-18 16:27:59.719902 [info] create_local_server: Listening @ /tmp/vsomeip-1277
+2024-07-18 16:27:59.721180 [info] OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 16:28:09.714267 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:28:19.720709 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:28:22.780268 [info] STOP OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 16:28:22.781118 [info] Stopping vsomeip application "test_method_server" (1277).
+2024-07-18 16:28:44.165313 [warning] Reliability type for event [1234.5678.8778] was not configured Using : RT_UNRELIABLE
+2024-07-18 16:28:44.167498 [warning] Reliability type for event [1234.5678.8779] was not configured Using : RT_UNRELIABLE
+2024-07-18 16:28:44.168522 [info] Using configuration file: "./../etc/vsomeip-udp-method-service.json".
+2024-07-18 16:28:44.168683 [info] Parsed vsomeip configuration in 0ms
+2024-07-18 16:28:44.168796 [info] Configuration module loaded.
+2024-07-18 16:28:44.168921 [info] Security disabled!
+2024-07-18 16:28:44.169020 [info] Initializing vsomeip (3.4.10) application "test_method_server".
+2024-07-18 16:28:44.169310 [info] Instantiating routing manager [Host].
+2024-07-18 16:28:44.170410 [info] create_routing_root: Routing root @ /tmp/vsomeip-0
+2024-07-18 16:28:44.172854 [info] Service Discovery enabled. Trying to load module.
+2024-07-18 16:28:44.175561 [info] Service Discovery module loaded.
+2024-07-18 16:28:44.176886 [info] Application(test_method_server, 1277) is initialized (11, 100).
+2024-07-18 16:28:44.206454 [info] Starting vsomeip application "test_method_server" (1277) using 2 threads I/O nice 255
+2024-07-18 16:28:44.208582 [info] Client [1277] routes unicast:192.254.8.102, netmask:255.255.255.0
+2024-07-18 16:28:44.214999 [info] Watchdog is disabled!
+2024-07-18 16:28:44.217367 [info] shutdown thread id from application: 1277 (test_method_server) is: 7f8beabfc640 TID: 93802
+2024-07-18 16:28:44.211584 [info] main dispatch thread id from application: 1277 (test_method_server) is: 7f8beb3fd640 TID: 93801
+2024-07-18 16:28:44.218881 [info] io thread id from application: 1277 (test_method_server) is: 7f8becec3bc0 TID: 93798
+2024-07-18 16:28:44.220270 [info] io thread id from application: 1277 (test_method_server) is: 7f8be9bfa640 TID: 93804
+2024-07-18 16:28:44.226713 [info] Network interface "enp0s9" state changed: up
+2024-07-18 16:28:44.224549 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:28:44.229755 [info] create_local_server: Listening @ /tmp/vsomeip-1277
+2024-07-18 16:28:44.235370 [info] OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 16:28:44.231611 [info] Route "224.0.0.0/4 if: enp0s9 gw: n/a" state changed: up
+2024-07-18 16:28:44.236925 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:28:44.237687 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:28:44.238216 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30509
+2024-07-18 16:28:44.239558 [info] SOME/IP routing ready.
+2024-07-18 16:28:44.239352 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:28:54.237123 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:28:57.120595 [info] STOP OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 16:28:57.121707 [info] Stopping vsomeip application "test_method_server" (1277).
+2024-07-18 16:29:28.863480 [warning] Reliability type for event [1234.5678.8778] was not configured Using : RT_UNRELIABLE
+2024-07-18 16:29:28.865077 [warning] Reliability type for event [1234.5678.8779] was not configured Using : RT_UNRELIABLE
+2024-07-18 16:29:28.865749 [info] Using configuration file: "./../etc/vsomeip-udp-method-service.json".
+2024-07-18 16:29:28.865882 [info] Parsed vsomeip configuration in 0ms
+2024-07-18 16:29:28.866004 [info] Configuration module loaded.
+2024-07-18 16:29:28.866118 [info] Security disabled!
+2024-07-18 16:29:28.866206 [info] Initializing vsomeip (3.4.10) application "test_method_server".
+2024-07-18 16:29:28.866397 [info] Instantiating routing manager [Host].
+2024-07-18 16:29:28.867576 [info] create_routing_root: Routing root @ /tmp/vsomeip-0
+2024-07-18 16:29:28.869463 [info] Service Discovery enabled. Trying to load module.
+2024-07-18 16:29:28.871173 [info] Service Discovery module loaded.
+2024-07-18 16:29:28.878053 [info] Application(test_method_server, 1277) is initialized (11, 100).
+2024-07-18 16:29:28.879743 [info] Starting vsomeip application "test_method_server" (1277) using 2 threads I/O nice 255
+2024-07-18 16:29:28.882510 [info] main dispatch thread id from application: 1277 (test_method_server) is: 71b1a65fd640 TID: 94063
+2024-07-18 16:29:28.891957 [info] shutdown thread id from application: 1277 (test_method_server) is: 71b1a5dfc640 TID: 94064
+2024-07-18 16:29:28.892699 [info] Client [1277] routes unicast:192.254.8.102, netmask:255.255.255.0
+2024-07-18 16:29:28.900584 [info] Watchdog is disabled!
+2024-07-18 16:29:28.902710 [info] io thread id from application: 1277 (test_method_server) is: 71b1a8168bc0 TID: 94060
+2024-07-18 16:29:28.905185 [info] create_local_server: Listening @ /tmp/vsomeip-1277
+2024-07-18 16:29:28.909748 [info] OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 16:29:28.907016 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:29:28.917341 [info] Network interface "enp0s9" state changed: up
+2024-07-18 16:29:28.905638 [info] io thread id from application: 1277 (test_method_server) is: 71b1a4dfa640 TID: 94066
+2024-07-18 16:29:28.948841 [info] Route "224.0.0.0/4 if: enp0s9 gw: n/a" state changed: up
+2024-07-18 16:29:28.958302 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:29:28.960048 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:29:28.961999 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30509
+2024-07-18 16:29:28.963325 [info] SOME/IP routing ready.
+2024-07-18 16:29:28.963759 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:29:38.922629 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:29:41.300284 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:29:41.302392 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:29:41.303090 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:29:41.371330 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:29:43.309612 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:29:43.312105 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:29:43.312919 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:29:43.373498 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:29:45.317357 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:29:45.320175 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:29:45.321155 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:29:45.337491 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:29:47.324019 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:29:47.325420 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:29:47.326034 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:29:47.373956 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:29:48.928541 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:29:50.330718 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:29:50.332965 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:29:50.333981 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:29:50.386558 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:29:52.339965 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:29:52.343155 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:29:52.344264 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:29:52.398381 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:29:54.373601 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:29:54.375974 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:29:54.376661 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:29:54.589187 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:29:55.437077 [info] STOP OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 16:29:55.437866 [info] Stopping vsomeip application "test_method_server" (1277).
+2024-07-18 16:30:09.841300 [warning] Reliability type for event [1234.5678.8778] was not configured Using : RT_UNRELIABLE
+2024-07-18 16:30:09.842932 [warning] Reliability type for event [1234.5678.8779] was not configured Using : RT_UNRELIABLE
+2024-07-18 16:30:09.843718 [info] Using configuration file: "./../etc/vsomeip-udp-method-service.json".
+2024-07-18 16:30:09.843870 [info] Parsed vsomeip configuration in 0ms
+2024-07-18 16:30:09.844033 [info] Configuration module loaded.
+2024-07-18 16:30:09.844207 [info] Security disabled!
+2024-07-18 16:30:09.844327 [info] Initializing vsomeip (3.4.10) application "test_method_server".
+2024-07-18 16:30:09.844606 [info] Instantiating routing manager [Host].
+2024-07-18 16:30:09.845689 [info] create_routing_root: Routing root @ /tmp/vsomeip-0
+2024-07-18 16:30:09.847824 [info] Service Discovery enabled. Trying to load module.
+2024-07-18 16:30:09.850015 [info] Service Discovery module loaded.
+2024-07-18 16:30:09.851935 [info] Application(test_method_server, 1277) is initialized (11, 100).
+2024-07-18 16:30:09.852861 [info] Starting vsomeip application "test_method_server" (1277) using 2 threads I/O nice 255
+2024-07-18 16:30:09.854194 [info] Client [1277] routes unicast:192.254.8.102, netmask:255.255.255.0
+2024-07-18 16:30:09.853893 [info] shutdown thread id from application: 1277 (test_method_server) is: 79e882dfc640 TID: 94266
+2024-07-18 16:30:09.854353 [info] main dispatch thread id from application: 1277 (test_method_server) is: 79e8835fd640 TID: 94265
+2024-07-18 16:30:09.864884 [info] Watchdog is disabled!
+2024-07-18 16:30:09.874425 [info] io thread id from application: 1277 (test_method_server) is: 79e885149bc0 TID: 94262
+2024-07-18 16:30:09.877327 [info] io thread id from application: 1277 (test_method_server) is: 79e881dfa640 TID: 94268
+2024-07-18 16:30:09.905094 [info] Network interface "enp0s9" state changed: up
+2024-07-18 16:30:09.909624 [info] Route "224.0.0.0/4 if: enp0s9 gw: n/a" state changed: up
+2024-07-18 16:30:09.911552 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:30:09.912372 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:09.913867 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30509
+2024-07-18 16:30:09.914683 [info] SOME/IP routing ready.
+2024-07-18 16:30:09.877269 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:30:09.913843 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:30:09.882368 [info] create_local_server: Listening @ /tmp/vsomeip-1277
+2024-07-18 16:30:09.919468 [info] OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 16:30:12.787872 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:30:12.789425 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:12.789675 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:12.022749 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:30:14.797451 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:30:14.799731 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:14.800457 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:14.987619 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:30:16.802316 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:30:16.806965 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:16.812838 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:16.907272 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:30:19.817116 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:30:19.820573 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:19.820937 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:19.881377 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:30:19.924617 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:30:21.822698 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:30:21.826025 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:21.834663 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:21.941195 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:30:23.843869 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:30:23.846159 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:23.852036 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:23.941221 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:30:25.855741 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:30:25.859016 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:25.859357 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:25.292468 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:30:27.861544 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:30:27.862984 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:27.868989 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:27.959291 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:30:29.932311 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:30:30.873091 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:30:30.874613 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:30.874897 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:30.932398 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:30:31.728925 [info] STOP OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 16:30:31.729739 [info] Stopping vsomeip application "test_method_server" (1277).
+2024-07-18 16:30:39.172095 [warning] Reliability type for event [1234.5678.8778] was not configured Using : RT_UNRELIABLE
+2024-07-18 16:30:39.173862 [warning] Reliability type for event [1234.5678.8779] was not configured Using : RT_UNRELIABLE
+2024-07-18 16:30:39.174558 [info] Using configuration file: "./../etc/vsomeip-udp-method-service.json".
+2024-07-18 16:30:39.174695 [info] Parsed vsomeip configuration in 0ms
+2024-07-18 16:30:39.174810 [info] Configuration module loaded.
+2024-07-18 16:30:39.174932 [info] Security disabled!
+2024-07-18 16:30:39.175022 [info] Initializing vsomeip (3.4.10) application "test_method_server".
+2024-07-18 16:30:39.175220 [info] Instantiating routing manager [Host].
+2024-07-18 16:30:39.176159 [info] create_routing_root: Routing root @ /tmp/vsomeip-0
+2024-07-18 16:30:39.177878 [info] Service Discovery enabled. Trying to load module.
+2024-07-18 16:30:39.180985 [info] Service Discovery module loaded.
+2024-07-18 16:30:39.185575 [info] Application(test_method_server, 1277) is initialized (11, 100).
+2024-07-18 16:30:39.186973 [info] Starting vsomeip application "test_method_server" (1277) using 2 threads I/O nice 255
+2024-07-18 16:30:39.187883 [info] Client [1277] routes unicast:192.254.8.102, netmask:255.255.255.0
+2024-07-18 16:30:39.188066 [info] main dispatch thread id from application: 1277 (test_method_server) is: 767818bfd640 TID: 94450
+2024-07-18 16:30:39.188986 [info] Watchdog is disabled!
+2024-07-18 16:30:39.192465 [info] io thread id from application: 1277 (test_method_server) is: 76781a6f7bc0 TID: 94447
+2024-07-18 16:30:39.193960 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:30:39.193986 [info] create_local_server: Listening @ /tmp/vsomeip-1277
+2024-07-18 16:30:39.194757 [info] OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 16:30:39.191940 [info] io thread id from application: 1277 (test_method_server) is: 7678173fa640 TID: 94453
+2024-07-18 16:30:39.194382 [info] Network interface "enp0s9" state changed: up
+2024-07-18 16:30:39.189078 [info] shutdown thread id from application: 1277 (test_method_server) is: 7678183fc640 TID: 94451
+2024-07-18 16:30:39.195732 [info] Route "224.0.0.0/4 if: enp0s9 gw: n/a" state changed: up
+2024-07-18 16:30:39.196163 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:30:39.196333 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:39.197145 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30509
+2024-07-18 16:30:39.197379 [info] SOME/IP routing ready.
+2024-07-18 16:30:39.200451 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:30:42.195960 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:30:42.198491 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:42.198855 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:42.211180 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:30:44.210741 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:30:44.212875 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:44.213619 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:44.232702 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:30:47.219066 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:30:47.221728 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:47.222684 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:47.235682 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:30:49.195070 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:30:49.253289 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:30:49.254215 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:49.254808 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:49.540423 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:30:51.256763 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:30:51.259865 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:51.260193 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:51.334983 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:30:53.279982 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:30:53.282322 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:53.288321 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:53.358854 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:30:55.291712 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:30:55.294333 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:55.308529 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:55.559242 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:30:58.312281 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:30:58.314892 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:58.315245 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:30:58.496199 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:30:59.197787 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:31:00.316969 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:31:00.320137 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:00.322326 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:00.382034 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:31:02.328539 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:31:02.330573 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:02.331442 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:02.342794 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:31:04.346957 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:31:04.349794 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:04.350645 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:04.404085 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:31:05.282601 [info] STOP OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 16:31:05.283606 [info] Stopping vsomeip application "test_method_server" (1277).
+2024-07-18 16:31:25.027609 [warning] Reliability type for event [1234.5678.8778] was not configured Using : RT_UNRELIABLE
+2024-07-18 16:31:25.028970 [warning] Reliability type for event [1234.5678.8779] was not configured Using : RT_UNRELIABLE
+2024-07-18 16:31:25.029835 [info] Using configuration file: "./../etc/vsomeip-udp-method-service.json".
+2024-07-18 16:31:25.029988 [info] Parsed vsomeip configuration in 0ms
+2024-07-18 16:31:25.030106 [info] Configuration module loaded.
+2024-07-18 16:31:25.030232 [info] Security disabled!
+2024-07-18 16:31:25.030327 [info] Initializing vsomeip (3.4.10) application "test_method_server".
+2024-07-18 16:31:25.030591 [info] Instantiating routing manager [Host].
+2024-07-18 16:31:25.031732 [info] create_routing_root: Routing root @ /tmp/vsomeip-0
+2024-07-18 16:31:25.033139 [info] Service Discovery enabled. Trying to load module.
+2024-07-18 16:31:25.036390 [info] Service Discovery module loaded.
+2024-07-18 16:31:25.038223 [info] Application(test_method_server, 1277) is initialized (11, 100).
+2024-07-18 16:31:25.039645 [info] Starting vsomeip application "test_method_server" (1277) using 2 threads I/O nice 255
+2024-07-18 16:31:25.041921 [info] Client [1277] routes unicast:192.254.8.102, netmask:255.255.255.0
+2024-07-18 16:31:25.044283 [info] Watchdog is disabled!
+2024-07-18 16:31:25.044312 [info] main dispatch thread id from application: 1277 (test_method_server) is: 769ea59fd640 TID: 94677
+2024-07-18 16:31:25.044676 [info] shutdown thread id from application: 1277 (test_method_server) is: 769ea51fc640 TID: 94678
+2024-07-18 16:31:25.047992 [info] io thread id from application: 1277 (test_method_server) is: 769ea7544bc0 TID: 94674
+2024-07-18 16:31:25.050620 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:31:25.051281 [info] create_local_server: Listening @ /tmp/vsomeip-1277
+2024-07-18 16:31:25.054301 [info] OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 16:31:25.053156 [info] io thread id from application: 1277 (test_method_server) is: 769e9ffff640 TID: 94680
+2024-07-18 16:31:25.053030 [info] Network interface "enp0s9" state changed: up
+2024-07-18 16:31:25.074325 [info] Route "224.0.0.0/4 if: enp0s9 gw: n/a" state changed: up
+2024-07-18 16:31:25.075790 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:31:25.076141 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:25.077107 [info] udp_server_endpoint_impl: SO_RCVBUF is: 212992 (1703936) local port:30509
+2024-07-18 16:31:25.077498 [info] SOME/IP routing ready.
+2024-07-18 16:31:25.077975 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:31:28.354916 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:31:28.356188 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:28.357430 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:28.371597 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:31:30.360884 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:31:30.362279 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:30.362870 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:30.384246 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:31:32.364462 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:31:32.365890 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:32.367138 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:32.452331 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:31:34.375687 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:31:34.403521 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:34.403874 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:34.583528 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:31:35.052904 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:31:36.412725 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:31:36.414236 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:36.415396 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:36.426287 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:31:39.419338 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:31:39.421675 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:39.422376 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:39.476029 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:31:41.423985 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:31:41.426134 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:41.427145 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:41.467992 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:31:43.432881 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:31:43.438742 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:43.439391 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:43.790620 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:31:45.074209 [info] vSomeIP 3.4.10 | (default)
+2024-07-18 16:31:45.448173 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:31:45.449732 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:45.455569 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:45.496156 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:31:47.458094 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:31:47.459385 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:47.460016 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:47.678287 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:31:50.462383 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:31:50.463777 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:50.476506 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:50.514464 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:31:52.524325 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:31:52.527637 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:52.528650 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:52.608677 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:31:54.541355 [warning] Didn't receive a multicast SD message for 2200ms.
+2024-07-18 16:31:54.544548 [debug] Leaving the multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:54.550721 [debug] Joining to multicast group 239.0.0.255 from 192.254.8.102
+2024-07-18 16:31:54.578742 [info] udp_server_endpoint_impl<multicast>: SO_RCVBUF is: 212992 (1703936) local port:30490
+2024-07-18 16:31:54.790851 [info] STOP OFFER(1277): [1234.5678:0.0] (true)
+2024-07-18 16:31:54.791759 [info] Stopping vsomeip application "test_method_server" (1277).

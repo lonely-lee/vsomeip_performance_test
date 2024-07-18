@@ -1,10 +1,10 @@
 {
-    "unicast" : "172.18.0.3",
+    "unicast" : "192.254.8.102",
     "netmask" : "255.255.255.0",
     "logging" :
     {
         "level" : "debug",
-        "console" : "true",
+        "console" : "false",
         "file" : { "enable" : "true", "path" : "/var/log/vsomeip.log" },
         "dlt" : "false"
     },
@@ -40,7 +40,7 @@
         {
             "service":"0x1234",
             "instance":"0x5678",
-            "unicast": "172.18.0.2", 
+            "unicast": "192.254.8.2", 
             "unreliable":"30509",
             "someip-tp": {
                 "client-to-service": [

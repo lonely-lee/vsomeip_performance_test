@@ -1,10 +1,10 @@
 {
-    "unicast" : "172.18.0.2",
+    "unicast" : "192.254.8.102",
     "logging" :
     {
         "level" : "debug",
-        "console" : "true",
-        "file" : { "enable" : "false", "path" : "/tmp/vsomeip.log" },
+        "console" : "false",
+        "file" : { "enable" : "true", "path" : "./../log/vsomeip.log" },
         "dlt" : "false"
     },
     "applications" :

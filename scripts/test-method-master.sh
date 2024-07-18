@@ -22,83 +22,83 @@ echo "Each test interval is 1 second, and 100 requests are sent for each test"
 
 echo "Firstly, test using UDP communication and changing the payload size from $small_start_size to $small_end_size with step size of $small_step_size"
 for size in $(seq $small_start_size $small_step_size $small_end_size); do  
-    echo "1. exec [./test_method_client --protocol UDP --size $size --notify 100 --test 10 --cycle 50]
+    echo "1. exec [./test_method_client --protocol UDP --payload-size $size --request 100 --test 10]
             Please enter 'a' when ready to start......" 
     read input
-    ./test_method_client --protocol UDP --size $size --notify 100 --test 10 --cycle 50&  
+    ./test_method_client --protocol UDP --payload-size $size --request 100 --test 10&  
     pid=$!  
     
     echo "2. The PID of test_method_client is: $pid.Please enter 'b' when app over......"
     read over
     
     while pgrep -f "test_method_clie" >/dev/null; do  
-        echo "./test_method_client --size $size --cycle 50 still running,wait 1s..." 
+        echo "./test_method_client --payload-size $size still running,wait 1s..." 
         sleep 1  
     done 
 
     sleep 1
-    echo "3. Finished running with --protocol UDP --size $size"  
+    echo "3. Finished running with --protocol UDP --payload-size $size"  
 done
 
 echo "secondly, test using UDP communication and changing the payload size from $big_start_size to $big_end_size with step size of $big_step_size"
 for size in $(seq $big_start_size $big_step_size $big_end_size); do  
-    echo "1. exec [./test_method_client --protocol UDP --size $size --notify 100 --test 10 --cycle 50]
+    echo "1. exec [./test_method_client --protocol UDP --payload-size $size --request 100 --test 10]
             Please enter 'a' when ready to start......" 
     read input
-    ./test_method_client --protocol UDP --size $size --notify 100 --test 10 --cycle 50&  
+    ./test_method_client --protocol UDP --payload-size $size --request 100 --test 10&  
     pid=$!  
     
     echo "2. The PID of test_method_client is: $pid.Please enter 'b' when app over......"
     read over
     
     while pgrep -f "./test_method_client" >/dev/null; do  
-        echo "./test_method_client --size $size --cycle 50 still running,wait 1s..." 
+        echo "./test_method_client --payload-size $size still running,wait 1s..." 
         sleep 1  
     done 
 
     sleep 1
-    echo "3. Finished running with --protocol UDP --size $size"  
+    echo "3. Finished running with --protocol UDP --payload-size $size"  
 done
 
 export VSOMEIP_CONFIGURATION=./../etc/vsomeip-tcp-method-client.json
 echo "Thirdly, test using UDTCPP communication and changing the payload size from $small_start_size to $small_end_size with step size of $small_step_size"
 for size in $(seq $small_start_size $small_step_size $small_end_size); do  
-    echo "1. exec [./test_method_client --protocol TCP --size $size --notify 100 --test 10 --cycle 50]
+    echo "1. exec [./test_method_client --protocol TCP --payload-size $size --request 100 --test 10]
             Please enter 'a' when ready to start......" 
     read input
-    ./test_method_client --protocol TCP --size $size --notify 100 --test 10 --cycle 50&  
+    ./test_method_client --protocol TCP --payload-size $size --request 100 --test 10&  
     pid=$!  
     
     echo "2. The PID of test_method_client is: $pid.Please enter 'b' when app over......"
     read over
     
     while pgrep -f "test_method_clie" >/dev/null; do  
-        echo "./test_method_client --size $size --cycle 50 still running,wait 1s..." 
+        echo "./test_method_client --payload-size $size still running,wait 1s..." 
         sleep 1  
     done 
 
     sleep 1
-    echo "3. Finished running with --protocol TCP --size $size"  
+    echo "3. Finished running with --protocol TCP --payload-size $size"  
 done
 
 echo "Fourthly, test using TCP communication and changing the payload size from $big_start_size to $big_end_size with step size of $big_step_size"
 for size in $(seq $big_start_size $big_step_size $big_end_size); do  
-    echo "1. exec [./test_method_client --protocol TCP --size $size --notify 100 --test 10 --cycle 50]
+    echo "1. exec [./test_method_client --protocol TCP --payload-size $size --request 100 --test 10]
             Please enter 'a' when ready to start......" 
     read input
-    ./test_method_client --protocol TCP --size $size --notify 100 --test 10 --cycle 50&  
+    ./test_method_client --protocol TCP --payload-size $size --request 100 --test 10&  
     pid=$!  
     
     echo "2. The PID of test_method_client is: $pid.Please enter 'b' when app over......"
     read over
     
     while pgrep -f "test_method_clie" >/dev/null; do  
-        echo "./test_method_client --size $size --cycle 50 still running,wait 1s..." 
+        echo "./test_method_client --payload-size $size still running,wait 1s..." 
         sleep 1  
     done 
 
     sleep 1
-    echo "3. Finished running with --protocol TCP --size $size"  
+    echo "3. Finished running with --protocol TCP --payload-size $size"  
 done
   
 echo "All tests completed."
