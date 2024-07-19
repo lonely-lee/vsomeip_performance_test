@@ -294,8 +294,6 @@ static protocol_e protocol(protocol_e::PR_UDP);
 static std::uint32_t number_of_requests_(10);
 static std::uint32_t number_of_test(0);
 static std::uint32_t payload_size(40);
-static bool call_service_sync(true);
-static bool shutdown_service(true);
 
 int main(int argc, char** argv)
 {

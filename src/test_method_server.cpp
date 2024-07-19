@@ -159,7 +159,7 @@ public:
         } else{
             const auto average_latency = std::accumulate(latencys_.begin(), latencys_.end(), 0) / static_cast<uint64_t>(latencys_.size());
             const auto average_throughput = payload_size_*1.000000 / average_latency*1000000;
-            std::cout << "Protoc:"<<"(protocol_ == protocol_e::PR_TCP ?)"
+            std::cout << "Protoc:"<<(protocol_ == protocol_e::PR_TCP ? "TCP" : "UDP" )
                 <<", execute "<< number_of_tests_ << " tests. Receive: " 
                 << number_of_received_messages_total_
                 << " request messages per test(all send response)."<<std::endl;

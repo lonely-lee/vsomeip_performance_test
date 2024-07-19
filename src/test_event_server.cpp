@@ -206,6 +206,10 @@ private:
     timespec before_,after_;
 };
 
+static protocol_e protocol(protocol_e::PR_UDP);
+static std::uint32_t cycle(50);
+static std::uint32_t payload_size(40);
+
 int main(int argc, char** argv) {
     bool use_tcp = false;
     bool be_quiet = false;
@@ -217,27 +221,49 @@ int main(int argc, char** argv) {
     std::string size_arg("--size");
     std::string cycle_arg("--cycle");
     
-    int i = 1;
+    int i = 0;
     while (i < argc) {
-        if (tcp_enable == argv[i]) {
-            use_tcp = true;
-        } else if (udp_enable == argv[i]) {
-            use_tcp = false;
-        } else if (size_arg == argv[i] && i+1 < argc) {
+        if(std::string("--protocol") == std::string(argv[i])
+        || std::string("-p") == std::string(argv[i])) {
+            if(std::string("udp") == std::string(argv[i+1]) ||
+                    std::string("UDP") == std::string(argv[i+1])) {
+                protocol = protocol_e::PR_UDP;
+                i++;
+            } else if(std::string("tcp") == std::string(argv[i+1]) ||
+                    std::string("TCP") == std::string(argv[i+1])) {
+                protocol = protocol_e::PR_TCP;
+                i++;
+            }
+        } else if(std::string("--cycle") == std::string(argv[i])
+        || std::string("-c") == std::string(argv[i])) {
+            try {
+                cycle = static_cast<std::uint32_t>(std::stoul(std::string(argv[i+1]), nullptr, 10));
+            } catch (const std::exception &e) {
+                std::cerr << "Please specify a valid value for number of calls" << std::endl;
+                return(EXIT_FAILURE);
+            }
             i++;
-            std::stringstream converter;
-            converter << argv[i];
-            converter >> payload_size;
-        } else if (cycle_arg == argv[i] && i+1 < argc) {
+        } else if(std::string("--payload-size") == std::string(argv[i])
+        || std::string("-pl") == std::string(argv[i])) {
+            try {
+                payload_size = static_cast<std::uint32_t>(std::stoul(std::string(argv[i+1]), nullptr, 10));
+                std::cout<<"payload_size:"<<payload_size << std::endl;
+            } catch (const std::exception &e) {
+                std::cerr << "Please specify a valid values for payload size" << std::endl;
+                return(EXIT_FAILURE);
+            }
             i++;
-            std::stringstream converter;
-            converter << argv[i];
-            converter >> cycle;
+        } else if(std::string("--help") == std::string(argv[i])
+        || std::string("-h") == std::string(argv[i])) {
+            std::cout << "Available options:" << std::endl;
+            std::cout << "--protocol|-p: valid values TCP or UDP" << std::endl;
+            std::cout << "--cycle|-c: number of notify per test" << std::endl;
+            std::cout << "--payload-size|-pl: payload size in Bytes default: 40" << std::endl;
         }
         i++;
     }
 
-    TestEventServer server(use_tcp ? protocol_e::PR_TCP : protocol_e::PR_UDP, payload_size, cycle);
+    TestEventServer server(protocol, payload_size, cycle);
 
     if (server.Init()) {
         server.Start();
