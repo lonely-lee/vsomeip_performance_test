@@ -71,7 +71,12 @@ public:
         app_->offer_event(
                 TEST_SERVICE_ID,
                 TEST_INSTANCE_ID,
-                TEST_EVENT_ID,
+                TEST_EVENT_TCP_ID,
+                its_groups);
+        app_->offer_event(
+                TEST_SERVICE_ID,
+                TEST_INSTANCE_ID,
+                TEST_EVENT_UDP_ID,
                 its_groups);
         return true;
     }
@@ -137,7 +142,8 @@ private:
             std::unique_lock<std::mutex> u_lock(notify_mutex_);
             notify_cv_.wait(u_lock, [this]{ return is_offered_; });
             while (is_start_){
-                app_->notify(TEST_SERVICE_ID, TEST_INSTANCE_ID, TEST_EVENT_ID, notify_payload_);
+                app_->notify(TEST_SERVICE_ID, TEST_INSTANCE_ID, TEST_EVENT_TCP_ID, notify_payload_);
+                app_->notify(TEST_SERVICE_ID, TEST_INSTANCE_ID, TEST_EVENT_UDP_ID, notify_payload_);
                 number_of_send_++;
                 std::this_thread::sleep_for(std::chrono::milliseconds(cycle_));
             }

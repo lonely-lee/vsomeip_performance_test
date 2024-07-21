@@ -3,8 +3,11 @@
 ```bash
 mkdir build
 cd build
-cmake -DCMAKE_PREFIX_PATH=/home/hikerlee02/workspace/x86target ..
-cmake .. && make
+cmake -DCMAKE_PREFIX_PATH=/home/lee_home/workspace/x86_libs \
+    -DTEST_IP_MASTER=192.254.8.2 \
+    -DTEST_IP_SLAVE=192.254.8.2 \
+    ..
+cmake .. && make -j4
 ```
 
 ## test_app armbuild
@@ -12,7 +15,7 @@ cmake .. && make
 mkdir armbuild
 cd armbuild
 cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/aarch64-toolchain.cmake -DCROSS_TOOLS_PATH="/home/hikerlee02/workspace/armcompilerchains/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu" ..
-cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/aarch64-toolchain.cmake -DCROSS_TOOLS_PATH="/home/hikerlee02/workspace/armcompilerchains/gcc-linaro-5.5.0-2017.10-x86_64_aarch64-linux-gnu" ..
+cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/aarch64-toolchain.cmake -DCROSS_TOOLS_PATH="/home/lee_home/armtoolchain/compile-tool/gcc-linaro-5.5.0-2017.10-x86_64_arm-linux-gnueabihf" ..
 cmake --build .
 ```
 

@@ -27,7 +27,8 @@ public:
         cycle_(cycle),
         running_(true),
         sender_(std::bind(&TestEventClient::run, this)),
-        initialized_(false) {
+        initialized_(false),
+        event_id_(protocol_ == protocol_e::PR_TCP ? TEST_EVENT_TCP_ID : TEST_EVENT_UDP_ID ) {
     }
 
 
@@ -51,7 +52,7 @@ public:
             }
         });
 
-        app_->register_message_handler(TEST_SERVICE_ID, TEST_INSTANCE_ID, TEST_EVENT_ID, 
+        app_->register_message_handler(TEST_SERVICE_ID, TEST_INSTANCE_ID, event_id_, 
         [this](const std::shared_ptr<vsomeip::message> &response){
             on_notification(response);
         });
@@ -66,11 +67,11 @@ public:
         app_->request_event(
                 TEST_SERVICE_ID,
                 TEST_INSTANCE_ID,
-                TEST_EVENT_ID,
+                event_id_,
                 its_groups);
         app_->register_subscription_status_handler(TEST_SERVICE_ID,
                 TEST_INSTANCE_ID, TEST_EVENTGROUP_ID,
-                TEST_EVENT_ID,
+                event_id_,
                 std::bind(&TestEventClient::on_subscription_status_changed, this,
                           std::placeholders::_1, std::placeholders::_2,
                           std::placeholders::_3, std::placeholders::_4,
@@ -100,7 +101,7 @@ public:
 
         app_->clear_all_handler();
         app_->unsubscribe(TEST_SERVICE_ID, TEST_INSTANCE_ID, TEST_EVENTGROUP_ID);
-        app_->release_event(TEST_SERVICE_ID, TEST_INSTANCE_ID, TEST_EVENT_ID);
+        app_->release_event(TEST_SERVICE_ID, TEST_INSTANCE_ID, event_id_);
         app_->release_service(TEST_SERVICE_ID, TEST_INSTANCE_ID);
 
         if(latencys_.size() != 0){
@@ -228,6 +229,7 @@ public:
 
 private:
     protocol_e protocol_;
+    vsomeip::event_t event_id_;
     std::shared_ptr<vsomeip::application> app_;
     std::mutex mutex_,msg_acknowledged_mutex_;
     std::condition_variable cv_,notification_cv_;

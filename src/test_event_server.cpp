@@ -19,6 +19,7 @@ public:
     TestEventServer(protocol_e protocol, std::size_t payload_size, std::uint32_t cycle) :
         app_(vsomeip::runtime::get()->create_application()),
         protocol_(protocol),
+        event_id_(protocol_ == protocol_e::PR_TCP ? TEST_EVENT_TCP_ID : TEST_EVENT_UDP_ID ),
         payload_size_(payload_size + time_payload_size),
         payload_(vsomeip::runtime::get()->create_payload()),
         number_of_send_(0),
@@ -66,7 +67,7 @@ public:
         app_->offer_event(
                 TEST_SERVICE_ID,
                 TEST_INSTANCE_ID,
-                TEST_EVENT_ID,
+                event_id_,
                 its_groups);
 
         ByteVec payload_data(payload_size_);
@@ -128,7 +129,7 @@ private:
             notify_cv_.wait(u_lock, [this]{ return is_offered_; });
             while (is_start_){
                 //std::cout<< "Send notification message......:"<<number_of_send_ << std::endl;
-                app_->notify(TEST_SERVICE_ID, TEST_INSTANCE_ID, TEST_EVENT_ID, payload_);
+                app_->notify(TEST_SERVICE_ID, TEST_INSTANCE_ID, event_id_, payload_);
                 number_of_send_++;
                 
                 std::this_thread::sleep_for(std::chrono::milliseconds(cycle_));
@@ -181,6 +182,7 @@ private:
     }
 
     std::shared_ptr<vsomeip::application> app_;
+    vsomeip::event_t event_id_;
     std::shared_ptr<vsomeip::payload> payload_;
     protocol_e protocol_;
     std::size_t payload_size_;

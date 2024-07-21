@@ -9,17 +9,15 @@ big_end_size=81500
 big_step_size=20000
 
 protocol_type=UDP
-
+# 目前仅执行client
 export LD_LIBRARY_PATH=./../lib:$LD_LIBRARY_PATH
-export VSOMEIP_CONFIGURATION=./../etc/vsomeip-udp-event-client.json
+export VSOMEIP_CONFIGURATION=./../etc/vsomeip-event-client-master.json
 export VSOMEIP_APPLICATION_NAME=test_event_client
 
 # handle cpu
-# nproc=4
 firstRun=1
 systemTimePrev=0
 processTimePrev=0
-numCores=$(nproc)
 
 getSystemTime() {
     IFS=' ' read -r cpu user nice system idle rest < /proc/stat
@@ -100,7 +98,6 @@ echo "Each test interval is 1 second, and 100 requests are sent for each test"
 for i in $(seq 1 2);do
     if [ $i -eq 2 ];then
         protocol_type=TCP
-        export VSOMEIP_CONFIGURATION=./../etc/vsomeip-tcp-event-client.json
     fi
 
     j=1
@@ -109,7 +106,7 @@ for i in $(seq 1 2);do
         echo "$i.$j.1 exec [./../build/test_event_client --protocol $protocol_type --notify 100 --test 10 --cycle 10]
               Please enter 'a' when ready to start......" 
         read input
-        ./../build/test_event_client --protocol $protocol_type --notify 100 --test 10 --cycle 10&  
+        ./test_event_client --protocol $protocol_type --notify 100 --test 10 --cycle 10&  
         pid=$! 
         echo "$i.$j.2 The PID of test_event_client is: $pid."
         # wait $pid
@@ -125,7 +122,7 @@ for i in $(seq 1 2);do
         echo "$i.$j.1 exec [./../build/test_event_client --protocol $protocol_type --notify 100 --test 10 --cycle 10]
                 Please enter 'a' when ready to start......" 
         read input
-        ./../build/test_event_client --protocol $protocol_type --notify 100 --test 10 --cycle 10&  
+        ./test_event_client --protocol $protocol_type --notify 100 --test 10 --cycle 10&  
         pid=$! 
         echo "$i.$j.2 The PID of test_event_client is: $pid."
         # wait $pid

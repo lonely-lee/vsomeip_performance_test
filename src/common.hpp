@@ -23,7 +23,8 @@
 #define STOP_METHOD_ID        0x0423
 #define SHUTDOWN_METHOD_ID    0x0424
 
-#define TEST_EVENT_ID         0x8778
+#define TEST_EVENT_UDP_ID         0x8778
+#define TEST_EVENT_TCP_ID         0x8779
 
 #define TEST_EVENTGROUP_ID    0x4465
 

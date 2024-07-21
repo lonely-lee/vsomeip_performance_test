@@ -25,11 +25,10 @@ class cpu_load_test_client
 {
 public:
     cpu_load_test_client(protocol_e _protocol, std::uint32_t number_of_request,std::uint32_t _number_of_test,
-                        std::uint32_t _payload_size,bool _shutdown_service) :
+                        std::uint32_t _payload_size) :
             protocol_(_protocol),
             app_(vsomeip::runtime::get()->create_application()),
             request_(vsomeip::runtime::get()->create_request(protocol_ == protocol_e::PR_TCP)),
-            shutdown_service_at_end_(_shutdown_service),
             sliding_window_size_(_number_of_test),
             wait_for_availability_(true),
             is_available_(false),
@@ -83,11 +82,7 @@ public:
 private:
     void stop() {
         std::cout << "Stopping..."<<std::endl;
-        // shutdown the service
-        if(shutdown_service_at_end_)
-        {
-            shutdown_service();
-        }
+        shutdown_service();
         app_->clear_all_handler();
 
         std::cout<<">>>>>>>>>>>>>>>               TEST RESULT               <<<<<<<<<<<<<<<"<<std::endl;
@@ -358,7 +353,7 @@ int main(int argc, char** argv)
         return(EXIT_FAILURE);
     }
 
-    cpu_load_test_client test_client_(protocol,number_of_requests_, number_of_test, payload_size, shutdown_service);
+    cpu_load_test_client test_client_(protocol,number_of_requests_, number_of_test, payload_size);
     // its_sample_ptr = &test_client_;
     // signal(SIGINT, handle_signal);
     // signal(SIGTERM, handle_signal);

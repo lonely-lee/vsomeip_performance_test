@@ -11,7 +11,7 @@ big_step_size=20000
 protocol_type=UDP
 
 export LD_LIBRARY_PATH=./../lib:$LD_LIBRARY_PATH
-export VSOMEIP_CONFIGURATION=./../etc/vsomeip-udp-method-client.json
+export VSOMEIP_CONFIGURATION=./../etc/vsomeip-method-client-master.json
 export VSOMEIP_APPLICATION_NAME=test_method_client
 
 # handle cpu
@@ -100,7 +100,6 @@ echo "Each test interval is 1 second, and 100 requests are sent for each test"
 for i in $(seq 1 2);do
     if [ $i -eq 2 ];then
         protocol_type=TCP
-        export VSOMEIP_CONFIGURATION=./../etc/vsomeip-tcp-method-client.json
     fi
 
     j=1

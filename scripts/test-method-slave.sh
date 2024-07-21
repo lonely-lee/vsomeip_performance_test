@@ -10,8 +10,8 @@ big_step_size=20000
 
 protocol_type=UDP
 
-export LD_LIBRARY_PATH=/home/hikerlee02/workspace/x86target/lib:$LD_LIBRARY_PATH
-export VSOMEIP_CONFIGURATION=./../etc/vsomeip-udp-method-service.json
+export LD_LIBRARY_PATH=./../lib:$LD_LIBRARY_PATH
+export VSOMEIP_CONFIGURATION=./../etc/vsomeip-method-service-slave.json
 export VSOMEIP_APPLICATION_NAME=test_method_server
 
 # handle cpu
@@ -96,16 +96,15 @@ echo "The preset notification cycle for this test is 50ms,
 for i in $(seq 1 2);do
     if [ $i -eq 2 ];then
         protocol_type=TCP
-        export VSOMEIP_CONFIGURATION=./../etc/vsomeip-tcp-method-service.json
     fi
 
     j=1
     echo "$i. Test using $protocol_type communication and changing the payload size from $big_start_size to $big_end_size with step size of $big_step_size"
     for size in $(seq $small_start_size $small_step_size $small_end_size); do  
-        echo "$i.$j. exec [./../build/test_method_server --protocol $protocol_type --payload-size $size --request 100 --test 10]
+        echo "$i.$j. exec [./test_method_server --protocol $protocol_type --payload-size $size --request 100 --test 10]
                 Please enter 'a' when ready to start......" 
         read input
-        ./../build/test_method_server --protocol $protocol_type --payload-size $size --request 100 --test 10&  
+        ./test_method_server --protocol $protocol_type --payload-size $size --request 100 --test 10&  
         pid=$! 
         echo "$i.$j. The PID of test_method_server is: $pid."
         # wait $pid
@@ -121,7 +120,7 @@ for i in $(seq 1 2);do
         echo "$i.$j. exec [./../build/test_method_server --protocol $protocol_type --payload-size $size --request 100 --test 10]
                 Please enter 'a' when ready to start......" 
         read input
-        ./../build/test_method_server --protocol $protocol_type --payload-size $size --request 100 --test 10&  
+        ./test_method_server --protocol $protocol_type --payload-size $size --request 100 --test 10&  
         pid=$! 
         echo "$i.$j. The PID of test_method_server is: $pid."
         # wait $pid

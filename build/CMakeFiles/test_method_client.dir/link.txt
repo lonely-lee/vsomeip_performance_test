@@ -1,1 +1,0 @@
-/usr/bin/c++ -g CMakeFiles/test_method_client.dir/src/test_method_client.cpp.o CMakeFiles/test_method_client.dir/src/common.cpp.o -o test_method_client  -Wl,-rpath,/home/hikerlee02/workspace/x86target/lib /home/hikerlee02/workspace/x86target/lib/libvsomeip3.so.3.4.10 

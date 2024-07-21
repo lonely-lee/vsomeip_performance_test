@@ -87,7 +87,7 @@ statistics_resource() {
 }
 
 export LD_LIBRARY_PATH=./../lib:$LD_LIBRARY_PATH
-export VSOMEIP_CONFIGURATION=./../etc/vsomeip-udp-event-service.json
+export VSOMEIP_CONFIGURATION=./../etc/vsomeip-event-service-slave.json
 export VSOMEIP_APPLICATION_NAME=test_event_server
 
 echo "This test will conduct a one-on-one event notification communication 
@@ -102,7 +102,6 @@ echo "The preset notification cycle for this test is 50ms,
 for i in {1,2};do
     if [ $i -eq 2 ];then
         protocol_type=TCP
-        export VSOMEIP_CONFIGURATION=./../etc/vsomeip-tcp-event-service.json
     fi
     j=1
     echo "$i. Test using $protocol_type communication and changing the payload size from $small_start_size to $small_end_size with step size of $small_step_size"
