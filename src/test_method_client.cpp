@@ -32,6 +32,8 @@ public:
             sliding_window_size_(_number_of_test),
             wait_for_availability_(true),
             is_available_(false),
+            is_ready_(false),
+            is_over_(false),
             number_of_requests_(number_of_request),
             number_of_test_(_number_of_test),
             number_of_test_current_(0),
@@ -142,7 +144,19 @@ private:
     }
     void on_message(const std::shared_ptr<vsomeip::message> &_response) {
         //std::cout<<"resp length:"<<_response->get_length()<<std::endl;
-
+        if(_response->get_method() == START_METHOD_ID){
+            std::cout<<"receive start response message"<<std::endl;
+            std::lock_guard<std::mutex> lk1(all_msg_acknowledged_mutex_);
+            is_ready_ = true;
+            all_msg_acknowledged_cv_.notify_one();
+            return;
+        } else if(_response->get_method() == STOP_METHOD_ID){
+            std::cout<<"receive stop response message"<<std::endl;
+            std::lock_guard<std::mutex> lk1(all_msg_acknowledged_mutex_);
+            is_over_ = true;
+            all_msg_acknowledged_cv_.notify_one();
+            return;
+        }
         number_of_acknowledged_messages_++;
         {
             // We notify the sender thread only if all sent messages have been acknowledged
@@ -181,9 +195,38 @@ private:
         for(std::uint32_t i=1; i <= number_of_test_; i++) {
             number_of_test_current_ = i;
             sliding_window_size_ = 1;
-            std::unique_lock<std::mutex> lk(all_msg_acknowledged_mutex_);
-            send_messages_async(lk, number_of_requests_);
-            sleep(1);//防止测试结束和测试开始的someip报文合并成一条报文，便于调试
+            timespec before,after,diff_ts;
+            std::cout<<"Testing begins!"<<std::endl;
+            send_service_start_measuring(true);
+            {
+                // 等待服务端开始测试的响应.
+                std::unique_lock<std::mutex> lk(all_msg_acknowledged_mutex_);
+                all_msg_acknowledged_cv_.wait(lk, [&](){return is_ready_;});
+                is_ready_ = false;
+            }
+            get_now_time(before);
+            {
+                // lk在发送请求完成后销毁
+                std::unique_lock<std::mutex> lk(all_msg_acknowledged_mutex_);
+                send_messages_async(lk, number_of_requests_);
+            }
+            get_now_time(after);
+            send_service_start_measuring(false);
+            {
+                std::unique_lock<std::mutex> lk(all_msg_acknowledged_mutex_);
+                all_msg_acknowledged_cv_.wait(lk, [&](){return is_over_;});
+                is_over_ = false;
+            }
+            diff_ts = timespec_diff(before, after);
+            auto latency_us = ((diff_ts.tv_sec * 1000000) + (diff_ts.tv_nsec / 1000)) / (2 * number_of_requests_);//请求到响应来回除以二,同时除以发送请求次数
+            latencys_.push_back(latency_us);
+            std::cout <<"The No."<<number_of_test_current_<<" Test "<< " sent " << std::setw(4) << std::setfill('0')
+                << number_of_requests_ << " request messages(all receive response). latency(us)["
+                << std::fixed << std::setprecision(2)
+                <<latency_us
+                <<"], Throughput(Bytes/s)["
+                <<(payload_size_*1000000/latency_us)
+                <<"]."<<std::endl;
         }
 
         wait_for_availability_ = true;
@@ -196,10 +239,6 @@ private:
     }
 
     void send_messages_async(std::unique_lock<std::mutex>& lk, std::uint32_t _messages_to_send) {
-        timespec before,after,diff_ts;
-        std::cout<<"Testing begins!"<<std::endl;
-        send_service_start_measuring(true);
-        get_now_time(before);
         for (number_of_sent_messages_ = 0;
                 number_of_sent_messages_ < _messages_to_send;
                 number_of_sent_messages_++, number_of_sent_messages_total_++)
@@ -214,18 +253,6 @@ private:
                 wait_for_all_msg_acknowledged_ = true;
             }
         }
-        get_now_time(after);
-        send_service_start_measuring(false);
-        diff_ts = timespec_diff(before, after);
-        auto latency_us = ((diff_ts.tv_sec * 1000000) + (diff_ts.tv_nsec / 1000)) / (2 * number_of_requests_);//请求到响应来回除以二,同时除以发送请求次数
-        latencys_.push_back(latency_us);
-        std::cout <<"The No."<<number_of_test_current_<<" Test "<< " sent " << std::setw(4) << std::setfill('0')
-            << number_of_requests_ << " request messages(all receive response). latency(us)["
-            << std::fixed << std::setprecision(2)
-            <<latency_us
-            <<"], Throughput(Bytes/s)["
-            <<(payload_size_*1000000/latency_us)
-            <<"]."<<std::endl;
     }
 
     void send_service_start_measuring(bool _start_measuring) {
@@ -254,6 +281,8 @@ private:
     std::condition_variable condition_;
     bool wait_for_availability_;
     bool is_available_;
+    bool is_ready_;
+    bool is_over_;
     std::uint32_t number_of_test_;
     std::uint32_t number_of_test_current_;
     std::uint32_t number_of_sent_messages_;

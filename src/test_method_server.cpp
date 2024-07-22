@@ -17,9 +17,13 @@
 class cpu_load_test_service
 {
 public:
-    cpu_load_test_service(protocol_e _protocol) :
+    cpu_load_test_service(protocol_e _protocol,uint32_t number_of_clients) :
                     protocol_(_protocol),
                     app_(vsomeip::runtime::get()->create_application()),
+                    number_of_clients_(number_of_clients),
+                    number_of_request_start_(0),
+                    number_of_request_stop_(0),
+                    number_of_request_shut_(0),
                     is_registered_(false),
                     blocked_(false),
                     number_of_tests_(0),
@@ -124,60 +128,81 @@ public:
 
     void on_message_start_measuring(const std::shared_ptr<vsomeip::message>& _request)
     {
-        (void)_request;
-        //std::cout<<"收到的请求为开始测试:"<<_request->get_method()<<std::endl;
-        std::cout << "Start measuring!"<<std::endl;
-        get_now_time(before_);
+        //(void)_request;
+        number_of_request_start_++;
+        start_resps_.push_back(vsomeip::runtime::get()->create_response(_request));
+        if(number_of_request_start_ == number_of_clients_){
+            std::cout << "Start measuring!"<<std::endl;
+            std::cout << "The resp has "<<start_resps_.size()<<" message"<<std::endl;
+            get_now_time(before_);
+            for(auto resp:start_resps_){
+                app_->send(resp);
+            }
+            number_of_request_start_=0;
+            start_resps_.clear();
+        }
     }
 
     void on_message_stop_measuring(const std::shared_ptr<vsomeip::message>& _request)
     {
-        (void)_request;
-        get_now_time(after_);
-        timespec diff_ts = timespec_diff(before_, after_);
-        auto latency_us = ((diff_ts.tv_sec * 1000000) + (diff_ts.tv_nsec / 1000)) / (2 * number_of_received_messages_);//请求到响应来回除以二，同时除以发送请求次数
-        //std::cout<<"收到的请求为结束测试:"<<_request->get_method()<<std::endl;
+        //(void)_request;
+        number_of_request_stop_++;
+        stop_resps_.push_back(vsomeip::runtime::get()->create_response(_request));
+        if(number_of_request_stop_ == number_of_clients_){
+            get_now_time(after_);
+            for(auto resp:stop_resps_){
+                app_->send(resp);
+            }
+            number_of_request_stop_=0;
+            stop_resps_.clear();
+            timespec diff_ts = timespec_diff(before_, after_);
+            auto latency_us = ((diff_ts.tv_sec * 1000000) + (diff_ts.tv_nsec / 1000)) / (2 * number_of_received_messages_);//请求到响应来回除以二，同时除以发送请求次数
+            //std::cout<<"收到的请求为结束测试:"<<_request->get_method()<<std::endl;
 
-        latencys_.push_back(latency_us);
-        std::cout <<"The No."<<++number_of_tests_<< " Received " << std::setw(4) << std::setfill('0')
-        << number_of_received_messages_ << " messages. latency(us)["
-        <<latency_us
-        <<"], Throughput(Bytes/s)["
-        <<(payload_size_*1000000/latency_us)
-        <<"]."<<std::endl;
-        number_of_received_messages_total_ += number_of_received_messages_;
-        number_of_received_messages_ = 0;
+            latencys_.push_back(latency_us);
+            std::cout <<"The No."<<++number_of_tests_<< " Received " << std::setw(4) << std::setfill('0')
+            << number_of_received_messages_ << " messages. latency(us)["
+            <<latency_us
+            <<"], Throughput(Bytes/s)["
+            <<(payload_size_*1000000/latency_us)
+            <<"]."<<std::endl;
+            number_of_received_messages_total_ += number_of_received_messages_;
+            number_of_received_messages_ = 0;
+            number_of_request_stop_=0;
+        }
     }
 
     void on_message_shutdown(
             const std::shared_ptr<vsomeip::message>& _request){
         (void)_request;
-
-        std::cout<<">>>>>>>>>>>>>>>               TEST RESULT               <<<<<<<<<<<<<<<"<<std::endl;
-        if(latencys_.empty()){
-            std::cout <<"This test have no data"<<std::endl;
-        } else{
-            const auto average_latency = std::accumulate(latencys_.begin(), latencys_.end(), 0) / static_cast<uint64_t>(latencys_.size());
-            const auto average_throughput = payload_size_*1.000000 / average_latency*1000000;
-            std::cout << "Protoc:"<<(protocol_ == protocol_e::PR_TCP ? "TCP" : "UDP" )
-                <<", execute "<< number_of_tests_ << " tests. Receive: " 
-                << number_of_received_messages_total_
-                << " request messages per test(all send response)."<<std::endl;
-            std::cout<<"The byte size of both the request and response messages is "<<payload_size_<<" bytes. "<<std::endl;
-            std::cout<<"This caused: "
-                << "average latency(every message send or receive)["
-                << std::setfill('0') << std::dec
-                << average_latency / 1000000
-                << "."
-                << std::setw(6) << average_latency % 1000000  
-                << "s], average throughput["
-                <<average_throughput<<"(Byte/s)]."
-                << std::endl;
-            handleDatas("method_server_data.txt",(protocol_ == protocol_e::PR_UDP),
-                        number_of_received_messages_total_/number_of_tests_,number_of_tests_,
-                        payload_size_,average_throughput,average_latency);
+        number_of_request_shut_++;
+        if(number_of_request_shut_ == number_of_clients_){
+            std::cout<<">>>>>>>>>>>>>>>               TEST RESULT               <<<<<<<<<<<<<<<"<<std::endl;
+            if(latencys_.empty()){
+                std::cout <<"This test have no data"<<std::endl;
+            } else{
+                const auto average_latency = std::accumulate(latencys_.begin(), latencys_.end(), 0) / static_cast<uint64_t>(latencys_.size());
+                const auto average_throughput = payload_size_*1.000000 / average_latency*1000000;
+                std::cout << "Protoc:"<<(protocol_ == protocol_e::PR_TCP ? "TCP" : "UDP" )
+                    <<", execute "<< number_of_tests_ << " tests. Receive: " 
+                    << number_of_received_messages_total_
+                    << " request messages per test(all send response)."<<std::endl;
+                std::cout<<"The byte size of both the request and response messages is "<<payload_size_<<" bytes. "<<std::endl;
+                std::cout<<"This caused: "
+                    << "average latency(every message send or receive)["
+                    << std::setfill('0') << std::dec
+                    << average_latency / 1000000
+                    << "."
+                    << std::setw(6) << average_latency % 1000000  
+                    << "s], average throughput["
+                    <<average_throughput<<"(Byte/s)]."
+                    << std::endl;
+                handleDatas("method_server_data.txt",(protocol_ == protocol_e::PR_UDP),
+                            number_of_received_messages_total_/number_of_tests_,number_of_tests_,
+                            payload_size_,average_throughput,average_latency);
+            }
+            stop();
         }
-        stop();
     }
 
     void run()
@@ -194,6 +219,12 @@ private:
     protocol_e protocol_;
     std::shared_ptr<vsomeip::application> app_;
     bool is_registered_;
+    uint32_t number_of_clients_;//客户端数量
+    uint32_t number_of_request_stop_;
+    uint32_t number_of_request_start_;
+    uint32_t number_of_request_shut_;
+    std::vector<std::shared_ptr<vsomeip::message>> stop_resps_;
+    std::vector<std::shared_ptr<vsomeip::message>> start_resps_;
 
     std::mutex mutex_;
     std::condition_variable condition_;
@@ -211,6 +242,7 @@ private:
 
 // this variables are changed via cmdline parameters
 static protocol_e protocol(protocol_e::PR_UNKNOWN);
+uint32_t number_of_clients(1);
 int main(int argc, char** argv)
 {
     int i = 0;
@@ -226,10 +258,20 @@ int main(int argc, char** argv)
                 protocol = protocol_e::PR_TCP;
                 i++;
             }
+        } else if(std::string("--clients") == std::string(argv[i])
+        || std::string("-c") == std::string(argv[i])) {
+            try {
+                number_of_clients = static_cast<std::uint32_t>(std::stoul(std::string(argv[i+1]), nullptr, 10));
+            } catch (const std::exception &e) {
+                std::cerr << "Please specify a valid value for number of test clients" << std::endl;
+                return(EXIT_FAILURE);
+            }
+            i++;
         } else if(std::string("--help") == std::string(argv[i])
         || std::string("-h") == std::string(argv[i])) {
             std::cout << "Available options:" << std::endl;
             std::cout << "--protocol|-p: valid values TCP or UDP" << std::endl;
+            std::cout << "--clients|-c: number of test clients" << std::endl;
         }
         i++;
     }
@@ -240,7 +282,7 @@ int main(int argc, char** argv)
         return(EXIT_FAILURE);
     }
 
-    cpu_load_test_service test_service(protocol);
+    cpu_load_test_service test_service(protocol,number_of_clients);
     if (test_service.init()) {
         test_service.start();
     }

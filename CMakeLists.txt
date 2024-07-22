@@ -5,8 +5,12 @@ if(NOT CMAKE_CXX_STANDARD)
     set(CMAKE_CXX_STANDARD 17)
 endif()
 
-set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/_output")  
-message("install path:${CMAKE_INSTALL_PREFIX}")
+if(NOT DEFINED CMAKE_INSTALL_PREFIX)  
+    set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/_output" CACHE PATH "Install path prefix, prepended onto install directories." FORCE)  
+endif()  
+
+# set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/_output")  
+message("-- Install path:${CMAKE_INSTALL_PREFIX}")
 
 find_package(vsomeip3 3.4.10 REQUIRED)
 
