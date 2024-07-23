@@ -32,7 +32,7 @@
         {
             "service" : "0x1234",
             "instance" : "0x5678",
-            "unreliable" : [ 40001],
+            "unreliable" : "40001",
             "reliable": {
                 "port":"40001",
                 "enable-magic-cookies":"false"
@@ -49,7 +49,7 @@
             "reliable": {
                 "port":"30509",
                 "enable-magic-cookies":"false"
-            }
+            },
             "events" :
             [
                 {

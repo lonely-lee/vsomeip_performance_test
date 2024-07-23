@@ -19,6 +19,8 @@ public:
         app_(vsomeip::runtime::get()->create_application()),
         number_of_notify_(number_of_notify),
         number_of_test_(0),
+        is_ready_ (false),
+        is_stoped_ (false),
         test_total_(test_total),
         number_of_notification_messages_(0),
         payload_size_(0),
@@ -55,6 +57,16 @@ public:
         app_->register_message_handler(TEST_SERVICE_ID, TEST_INSTANCE_ID, event_id_, 
         [this](const std::shared_ptr<vsomeip::message> &response){
             on_notification(response);
+        });
+
+        app_->register_message_handler(TEST_SERVICE_ID, TEST_INSTANCE_ID, START_METHOD_ID, 
+        [this](const std::shared_ptr<vsomeip::message> &response){
+            on_message(response);
+        });
+
+        app_->register_message_handler(TEST_SERVICE_ID, TEST_INSTANCE_ID, STOP_METHOD_ID, 
+        [this](const std::shared_ptr<vsomeip::message> &response){
+            on_message(response);
         });
 
         app_->register_availability_handler(TEST_SERVICE_ID, TEST_INSTANCE_ID,
@@ -173,6 +185,22 @@ public:
         }
     }
 
+    void on_message(const std::shared_ptr<vsomeip::message> &response) {
+        if(response->get_method() == START_METHOD_ID){
+            std::cout<<"receive start response message"<<std::endl;
+            std::lock_guard<std::mutex> lk1(msg_acknowledged_mutex_);
+            is_ready_ = true;
+            notification_cv_.notify_one();
+            return;
+        } else if(response->get_method() == STOP_METHOD_ID){
+            std::cout<<"receive stop response message"<<std::endl;
+            std::lock_guard<std::mutex> lk1(msg_acknowledged_mutex_);
+            is_stoped_ = true;
+            notification_cv_.notify_one();
+            return;
+        }
+    }
+
     void run() {
         timespec before,after,diff_ts;
         std::unique_lock<std::mutex> its_lock(mutex_);
@@ -190,14 +218,24 @@ public:
         for(number_of_test_ = 1; number_of_test_ <= test_total_; ++number_of_test_){
             std::cout << "Service is send_service_start_measuring." << std::endl;
             send_service_start_measuring(true);
+            {
+                std::unique_lock<std::mutex> its_lock(msg_acknowledged_mutex_);
+                notification_cv_.wait(its_lock, [this]{ return is_ready_; });
+                is_ready_ = false;
+            }
             get_now_time(before);
-            {                    
+            {
                 std::unique_lock<std::mutex> u_lock(msg_acknowledged_mutex_);
                 notification_cv_.wait(u_lock, [this]{ return !wait_for_msg_acknowledged_; });
                 wait_for_msg_acknowledged_ = true;
             }
             get_now_time(after);
             send_service_start_measuring(false);
+            {
+                std::unique_lock<std::mutex> its_lock(msg_acknowledged_mutex_);
+                notification_cv_.wait(its_lock, [this]{ return is_stoped_; });
+                is_stoped_ = false;
+            }
             diff_ts = timespec_diff(before, after);
             uint64_t latency_us = diff_ts.tv_sec * 1000000 + diff_ts.tv_nsec / 1000;//测试过程总延迟
             latencys_.push_back(latency_us);
@@ -233,6 +271,8 @@ private:
     std::shared_ptr<vsomeip::application> app_;
     std::mutex mutex_,msg_acknowledged_mutex_;
     std::condition_variable cv_,notification_cv_;
+    bool is_ready_;
+    bool is_stoped_;
     bool running_;
     bool wait_for_availability_,wait_for_msg_acknowledged_;
     bool is_available_;

@@ -16,10 +16,13 @@
 
 class TestEventServer {
 public:
-    TestEventServer(protocol_e protocol, std::size_t payload_size, std::uint32_t cycle) :
+    TestEventServer(protocol_e protocol,uint32_t number_of_clients, std::size_t payload_size, std::uint32_t cycle) :
         app_(vsomeip::runtime::get()->create_application()),
+        number_of_clients_(number_of_clients),
+        number_of_request_start_(0),
+        number_of_request_stop_(0),
         protocol_(protocol),
-        event_id_(protocol_ == protocol_e::PR_TCP ? TEST_EVENT_TCP_ID : TEST_EVENT_UDP_ID ),
+        event_id_((protocol_ == protocol_e::PR_TCP) ? TEST_EVENT_TCP_ID : TEST_EVENT_UDP_ID ),
         payload_size_(payload_size + time_payload_size),
         payload_(vsomeip::runtime::get()->create_payload()),
         number_of_send_(0),
@@ -64,6 +67,7 @@ public:
 
         std::set<vsomeip::eventgroup_t> its_groups;
         its_groups.insert(TEST_EVENTGROUP_ID);
+        std::cout<< "Offering event service:"<<event_id_ << std::endl;
         app_->offer_event(
                 TEST_SERVICE_ID,
                 TEST_INSTANCE_ID,
@@ -137,41 +141,60 @@ private:
         }
     }
 
-    void on_message_start_measuring(const std::shared_ptr<vsomeip::message>& _request)
-    {
+    void on_message_start_measuring(const std::shared_ptr<vsomeip::message>& _request){
         std::cout<< "Start measuring......" << std::endl;
-        (void)_request;
-        is_start_ = true;
-        get_now_time(before_);
+        //(void)_request;
+        number_of_request_start_++;
+        start_resps_.push_back(vsomeip::runtime::get()->create_response(_request));
+        if(number_of_request_start_ == number_of_clients_){
+            for(auto resp:start_resps_){
+                app_->send(resp);
+            }
+            number_of_request_start_=0;
+            start_resps_.clear();
+            is_start_ = true;
+            get_now_time(before_);
 
-        std::lock_guard<std::mutex> g_lock(notify_mutex_);
-        notify_cv_.notify_one();
+            std::lock_guard<std::mutex> g_lock(notify_mutex_);
+            notify_cv_.notify_one();
+        }
     }
 
     void on_message_stop_measuring(const std::shared_ptr<vsomeip::message>& _request)
     {
         std::cout<< "Stop measuring......" << std::endl;
-        (void)_request;
-        is_start_ = false;
-        get_now_time(after_);
-        if(number_of_send_ != 0){
-            timespec diff_ts = timespec_diff(before_, after_);
-            auto latency_us = (diff_ts.tv_sec * 1000000) + diff_ts.tv_nsec / 1000;//每条notification直接的时间间隔，包括notify的周期
-            auto throuput_bytes = payload_size_ * number_of_send_ * 1000000 / (latency_us - cycle_*1000 * (number_of_send_ - 1));//每条notification直接的时间间隔，包括notify的周期
-            latencys_.push_back(latency_us);
-            number_of_test_++;
-            std::cout <<"The No."<<number_of_test_<< " test send " << std::setw(4) << std::setfill('0')
-            << number_of_send_ << " notification messages.cycle(ms)["
-            <<cycle_<<"]. latency(us,except cycles)["
-            << std::fixed << std::setprecision(2)
-            <<((latency_us- cycle_ * (number_of_send_ - 1) * 1000)/number_of_send_)
-            <<"]. throughput(bytes/s,Excluding cycles)["
-            <<throuput_bytes<<"]."<<std::endl;
-            std::cout << "The No."<<number_of_test_<<" testing has ended, and the next round of testing is about to begin......" << std::endl;
-            number_of_send_total_ += number_of_send_;
-            number_of_send_ = 0;            
-        } else{
-            std::cout<< "No notification messages was sended." << std::endl;
+        //(void)_request;
+
+        number_of_request_stop_++;
+        stop_resps_.push_back(vsomeip::runtime::get()->create_response(_request));
+        if(number_of_request_stop_ == number_of_clients_){
+            is_start_ = false;
+            get_now_time(after_);
+            for(auto resp:stop_resps_){
+                app_->send(resp);
+            }
+            number_of_request_stop_=0;
+            stop_resps_.clear();
+
+            if(number_of_send_ != 0){
+                timespec diff_ts = timespec_diff(before_, after_);
+                auto latency_us = (diff_ts.tv_sec * 1000000) + diff_ts.tv_nsec / 1000;//每条notification直接的时间间隔，包括notify的周期
+                auto throuput_bytes = payload_size_ * number_of_send_ * 1000000 / (latency_us - cycle_*1000 * (number_of_send_ - 1));//每条notification直接的时间间隔，包括notify的周期
+                latencys_.push_back(latency_us);
+                number_of_test_++;
+                std::cout <<"The No."<<number_of_test_<< " test send " << std::setw(4) << std::setfill('0')
+                << number_of_send_ << " notification messages.cycle(ms)["
+                <<cycle_<<"]. latency(us,except cycles)["
+                << std::fixed << std::setprecision(2)
+                <<((latency_us- cycle_ * (number_of_send_ - 1) * 1000)/number_of_send_)
+                <<"]. throughput(bytes/s,Excluding cycles)["
+                <<throuput_bytes<<"]."<<std::endl;
+                std::cout << "The No."<<number_of_test_<<" testing has ended, and the next round of testing is about to begin......" << std::endl;
+                number_of_send_total_ += number_of_send_;
+                number_of_send_ = 0;            
+            } else{
+                std::cout<< "No notification messages was sended." << std::endl;
+            }
         }
     }
 
@@ -182,9 +205,15 @@ private:
     }
 
     std::shared_ptr<vsomeip::application> app_;
-    vsomeip::event_t event_id_;
+    uint32_t number_of_clients_;//客户端数量
+    uint32_t number_of_request_stop_;
+    uint32_t number_of_request_start_;
+    std::vector<std::shared_ptr<vsomeip::message>> stop_resps_;
+    std::vector<std::shared_ptr<vsomeip::message>> start_resps_;
+
     std::shared_ptr<vsomeip::payload> payload_;
     protocol_e protocol_;
+    vsomeip::event_t event_id_;//成员变量赋值依赖声明次序，不依赖初始化列表顺序
     std::size_t payload_size_;
     uint32_t number_of_send_,number_of_send_total_;
 
@@ -211,6 +240,7 @@ private:
 static protocol_e protocol(protocol_e::PR_UDP);
 static std::uint32_t cycle(50);
 static std::uint32_t payload_size(40);
+uint32_t number_of_clients(1);
 
 int main(int argc, char** argv) {
     bool use_tcp = false;
@@ -229,10 +259,12 @@ int main(int argc, char** argv) {
         || std::string("-p") == std::string(argv[i])) {
             if(std::string("udp") == std::string(argv[i+1]) ||
                     std::string("UDP") == std::string(argv[i+1])) {
+                std::cout<< "UDP is using:." << std::endl;
                 protocol = protocol_e::PR_UDP;
                 i++;
             } else if(std::string("tcp") == std::string(argv[i+1]) ||
                     std::string("TCP") == std::string(argv[i+1])) {
+                std::cout<< "TCP is using:." << std::endl;
                 protocol = protocol_e::PR_TCP;
                 i++;
             }
@@ -241,7 +273,16 @@ int main(int argc, char** argv) {
             try {
                 cycle = static_cast<std::uint32_t>(std::stoul(std::string(argv[i+1]), nullptr, 10));
             } catch (const std::exception &e) {
-                std::cerr << "Please specify a valid value for number of calls" << std::endl;
+                std::cerr << "Please specify a valid value for number of cycle" << std::endl;
+                return(EXIT_FAILURE);
+            }
+            i++;
+        } else if(std::string("--clients") == std::string(argv[i])
+        || std::string("-cl") == std::string(argv[i])) {
+            try {
+                number_of_clients = static_cast<std::uint32_t>(std::stoul(std::string(argv[i+1]), nullptr, 10));
+            } catch (const std::exception &e) {
+                std::cerr << "Please specify a valid value for number of clients" << std::endl;
                 return(EXIT_FAILURE);
             }
             i++;
@@ -260,12 +301,13 @@ int main(int argc, char** argv) {
             std::cout << "Available options:" << std::endl;
             std::cout << "--protocol|-p: valid values TCP or UDP" << std::endl;
             std::cout << "--cycle|-c: number of notify per test" << std::endl;
+            std::cout << "--clients|-cl: number of clients" << std::endl;
             std::cout << "--payload-size|-pl: payload size in Bytes default: 40" << std::endl;
         }
         i++;
     }
 
-    TestEventServer server(protocol, payload_size, cycle);
+    TestEventServer server(protocol,number_of_clients, payload_size, cycle);
 
     if (server.Init()) {
         server.Start();

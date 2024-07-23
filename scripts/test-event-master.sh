@@ -60,7 +60,7 @@ statistics_resource() {
     local payload=$3  
     local protocal=$4  
     local output_file="${name}_${payload}_${protocal}.txt" 
-    echo "Start statistical resource usage" >> "$output_file" 
+    echo "timestamp | systemTime | processTime | memory" >> "$output_file" 
   
     if  !kill -0 $pid 2>/dev/null; then  
         echo "Error: Process $pid does not exist."  

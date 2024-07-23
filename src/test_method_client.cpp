@@ -225,7 +225,7 @@ private:
                 << std::fixed << std::setprecision(2)
                 <<latency_us
                 <<"], Throughput(Bytes/s)["
-                <<(payload_size_*1000000/latency_us)
+                <<(payload_size_*1.000000/latency_us*1000000)
                 <<"]."<<std::endl;
         }
 

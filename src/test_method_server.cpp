@@ -155,6 +155,10 @@ public:
             }
             number_of_request_stop_=0;
             stop_resps_.clear();
+            if(latencys_.empty()){
+                std::cout <<"This test have no data"<<std::endl;
+                return;
+            }
             timespec diff_ts = timespec_diff(before_, after_);
             auto latency_us = ((diff_ts.tv_sec * 1000000) + (diff_ts.tv_nsec / 1000)) / (2 * number_of_received_messages_);//请求到响应来回除以二，同时除以发送请求次数
             //std::cout<<"收到的请求为结束测试:"<<_request->get_method()<<std::endl;
@@ -164,7 +168,7 @@ public:
             << number_of_received_messages_ << " messages. latency(us)["
             <<latency_us
             <<"], Throughput(Bytes/s)["
-            <<(payload_size_*1000000/latency_us)
+            <<(payload_size_*1.000000/latency_us*1000000)
             <<"]."<<std::endl;
             number_of_received_messages_total_ += number_of_received_messages_;
             number_of_received_messages_ = 0;

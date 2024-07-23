@@ -58,7 +58,7 @@ statistics_resource() {
     local payload=$3  
     local protocal=$4  
     local output_file="${name}_${payload}_${protocal}.txt" 
-    echo "Start statistical resource usage" >> "$output_file" 
+    echo "timestamp | systemTime | processTime | memory" >> "$output_file"  
   
     if  !kill -0 $pid 2>/dev/null; then  
         echo "Error: Process $pid does not exist."  
@@ -106,10 +106,10 @@ for i in {1,2};do
     j=1
     echo "$i. Test using $protocol_type communication and changing the payload size from $small_start_size to $small_end_size with step size of $small_step_size"
     for size in $(seq $small_start_size $small_step_size $small_end_size); do  
-        echo "$i.$j. exec [./../build/test_event_server --protocol $protocol_type --payload-size $size --cycle 10]
+        echo "$i.$j. exec [./../build/test_event_server --protocol $protocol_type --payload-size $size --cycle 50]
                 Please enter 'a' when ready to start......" 
         read input
-        ./test_event_server --protocol $protocol_type --payload-size $size --cycle 10&  
+        ./test_event_server --protocol $protocol_type --payload-size $size --cycle 50&  
         pid=$! 
         # wait $pid
         statistics_resource $pid test_event_server $size $protocol_type
@@ -128,10 +128,10 @@ for i in {1,2};do
 
     echo "$i. Test using $protocol_type communication and changing the payload size from $big_start_size to $big_end_size with step size of $big_step_size"
     for size in $(seq $big_start_size $big_step_size $big_end_size); do  
-        echo "$i.$j. exec [./../build/test_event_server --protocol $protocol_type --payload-size $size --cycle 10]
+        echo "$i.$j. exec [./../build/test_event_server --protocol $protocol_type --payload-size $size --cycle 50]
                 Please enter 'a' when ready to start......" 
         read input
-        ./test_event_server --protocol $protocol_type --payload-size $size --cycle 10&  
+        ./test_event_server --protocol $protocol_type --payload-size $size --cycle 50&  
         pid=$! 
         # wait $pid
         statistics_resource $pid test_event_server $size $protocol_type
