@@ -1,5 +1,11 @@
 #!/bin/sh  
-  
+
+# 创建测试数据保存路径
+script_dir="$(dirname "$0")"  
+parent_dir="$(dirname "$script_dir")"  
+target_dir="./../result"   
+mkdir -p "$target_dir"  
+
 small_start_size=100
 small_end_size=1300
 small_step_size=200
@@ -61,7 +67,7 @@ statistics_resource() {
     local name=$2  
     local payload=$3  
     local protocal=$4  
-    local output_file="${name}_${payload}_${protocal}.txt" 
+    local output_file="${target_dir}/${name}_${protocal}_${payload}_resources.txt" 
     echo "timestamp | systemTime | processTime | memory" >> "$output_file" 
   
     if  !kill -0 $pid 2>/dev/null; then  

@@ -130,7 +130,7 @@ public:
                     <<"], average throughput(Bytes/s,except cycle)["
                     <<average_throughput
                     <<"]"<<std::endl;
-            handleDatas("event_client_data.txt",(protocol_ == protocol_e::PR_UDP),cycle_,number_of_notify_,
+            handleDatas("./../result/event_client_data.txt",(protocol_ == protocol_e::PR_UDP),cycle_,number_of_notify_,
                         number_of_test_,payload_size_,average_throughput,average_latency);
         } else{
             std::cout<<"No data to handle"<<std::endl;

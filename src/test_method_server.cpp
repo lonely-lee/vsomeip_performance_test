@@ -155,10 +155,7 @@ public:
             }
             number_of_request_stop_=0;
             stop_resps_.clear();
-            if(latencys_.empty()){
-                std::cout <<"This test have no data"<<std::endl;
-                return;
-            }
+
             timespec diff_ts = timespec_diff(before_, after_);
             auto latency_us = ((diff_ts.tv_sec * 1000000) + (diff_ts.tv_nsec / 1000)) / (2 * number_of_received_messages_);//请求到响应来回除以二，同时除以发送请求次数
             //std::cout<<"收到的请求为结束测试:"<<_request->get_method()<<std::endl;
@@ -201,7 +198,7 @@ public:
                     << "s], average throughput["
                     <<average_throughput<<"(Byte/s)]."
                     << std::endl;
-                handleDatas("method_server_data.txt",(protocol_ == protocol_e::PR_UDP),
+                handleDatas("./../result/method_server_data.txt",(protocol_ == protocol_e::PR_UDP),
                             number_of_received_messages_total_/number_of_tests_,number_of_tests_,
                             payload_size_,average_throughput,average_latency);
             }

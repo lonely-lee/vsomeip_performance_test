@@ -84,6 +84,7 @@ bool handleDatas(std::string filename, bool is_udp,
                 const unsigned long average_throughput,const unsigned long average_latency){
     std::ofstream outfile(filename, std::ios::app);
     if (!outfile.is_open()) {  
+        std::cerr<<"open file failed"<<std::endl;
         return false;  
     }  
     std::ifstream infile(filename);  
@@ -102,6 +103,7 @@ bool handleDatas(std::string filename, bool is_udp,uint32_t cycle,
                 const unsigned long average_throughput,const unsigned long average_latency){
     std::ofstream outfile(filename, std::ios::app);
     if (!outfile.is_open()) {  
+        std::cerr<<"open file failed"<<std::endl;
         return false;  
     }  
     std::ifstream infile(filename);  

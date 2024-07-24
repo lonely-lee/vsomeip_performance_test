@@ -117,7 +117,7 @@ public:
                     <<average_throughput
                     <<"]"<<std::endl;
 
-                handleDatas("event_server_data.txt",(protocol_ == protocol_e::PR_UDP),cycle_,number_of_send_total_/number_of_test_,
+                handleDatas("./../result/event_server_data.txt",(protocol_ == protocol_e::PR_UDP),cycle_,number_of_send_total_/number_of_test_,
                             number_of_test_,payload_size_,average_throughput,average_latency);
         } else{
             std::cout<< "No latency data was recorded." << std::endl;

@@ -1,5 +1,12 @@
 #!/bin/sh  
-  
+
+# 创建测试数据保存路径
+script_dir="$(dirname "$0")"  
+parent_dir="$(dirname "$script_dir")"  
+target_dir="./../result"  
+mkdir -p "$target_dir"  
+
+#测试参数
 small_start_size=100
 small_end_size=1300
 small_step_size=200
@@ -59,7 +66,7 @@ statistics_resource() {
     local name=$2  
     local payload=$3  
     local protocal=$4  
-    local output_file="${name}_${payload}_${protocal}.txt" 
+    local output_file="${target_dir}/${name}_${protocal}_${payload}_resources.txt" 
     echo "timestamp | systemTime | processTime | memory" >> "$output_file" 
   
     if  !kill -0 $pid 2>/dev/null; then  
@@ -103,10 +110,10 @@ for i in $(seq 1 2);do
     j=1
     echo "$i. Test using $protocol_type communication and changing the payload size from $small_start_size to $small_end_size with step size of $small_step_size"
     for size in $(seq $small_start_size $small_step_size $small_end_size); do  
-        echo "$i.$j.1 exec [./../build/test_event_client --protocol $protocol_type --notify 100 --test 10 --cycle 10]
+        echo "$i.$j.1 exec [./../build/test_event_client --protocol $protocol_type --notify 100 --test 10 --cycle 50]
               Please enter 'a' when ready to start......" 
         read input
-        ./test_event_client --protocol $protocol_type --notify 100 --test 10 --cycle 10&  
+        ./test_event_client --protocol $protocol_type --notify 100 --test 10 --cycle 50&  
         pid=$! 
         echo "$i.$j.2 The PID of test_event_client is: $pid."
         # wait $pid
@@ -119,10 +126,10 @@ for i in $(seq 1 2);do
     
     echo "$i. Test using $protocol_type communication and changing the payload size from $big_start_size to $big_end_size with step size of $big_step_size"
     for size in $(seq $big_start_size $big_step_size $big_end_size); do  
-        echo "$i.$j.1 exec [./../build/test_event_client --protocol $protocol_type --notify 100 --test 10 --cycle 10]
+        echo "$i.$j.1 exec [./../build/test_event_client --protocol $protocol_type --notify 100 --test 10 --cycle 50]
                 Please enter 'a' when ready to start......" 
         read input
-        ./test_event_client --protocol $protocol_type --notify 100 --test 10 --cycle 10&  
+        ./test_event_client --protocol $protocol_type --notify 100 --test 10 --cycle 50&  
         pid=$! 
         echo "$i.$j.2 The PID of test_event_client is: $pid."
         # wait $pid

@@ -110,7 +110,7 @@ private:
                 << std::endl;
 
             
-            handleDatas("method_client_data.txt",(protocol_ == protocol_e::PR_UDP),
+            handleDatas("./../result/method_client_data.txt",(protocol_ == protocol_e::PR_UDP),
                         number_of_requests_,number_of_test_,payload_size_,
                         average_throughput,average_latency);
         }
@@ -194,7 +194,7 @@ private:
         // lock the mutex
         for(std::uint32_t i=1; i <= number_of_test_; i++) {
             number_of_test_current_ = i;
-            sliding_window_size_ = 1;
+            sliding_window_size_ = 10;
             timespec before,after,diff_ts;
             std::cout<<"Testing begins!"<<std::endl;
             send_service_start_measuring(true);
