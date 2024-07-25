@@ -29,7 +29,7 @@ public:
             protocol_(_protocol),
             app_(vsomeip::runtime::get()->create_application()),
             request_(vsomeip::runtime::get()->create_request(protocol_ == protocol_e::PR_TCP)),
-            sliding_window_size_(_number_of_test),
+            sliding_window_size_(1),
             wait_for_availability_(true),
             is_available_(false),
             is_ready_(false),
@@ -108,9 +108,9 @@ private:
                 << "s], average throughput["
                 <<average_throughput<<"(Byte/s)]"
                 << std::endl;
-
-            
-            handleDatas("./../result/method_client_data.txt",(protocol_ == protocol_e::PR_UDP),
+            std::string name = app_->get_name();
+            std::string filename = "./../result/" + name + "_latency.txt";
+            handleDatas(filename,(protocol_ == protocol_e::PR_UDP),
                         number_of_requests_,number_of_test_,payload_size_,
                         average_throughput,average_latency);
         }
@@ -166,12 +166,14 @@ private:
                 number_of_acknowledged_messages_ = 0;
                 wait_for_all_msg_acknowledged_ = false;
                 all_msg_acknowledged_cv_.notify_one();
+                //std::cout<<"receive all send message"<<std::endl;
             }
             else if(number_of_acknowledged_messages_ % sliding_window_size_ == 0)
             {
                 std::lock_guard<std::mutex> lk(all_msg_acknowledged_mutex_);
                 wait_for_all_msg_acknowledged_ = false;
                 all_msg_acknowledged_cv_.notify_one();
+                //std::cout<<"receive all sliding message"<<std::endl;
             }
         }
     }
@@ -194,7 +196,6 @@ private:
         // lock the mutex
         for(std::uint32_t i=1; i <= number_of_test_; i++) {
             number_of_test_current_ = i;
-            sliding_window_size_ = 10;
             timespec before,after,diff_ts;
             std::cout<<"Testing begins!"<<std::endl;
             send_service_start_measuring(true);
@@ -251,6 +252,7 @@ private:
                     all_msg_acknowledged_cv_.wait(lk);
                 }
                 wait_for_all_msg_acknowledged_ = true;
+                //std::cout<<"begin next send sliding "<<std::endl;
             }
         }
     }

@@ -123,6 +123,7 @@ public:
         ByteVec payload_data(payload_size_);
         auto response_payload = vsomeip::runtime::get()->create_payload(payload_data);
         response->set_payload(response_payload);
+        std::cout<<"session_tID:" <<std::hex<<response->get_session()<<std::dec<<std::endl;
         app_->send(response);
     }
 
@@ -135,7 +136,9 @@ public:
             std::cout << "Start measuring!"<<std::endl;
             std::cout << "The resp has "<<start_resps_.size()<<" message"<<std::endl;
             get_now_time(before_);
+            int i=0;
             for(auto resp:start_resps_){
+                std::cout<<"send start message to client:"<<++i<<std::endl;
                 app_->send(resp);
             }
             number_of_request_start_=0;
@@ -150,7 +153,9 @@ public:
         stop_resps_.push_back(vsomeip::runtime::get()->create_response(_request));
         if(number_of_request_stop_ == number_of_clients_){
             get_now_time(after_);
+            int i=0;
             for(auto resp:stop_resps_){
+                std::cout<<"send stop message to client:"<<++i<<std::endl;
                 app_->send(resp);
             }
             number_of_request_stop_=0;
@@ -198,7 +203,9 @@ public:
                     << "s], average throughput["
                     <<average_throughput<<"(Byte/s)]."
                     << std::endl;
-                handleDatas("./../result/method_server_data.txt",(protocol_ == protocol_e::PR_UDP),
+                std::string name = app_->get_name();
+                std::string filename = "./../result/" + name + "_latency.txt";
+                handleDatas(filename,(protocol_ == protocol_e::PR_UDP),
                             number_of_received_messages_total_/number_of_tests_,number_of_tests_,
                             payload_size_,average_throughput,average_latency);
             }
