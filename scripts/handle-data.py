@@ -86,7 +86,7 @@ for name, event_g in event_grouped:
             small_payloads = group[group['payloadsize'] < 1400]
             large_payloads  = group[group['payloadsize'] >= 1400]
             plt.subplot(2, 2, 1) 
-            plt.plot(small_payloads['payloadsize'], small_payloads['average_memory'], label=name)
+            plt.plot(small_payloads['payloadsize'], small_payloads['average_memory'], label=name, marker='*')
             # 添加图例和标签
             plt.legend()
             plt.xlabel('Payload Size')
@@ -94,7 +94,7 @@ for name, event_g in event_grouped:
             plt.title('Average Memory vs small Payload Size for Different Protocols')
             plt.grid(True)
             plt.subplot(2, 2, 2) 
-            plt.plot(large_payloads['payloadsize'], large_payloads['average_memory'], label=name)
+            plt.plot(large_payloads['payloadsize'], large_payloads['average_memory'], label=name,marker='*')
             # 添加图例和标签
             plt.legend()
             plt.xlabel('Payload Size')
@@ -102,7 +102,7 @@ for name, event_g in event_grouped:
             plt.title('Average Memory vs large Payload Size for Different Protocols')
             plt.grid(True)
             plt.subplot(2, 2, 3) 
-            plt.plot(small_payloads['payloadsize'], small_payloads['average_cpuload'], label=name)
+            plt.plot(small_payloads['payloadsize'], small_payloads['average_cpuload'], label=name,marker='*')
             # 添加图例和标签
             plt.legend()
             plt.xlabel('Payload Size')
@@ -110,7 +110,7 @@ for name, event_g in event_grouped:
             plt.title('Average CPUload vs small Payload Size for Different Protocols')
             plt.grid(True)
             plt.subplot(2, 2, 4) 
-            plt.plot(large_payloads['payloadsize'], large_payloads['average_cpuload'], label=name)
+            plt.plot(large_payloads['payloadsize'], large_payloads['average_cpuload'], label=name,marker='*')
             # 添加图例和标签
             plt.legend()
             plt.xlabel('Payload Size')
@@ -144,7 +144,7 @@ for file in files:
         large_payloads  = group[group['payload_size(Bytes)'] >= 1400]
         plt.subplot(2, 2, 1) 
         protocol = protocol_labels.get(name, 'Unknown Protocol')  # 如果name不在字典中，则使用'Unknown Protocol'
-        plt.plot(small_payloads['payload_size(Bytes)'], small_payloads['average_throughput(Byte/s)'], label=protocol)
+        plt.plot(small_payloads['payload_size(Bytes)'], small_payloads['average_throughput(Byte/s)'], label=protocol,marker='*')
         plt.legend()
         plt.xlabel('Payload Size')
         plt.ylabel('Average Throughput')
@@ -152,21 +152,21 @@ for file in files:
         plt.grid(True)
         plt.subplot(2, 2, 2) 
         large_payloads  = group[group['payload_size(Bytes)'] >= 1400]
-        plt.plot(large_payloads['payload_size(Bytes)'], large_payloads['average_throughput(Byte/s)'], label=protocol)
+        plt.plot(large_payloads['payload_size(Bytes)'], large_payloads['average_throughput(Byte/s)'], label=protocol,marker='*')
         plt.legend()
         plt.xlabel('Payload Size')
         plt.ylabel('Average Throughput')
         plt.title('Throughput vs large Payload Size for Different Protocols')
         plt.grid(True)
         plt.subplot(2, 2, 3) 
-        plt.plot(small_payloads['payload_size(Bytes)'], small_payloads['average_latency(us)'], label=protocol)
+        plt.plot(small_payloads['payload_size(Bytes)'], small_payloads['average_latency(us)'], label=protocol,marker='*')
         plt.legend()
         plt.xlabel('Payload Size')
         plt.ylabel('Average Latency')
         plt.title('Latency vs small Payload Size for Different Protocols')
         plt.grid(True)
         plt.subplot(2, 2, 4) 
-        plt.plot(large_payloads['payload_size(Bytes)'], large_payloads['average_latency(us)'], label=protocol)
+        plt.plot(large_payloads['payload_size(Bytes)'], large_payloads['average_latency(us)'], label=protocol,marker='*')
         plt.legend()
         plt.xlabel('Payload Size')
         plt.ylabel('Average Latency')
